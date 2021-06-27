@@ -9,20 +9,15 @@ const instance = axios.create({
 });
 
 const error = {
-  data: {
-    msg: 'not found',
-    code: 404,
+  response: {
+    status: 404,
   },
 };
 
 export default class Axios {
-  static get(url, body, { token }) {
-    if (
-      Validator.isNotEmpty(url) &&
-      Validator.isNotEmpty(body) &&
-      Validator.isNotEmpty(token)
-    ) {
-      return instance.get(url, body, {
+  static get(url, { token }) {
+    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(token)) {
+      return instance.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

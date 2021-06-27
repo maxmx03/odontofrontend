@@ -89,4 +89,8 @@ export default class Validator {
       hasUpperCaseCharacter
     );
   }
+
+  static areEqual(value, valueToCompare) {
+    return value === valueToCompare;
+  }
 }

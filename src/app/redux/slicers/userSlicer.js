@@ -15,15 +15,15 @@ const reducers = {
   },
 };
 
-export const userSlice = createSlice({
+const userSlice = createSlice({
   name: 'user',
   initialState: {
     stateCreate: false,
     stateEdit: false,
     data: [],
     userFeedback: {
-      msg: null,
-      success: null,
+      msg: '',
+      success: false,
     },
   },
   reducers,
@@ -31,3 +31,5 @@ export const userSlice = createSlice({
 
 export const { storeUser, collapseUserCreate, collapseUserEdit, userFeedback } =
   userSlice.actions;
+
+export default userSlice.reducer;

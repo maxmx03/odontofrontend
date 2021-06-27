@@ -1,3 +1,3 @@
-export const FIND_SERVICES = '/find/services';
-export const FIND_SERVICES_PACKAGES = '/find/services/packages';
-export const FIND_SERVICES_STUDENTS = '/find/services/students';
+export const FIND_SERVICES = '/service/find/services';
+export const FIND_SERVICES_PACKAGES = '/service/find/services/packages';
+export const FIND_SERVICES_STUDENTS = '/service/find/services/students';

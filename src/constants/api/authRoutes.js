@@ -1,3 +1,3 @@
-export const USER_LOGIN = '/login/user';
-export const IS_USER_LOGGED = '/login/user/logged';
-export const RECOVER_PASSWORD = '/login/forgetPassword';
+export const USER_LOGIN = '/auth/login/user';
+export const IS_USER_LOGGED = '/auth/login/user/logged';
+export const RECOVER_PASSWORD = '/auth/login/forgetPassword';
