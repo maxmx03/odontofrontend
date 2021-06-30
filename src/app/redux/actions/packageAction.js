@@ -2,52 +2,57 @@ import Validator from '../../../utils/validators/Validator';
 import Axios from '../../services/Axios';
 import Session from '../../services/Session';
 import {
-  FIND_USERS,
-  CREATE_USER,
-  UPDATE_USER_PROFILE,
-  UPDATE_USER_EMAIL,
-  UPDATE_USER_PASSWORD,
-  DELETE_USER,
-} from '../../../constants/api/userRoutes';
-import { storeUsers, userFeedback } from '../slicers/userSlicer';
+  FIND_PACKAGES,
+  CREATE_PACKAGE,
+  UPDATE_PACKAGE_PROFILE,
+  UPDATE_PACKAGE_CODE,
+  DELETE_PACKAGE,
+} from '../../../constants/api/packageRoutes';
+import { storePackage, packageFeedback } from '../slicers/packageSlicer';
 import { load, unload } from '../slicers/loadSlicer';
 
-export function getUsers() {
+export function getPackages() {
   return function (dispatch) {
     const token = Session.get('token');
 
     if (Validator.isNotEmpty(token)) {
-      Axios.get(FIND_USERS, token).then(({ data }) => {
-        dispatch(storeUsers(data.users));
+      Axios.get(FIND_PACKAGES, token).then(({ data }) => {
+        dispatch(storePackage(data.packages));
       });
     }
   };
 }
 
-export function createUser(body) {
+export function createPackage(body) {
   return function (dispatch) {
     try {
       dispatch(load());
-      const { firstName, lastName, email, type, password, confirmPassword } =
-        body;
+      const {
+        studentId,
+        description,
+        validity,
+        status,
+        password,
+        confirmPassword,
+      } = body;
       const token = Session.get('token');
 
       if (
         Validator.isNotEmpty(token) &&
-        Validator.isNotEmpty(firstName) &&
-        Validator.isNotEmpty(lastName) &&
-        Validator.isEmail(email) &&
-        Validator.isType(type) &&
+        Validator.isNotEmpty(studentId) &&
+        Validator.isNotEmpty(description) &&
+        Validator.isDate(validity) &&
+        Validator.isStatus(status) &&
         Validator.isPassword(password) &&
         Validator.isPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword)
       ) {
-        return Axios.post(CREATE_USER, body, token)
+        return Axios.post(CREATE_PACKAGE, body, token)
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
-                msg: 'Usuário foi criado com sucesso!',
+              packageFeedback({
+                msg: 'Pacote foi criado com sucesso!',
                 success: true,
               })
             );
@@ -55,8 +60,8 @@ export function createUser(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
-                msg: 'Não foi possível criar este usuário',
+              packageFeedback({
+                msg: 'Não foi possível criar este pacote',
                 success: false,
               })
             );
@@ -65,16 +70,16 @@ export function createUser(body) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
-          msg: 'Não foi possível criar este usuário',
+        packageFeedback({
+          msg: 'Não foi possível criar este pacote',
           success: false,
         })
       );
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
-          msg: 'Não foi possível criar este usuário',
+        packageFeedback({
+          msg: 'Não foi possível criar este pacote',
           success: false,
         })
       );
@@ -82,25 +87,26 @@ export function createUser(body) {
   };
 }
 
-export function updateUserProfile(body) {
+export function updatePackageProfile(body) {
   return function (dispatch) {
     try {
       dispatch(load());
-      const { firstName, lastName, type, userId } = body;
+      const { packageId, studentId, description, validity, status } = body;
       const token = Session.get('token');
 
       if (
         Validator.isNotEmpty(token) &&
-        Validator.isNotEmpty(firstName) &&
-        Validator.isNotEmpty(lastName) &&
-        Validator.isType(type) &&
-        Validator.isNotEmpty(userId)
+        Validator.isNotEmpty(packageId) &&
+        Validator.isNotEmpty(studentId) &&
+        Validator.isNotEmpty(description) &&
+        Validator.isDate(validity) &&
+        Validator.isStatus(status)
       ) {
-        return Axios.patch(UPDATE_USER_PROFILE, body, token)
+        return Axios.patch(UPDATE_PACKAGE_PROFILE, body, token)
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              packageFeedback({
                 msg: 'Perfil atualizado com sucesso!',
                 success: true,
               })
@@ -109,7 +115,7 @@ export function updateUserProfile(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              packageFeedback({
                 msg: 'Não foi possível atualizar este perfil',
                 success: false,
               })
@@ -119,7 +125,7 @@ export function updateUserProfile(body) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
+        packageFeedback({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -127,7 +133,7 @@ export function updateUserProfile(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
+        packageFeedback({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -136,73 +142,24 @@ export function updateUserProfile(body) {
   };
 }
 
-export function updateUserEmail(body) {
+export function updatePackageCode(body) {
   return function (dispatch) {
     try {
       dispatch(load());
-      const { email, userId } = body;
-      const token = Session.get('token');
-
-      if (Validator.isEmail(email) && Validator.isNotEmpty(userId)) {
-        return Axios.patch(UPDATE_USER_EMAIL, body, token)
-          .then(() => {
-            dispatch(unload());
-            dispatch(
-              userFeedback({
-                msg: 'E-mail foi atualizado com sucesso!',
-                success: true,
-              })
-            );
-          })
-          .catch(() => {
-            dispatch(unload());
-            dispatch(
-              userFeedback({
-                msg: 'E-mail inválido ou ele já existe',
-                success: false,
-              })
-            );
-          });
-      }
-
-      dispatch(unload());
-      dispatch(
-        userFeedback({
-          msg: 'Não foi possível atualizar este E-mail',
-          success: false,
-        })
-      );
-    } catch (error) {
-      dispatch(unload());
-      dispatch(
-        userFeedback({
-          msg: 'Não foi possível atualizar este E-mail',
-          success: false,
-        })
-      );
-    }
-  };
-}
-
-export function updateUserPassword(body) {
-  return function (dispatch) {
-    try {
-      dispatch(load());
-      const { password, confirmPassword, userId } = body;
+      const { packageId, studentId, code } = body;
       const token = Session.get('token');
 
       if (
-        Validator.isPassword(password) &&
-        Validator.isPassword(confirmPassword) &&
-        Validator.areEqual(password, confirmPassword) &&
-        Validator.isNotEmpty(userId)
+        Validator.isNotEmpty(packageId) &&
+        Validator.isNotEmpty(studentId) &&
+        Validator.isNotEmpty(code)
       ) {
-        return Axios.patch(UPDATE_USER_PASSWORD, body, token)
+        return Axios.patch(UPDATE_PACKAGE_CODE, body, token)
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
-                msg: 'Senha foi atualizada com sucesso!',
+              packageFeedback({
+                msg: 'Código foi atualizado com sucesso!',
                 success: true,
               })
             );
@@ -210,8 +167,8 @@ export function updateUserPassword(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
-                msg: 'Senha inválida, verifique se você esta preenchendo a senha corretamente.',
+              packageFeedback({
+                msg: 'Código inválido ou ele já existe',
                 success: false,
               })
             );
@@ -220,16 +177,16 @@ export function updateUserPassword(body) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
-          msg: 'Não foi possível atualizar esta senha',
+        packageFeedback({
+          msg: 'Não foi possível atualizar este código',
           success: false,
         })
       );
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
-          msg: 'Não foi possível atualizar esta senha',
+        packageFeedback({
+          msg: 'Não foi possível atualizar este código',
           success: false,
         })
       );
@@ -237,18 +194,18 @@ export function updateUserPassword(body) {
   };
 }
 
-export function deleteUserAccount(userId) {
+export function deletePackageAccount(packageId) {
   return function (dispatch) {
     try {
       dispatch(load());
       const token = Session.get('token');
 
-      if (Validator.isNotEmpty(userId)) {
-        return Axios.delete(DELETE_USER, userId, token)
+      if (Validator.isNotEmpty(packageId)) {
+        return Axios.delete(DELETE_PACKAGE, packageId, token)
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              packageFeedback({
                 msg: 'Usuário foi deletado com sucesso!',
                 success: true,
               })
@@ -257,7 +214,7 @@ export function deleteUserAccount(userId) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              packageFeedback({
                 msg: 'Não foi possível deletar este usuário',
                 success: false,
               })
@@ -267,7 +224,7 @@ export function deleteUserAccount(userId) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
+        packageFeedback({
           msg: 'Não foi possível deletar este usuário',
           success: false,
         })
@@ -275,7 +232,7 @@ export function deleteUserAccount(userId) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
+        packageFeedback({
           msg: 'Não foi possível deletar este usuário',
           success: false,
         })

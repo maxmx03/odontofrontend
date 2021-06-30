@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const reducers = {
-  storeUser: (state, action) => {
+  storeUsers: (state, action) => {
     state.data = action.payload;
   },
   collapseUserCreate: (state, action) => {
@@ -29,7 +29,7 @@ const userSlice = createSlice({
   reducers,
 });
 
-export const { storeUser, collapseUserCreate, collapseUserEdit, userFeedback } =
+export const { storeUsers, collapseUserCreate, collapseUserEdit, userFeedback } =
   userSlice.actions;
 
 export default userSlice.reducer;

@@ -24,19 +24,20 @@ export function getStudents() {
   };
 }
 
-export function createStudent({
-  firstName,
-  lastName,
-  cpf,
-  email,
-  password,
-  confirmPassword,
-  phone,
-  shift,
-}) {
+export function createStudent(body) {
   return function (dispatch) {
     try {
       dispatch(load());
+      const {
+        firstName,
+        lastName,
+        cpf,
+        email,
+        password,
+        confirmPassword,
+        phone,
+        shift,
+      } = body;
       const token = Session.get('token');
       if (
         Validator.isNotEmpty(token) &&
@@ -50,17 +51,6 @@ export function createStudent({
         Validator.isNotEmpty(phone) &&
         Validator.isShift(shift)
       ) {
-        const body = {
-          firstName: Validator.clearHTML(firstName).toLowerCase(),
-          lastName: Validator.clearHTML(lastName).toLowerCase(),
-          cpf: Validator.clearHTML(cpf),
-          email: Validator.clearHTML(email),
-          password: Validator.clearHTML(password),
-          confirmPassword: Validator.clearHTML(confirmPassword),
-          phone: Validator.clearHTML(phone),
-          shift: Validator.clearHTML(shift).toLowerCase(),
-        };
-
         return Axios.post(CREATE_STUDENT, body, token)
           .then(() => {
             dispatch(unload());
@@ -101,17 +91,11 @@ export function createStudent({
   };
 }
 
-export function updateStudentProfile({
-  firstName,
-  lastName,
-  cpf,
-  phone,
-  shift,
-  studentId,
-}) {
+export function updateStudentProfile(body) {
   return function (dispatch) {
     try {
       dispatch(load());
+      const { firstName, lastName, cpf, phone, shift, studentId } = body;
       const token = Session.get('token');
 
       if (
@@ -123,15 +107,6 @@ export function updateStudentProfile({
         Validator.isShift(shift) &&
         Validator.isNotEmpty(studentId)
       ) {
-        const body = {
-          firstName: Validator.clearHTML(firstName).toLowerCase(),
-          lastName: Validator.clearHTML(lastName).toLowerCase(),
-          cpf: Validator.clearHTML(cpf),
-          phone: Validator.clearHTML(phone),
-          shift: Validator.clearHTML(shift),
-          studentId: Validator.clearHTML(studentId),
-        };
-
         return Axios.patch(UPDATE_STUDENT_PROFILE, body, token)
           .then(() => {
             dispatch(unload());
@@ -172,18 +147,14 @@ export function updateStudentProfile({
   };
 }
 
-export function updateStudentEmail({ email, studentId }) {
+export function updateStudentEmail(body) {
   return function (dispatch) {
     try {
       dispatch(load());
+      const { email, studentId } = body;
       const token = Session.get('token');
 
       if (Validator.isEmail(email) && Validator.isNotEmpty(studentId)) {
-        const body = {
-          email: Validator.clearHTML(email),
-          studentId: Validator.clearHTML(studentId),
-        };
-
         return Axios.patch(UPDATE_STUDENT_EMAIL, body, token)
           .then(() => {
             dispatch(unload());
@@ -224,14 +195,11 @@ export function updateStudentEmail({ email, studentId }) {
   };
 }
 
-export function updateStudentPassword({
-  password,
-  confirmPassword,
-  studentId,
-}) {
+export function updateStudentPassword(body) {
   return function (dispatch) {
     try {
       dispatch(load());
+      const { password, confirmPassword, studentId } = body;
       const token = Session.get('token');
 
       if (
@@ -240,12 +208,6 @@ export function updateStudentPassword({
         Validator.areEqual(password, confirmPassword) &&
         Validator.isNotEmpty(studentId)
       ) {
-        const body = {
-          password: Validator.clearHTML(password),
-          confirmPassword: Validator.clearHTML(confirmPassword),
-          studentId: Validator.clearHTML(studentId),
-        };
-
         return Axios.patch(UPDATE_STUDENT_PASSWORD, body, token)
           .then(() => {
             dispatch(unload());
@@ -293,11 +255,7 @@ export function deleteStudentAccount(studentId) {
       const token = Session.get('token');
 
       if (Validator.isNotEmpty(studentId)) {
-        const body = {
-          studentId: Validator.clearHTML(studentId),
-        };
-
-        return Axios.delete(DELETE_STUDENT, body.studentId, token)
+        return Axios.delete(DELETE_STUDENT, studentId, token)
           .then(() => {
             dispatch(unload());
             dispatch(
