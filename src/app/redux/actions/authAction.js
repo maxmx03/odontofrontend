@@ -6,7 +6,7 @@ import {
   IS_USER_LOGGED,
   RECOVER_PASSWORD,
 } from '../../../constants/api/authRoutes';
-import { storeUser, authFeedback } from '../slicers/authSlicer';
+import { storeUser, authResponse, forgetResponse } from '../slicers/authSlicer';
 import { load, unload } from '../slicers/loadSlicer';
 
 export function loginUser(body) {
@@ -22,7 +22,7 @@ export function loginUser(body) {
 
             dispatch(unload());
             dispatch(
-              authFeedback({
+              authResponse({
                 msg: 'Usuário logado com sucesso!',
                 success: true,
               })
@@ -32,7 +32,7 @@ export function loginUser(body) {
             dispatch(unload());
             if (Validator.isNotEmpty(response) && response.status === 429) {
               return dispatch(
-                authFeedback({
+                authResponse({
                   msg: 'Limite de solitação atingido, tente novamente mais tarde',
                   success: false,
                 })
@@ -40,7 +40,7 @@ export function loginUser(body) {
             }
 
             dispatch(
-              authFeedback({
+              authResponse({
                 msg: 'E-mail ou senha inválida',
                 success: false,
               })
@@ -50,7 +50,7 @@ export function loginUser(body) {
 
       dispatch(unload());
       dispatch(
-        authFeedback({
+        authResponse({
           msg: 'E-mail ou senha inválida',
           success: false,
         })
@@ -58,7 +58,7 @@ export function loginUser(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        authFeedback({
+        authResponse({
           msg: 'E-mail ou senha inválida',
           success: false,
         })
@@ -142,7 +142,7 @@ export function recoverUserPassword(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              authFeedback({
+              forgetResponse({
                 msg: 'Sua nova senha foi enviado por email, verifique usa caixa de entrada ou spam',
                 success: true,
               })
@@ -151,7 +151,7 @@ export function recoverUserPassword(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              authFeedback({
+              forgetResponse({
                 msg: 'Sua nova senha foi enviado por email, verifique usa caixa de entrada ou spam',
                 success: false,
               })
@@ -161,7 +161,7 @@ export function recoverUserPassword(body) {
 
       dispatch(unload());
       dispatch(
-        authFeedback({
+        forgetResponse({
           msg: 'Sua nova senha foi enviado por email, verifique usa caixa de entrada ou spam',
           success: false,
         })
@@ -169,7 +169,7 @@ export function recoverUserPassword(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        authFeedback({
+        forgetResponse({
           msg: 'Sua nova senha foi enviado por email, verifique usa caixa de entrada ou spam',
           success: false,
         })

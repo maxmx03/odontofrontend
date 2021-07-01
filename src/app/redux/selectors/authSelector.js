@@ -2,6 +2,10 @@ export function selectUser({ authReducer }) {
   return authReducer.user;
 }
 
-export function selectAuthFeedback({ authReducer }) {
-  return authReducer.authFeedback;
+export function selectAuthResponse({ authReducer }) {
+  return authReducer.authStatus;
+}
+
+export function selectForgetResponse({ authReducer }) {
+  return authReducer.forgetPassStatus;
 }

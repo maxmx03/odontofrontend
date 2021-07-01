@@ -9,7 +9,14 @@ import {
   UPDATE_STUDENT_PASSWORD,
   DELETE_STUDENT,
 } from '../../../constants/api/studentRoutes';
-import { storeStudent, studentFeedback } from '../slicers/studentSlicer';
+import {
+  storeStudent,
+  createResponse,
+  updateProfileResponse,
+  updateEmailResponse,
+  updatePasswordResponse,
+  deleteAccountResponse,
+} from '../slicers/studentSlicer';
 import { load, unload } from '../slicers/loadSlicer';
 
 export function getStudents() {
@@ -55,7 +62,7 @@ export function createStudent(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              createResponse({
                 msg: 'Estudante foi criado com sucesso!',
                 success: true,
               })
@@ -64,7 +71,7 @@ export function createStudent(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              createResponse({
                 msg: 'Não foi possível criar este estudante',
                 success: false,
               })
@@ -74,7 +81,7 @@ export function createStudent(body) {
 
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        createResponse({
           msg: 'Não foi possível criar este estudante',
           success: false,
         })
@@ -82,7 +89,7 @@ export function createStudent(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        createResponse({
           msg: 'Não foi possível criar este estudante',
           success: false,
         })
@@ -111,7 +118,7 @@ export function updateStudentProfile(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              updateProfileResponse({
                 msg: 'Perfil atualizado com sucesso!',
                 success: true,
               })
@@ -120,7 +127,7 @@ export function updateStudentProfile(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              updateProfileResponse({
                 msg: 'Não foi possível atualizar este perfil',
                 success: false,
               })
@@ -130,7 +137,7 @@ export function updateStudentProfile(body) {
 
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        updateProfileResponse({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -138,7 +145,7 @@ export function updateStudentProfile(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        updateProfileResponse({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -159,7 +166,7 @@ export function updateStudentEmail(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              updateEmailResponse({
                 msg: 'E-mail foi atualizado com sucesso!',
                 success: true,
               })
@@ -168,7 +175,7 @@ export function updateStudentEmail(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              updateEmailResponse({
                 msg: 'E-mail inválido ou ele já existe',
                 success: false,
               })
@@ -178,7 +185,7 @@ export function updateStudentEmail(body) {
 
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        updateEmailResponse({
           msg: 'Não foi possível atualizar este E-mail',
           success: false,
         })
@@ -186,7 +193,7 @@ export function updateStudentEmail(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        updateEmailResponse({
           msg: 'Não foi possível atualizar este E-mail',
           success: false,
         })
@@ -212,7 +219,7 @@ export function updateStudentPassword(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              updatePasswordResponse({
                 msg: 'Senha foi atualizada com sucesso!',
                 success: true,
               })
@@ -221,7 +228,7 @@ export function updateStudentPassword(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              updatePasswordResponse({
                 msg: 'Senha inválida, verifique se você esta preenchendo a senha corretamente.',
                 success: false,
               })
@@ -231,7 +238,7 @@ export function updateStudentPassword(body) {
 
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        updatePasswordResponse({
           msg: 'Não foi possível atualizar esta senha',
           success: false,
         })
@@ -239,7 +246,7 @@ export function updateStudentPassword(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        updatePasswordResponse({
           msg: 'Não foi possível atualizar esta senha',
           success: false,
         })
@@ -259,7 +266,7 @@ export function deleteStudentAccount(studentId) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              deleteAccountResponse({
                 msg: 'Estudante foi deletado com sucesso!',
                 success: true,
               })
@@ -268,7 +275,7 @@ export function deleteStudentAccount(studentId) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              studentFeedback({
+              deleteAccountResponse({
                 msg: 'Não foi possível deletar este estudante',
                 success: false,
               })
@@ -278,7 +285,7 @@ export function deleteStudentAccount(studentId) {
 
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        deleteAccountResponse({
           msg: 'Não foi possível deletar este estudante',
           success: false,
         })
@@ -286,7 +293,7 @@ export function deleteStudentAccount(studentId) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        studentFeedback({
+        deleteAccountResponse({
           msg: 'Não foi possível deletar este estudante',
           success: false,
         })

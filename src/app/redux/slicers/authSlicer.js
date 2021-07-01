@@ -1,11 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { responseStatus } from '../../../constants/state/responseStatus';
+
 const reducers = {
   storeUser: (state, action) => {
     state.data = action.payload;
   },
-  authFeedback: (state, action) => {
-    state.packageFeedback = action.payload;
+  authResponse: (state, action) => {
+    state.authStatus = action.payload;
+  },
+  forgetResponse: (state, action) => {
+    state.forgetPassStatus = action.payload;
   },
 };
 
@@ -19,14 +24,12 @@ const authSlice = createSlice({
       type: '',
       isLogged: false,
     },
-    authFeedback: {
-      msg: '',
-      success: false,
-    },
+    authStatus: responseStatus,
+    forgetPassStatus: responseStatus,
   },
   reducers,
 });
 
-export const { storeUser, authFeedback } = authSlice.actions;
+export const { storeUser, authResponse, forgetResponse } = authSlice.actions;
 
 export default authSlice.reducer;

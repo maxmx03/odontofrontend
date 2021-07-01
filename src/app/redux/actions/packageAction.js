@@ -8,7 +8,13 @@ import {
   UPDATE_PACKAGE_CODE,
   DELETE_PACKAGE,
 } from '../../../constants/api/packageRoutes';
-import { storePackage, packageFeedback } from '../slicers/packageSlicer';
+import {
+  storePackage,
+  createResponse,
+  updateProfileResponse,
+  updateCodeResponse,
+  deletePackageResponse,
+} from '../slicers/packageSlicer';
 import { load, unload } from '../slicers/loadSlicer';
 
 export function getPackages() {
@@ -51,7 +57,7 @@ export function createPackage(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              createResponse({
                 msg: 'Pacote foi criado com sucesso!',
                 success: true,
               })
@@ -60,7 +66,7 @@ export function createPackage(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              createResponse({
                 msg: 'Não foi possível criar este pacote',
                 success: false,
               })
@@ -70,7 +76,7 @@ export function createPackage(body) {
 
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        createResponse({
           msg: 'Não foi possível criar este pacote',
           success: false,
         })
@@ -78,7 +84,7 @@ export function createPackage(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        createResponse({
           msg: 'Não foi possível criar este pacote',
           success: false,
         })
@@ -106,7 +112,7 @@ export function updatePackageProfile(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              updateProfileResponse({
                 msg: 'Perfil atualizado com sucesso!',
                 success: true,
               })
@@ -115,7 +121,7 @@ export function updatePackageProfile(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              updateProfileResponse({
                 msg: 'Não foi possível atualizar este perfil',
                 success: false,
               })
@@ -125,7 +131,7 @@ export function updatePackageProfile(body) {
 
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        updateProfileResponse({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -133,7 +139,7 @@ export function updatePackageProfile(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        updateProfileResponse({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -158,7 +164,7 @@ export function updatePackageCode(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              updateCodeResponse({
                 msg: 'Código foi atualizado com sucesso!',
                 success: true,
               })
@@ -167,7 +173,7 @@ export function updatePackageCode(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              updateCodeResponse({
                 msg: 'Código inválido ou ele já existe',
                 success: false,
               })
@@ -177,7 +183,7 @@ export function updatePackageCode(body) {
 
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        updateCodeResponse({
           msg: 'Não foi possível atualizar este código',
           success: false,
         })
@@ -185,7 +191,7 @@ export function updatePackageCode(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        updateCodeResponse({
           msg: 'Não foi possível atualizar este código',
           success: false,
         })
@@ -205,7 +211,7 @@ export function deletePackageAccount(packageId) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              deletePackageResponse({
                 msg: 'Usuário foi deletado com sucesso!',
                 success: true,
               })
@@ -214,7 +220,7 @@ export function deletePackageAccount(packageId) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              packageFeedback({
+              deletePackageResponse({
                 msg: 'Não foi possível deletar este usuário',
                 success: false,
               })
@@ -224,7 +230,7 @@ export function deletePackageAccount(packageId) {
 
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        deletePackageResponse({
           msg: 'Não foi possível deletar este usuário',
           success: false,
         })
@@ -232,7 +238,7 @@ export function deletePackageAccount(packageId) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        packageFeedback({
+        deletePackageResponse({
           msg: 'Não foi possível deletar este usuário',
           success: false,
         })

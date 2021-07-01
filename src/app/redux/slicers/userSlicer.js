@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { responseStatus } from '../../../constants/state/responseStatus';
+
 const reducers = {
   storeUsers: (state, action) => {
     state.data = action.payload;
@@ -10,8 +12,20 @@ const reducers = {
   collapseUserEdit: (state, action) => {
     state.stateEdit = action.payload;
   },
-  userFeedback: (state, action) => {
-    state.userFeedback = action.payload;
+  createResponse: (state, action) => {
+    state.createStatus = action.payload;
+  },
+  updateProfileResponse: (state, action) => {
+    state.updateProfileStatus = action.payload;
+  },
+  updateEmailResponse: (state, action) => {
+    state.updateEmailStatus = action.payload;
+  },
+  updatePasswordResponse: (state, action) => {
+    state.updatePasswordStatus = action.payload;
+  },
+  deleteAccountResponse: (state, action) => {
+    state.deleteAccountStatus = action.payload;
   },
 };
 
@@ -21,15 +35,24 @@ const userSlice = createSlice({
     stateCreate: false,
     stateEdit: false,
     data: [],
-    userFeedback: {
-      msg: '',
-      success: false,
-    },
+    createStatus: responseStatus,
+    updateProfileStatus: responseStatus,
+    updateEmailStatus: responseStatus,
+    updatePasswordStatus: responseStatus,
+    deleteAccountStatus: responseStatus,
   },
   reducers,
 });
 
-export const { storeUsers, collapseUserCreate, collapseUserEdit, userFeedback } =
-  userSlice.actions;
+export const {
+  storeUsers,
+  collapseUserCreate,
+  collapseUserEdit,
+  createResponse,
+  updateProfileResponse,
+  updateEmailResponse,
+  updatePasswordResponse,
+  deleteAccountResponse,
+} = userSlice.actions;
 
 export default userSlice.reducer;

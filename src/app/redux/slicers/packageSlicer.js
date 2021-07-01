@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { responseStatus } from '../../../constants/state/responseStatus';
+
 const reducers = {
   storePackage: (state, action) => {
     state.data = action.payload;
@@ -10,8 +12,17 @@ const reducers = {
   collapsePackageEdit: (state, action) => {
     state.stateEdit = action.payload;
   },
-  packageFeedback: (state, action) => {
-    state.packageFeedback = action.payload;
+  createResponse: (state, action) => {
+    state.createStatus = action.payload;
+  },
+  updateProfileResponse: (state, action) => {
+    state.updateProfileStatus = action.payload;
+  },
+  updateCodeResponse: (state, action) => {
+    state.updateCodeStatus = action.payload;
+  },
+  deletePackageResponse: (state, action) => {
+    state.deleteAccountStatus = action.payload;
   },
 };
 
@@ -21,10 +32,10 @@ const packageSlice = createSlice({
     stateCreate: false,
     stateEdit: false,
     data: [],
-    packageFeedback: {
-      msg: '',
-      success: false,
-    },
+    createStatus: responseStatus,
+    updateProfileStatus: responseStatus,
+    updateCodeStatus: responseStatus,
+    deleteAccountStatus: responseStatus,
   },
   reducers,
 });
@@ -33,7 +44,10 @@ export const {
   storePackage,
   collapsePackageCreate,
   collapsePackageEdit,
-  packageFeedback,
+  createResponse,
+  updateProfileResponse,
+  updateCodeResponse,
+  deletePackageResponse,
 } = packageSlice.actions;
 
 export default packageSlice.reducer;

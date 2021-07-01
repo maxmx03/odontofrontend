@@ -9,7 +9,14 @@ import {
   UPDATE_USER_PASSWORD,
   DELETE_USER,
 } from '../../../constants/api/userRoutes';
-import { storeUsers, userFeedback } from '../slicers/userSlicer';
+import {
+  storeUsers,
+  createResponse,
+  updateProfileResponse,
+  updateEmailResponse,
+  updatePasswordResponse,
+  deleteAccountResponse,
+} from '../slicers/userSlicer';
 import { load, unload } from '../slicers/loadSlicer';
 
 export function getUsers() {
@@ -46,7 +53,7 @@ export function createUser(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              createResponse({
                 msg: 'Usuário foi criado com sucesso!',
                 success: true,
               })
@@ -55,7 +62,7 @@ export function createUser(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              createResponse({
                 msg: 'Não foi possível criar este usuário',
                 success: false,
               })
@@ -65,7 +72,7 @@ export function createUser(body) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
+        createResponse({
           msg: 'Não foi possível criar este usuário',
           success: false,
         })
@@ -73,7 +80,7 @@ export function createUser(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
+        createResponse({
           msg: 'Não foi possível criar este usuário',
           success: false,
         })
@@ -100,7 +107,7 @@ export function updateUserProfile(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              updateProfileResponse({
                 msg: 'Perfil atualizado com sucesso!',
                 success: true,
               })
@@ -109,7 +116,7 @@ export function updateUserProfile(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              updateProfileResponse({
                 msg: 'Não foi possível atualizar este perfil',
                 success: false,
               })
@@ -119,7 +126,7 @@ export function updateUserProfile(body) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
+        updateProfileResponse({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -127,7 +134,7 @@ export function updateUserProfile(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
+        updateProfileResponse({
           msg: 'Não foi possível atualizar este perfil',
           success: false,
         })
@@ -148,7 +155,7 @@ export function updateUserEmail(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              updateEmailResponse({
                 msg: 'E-mail foi atualizado com sucesso!',
                 success: true,
               })
@@ -157,7 +164,7 @@ export function updateUserEmail(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              updateEmailResponse({
                 msg: 'E-mail inválido ou ele já existe',
                 success: false,
               })
@@ -167,7 +174,7 @@ export function updateUserEmail(body) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
+        updateEmailResponse({
           msg: 'Não foi possível atualizar este E-mail',
           success: false,
         })
@@ -175,7 +182,7 @@ export function updateUserEmail(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
+        updateEmailResponse({
           msg: 'Não foi possível atualizar este E-mail',
           success: false,
         })
@@ -201,7 +208,7 @@ export function updateUserPassword(body) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              updatePasswordResponse({
                 msg: 'Senha foi atualizada com sucesso!',
                 success: true,
               })
@@ -210,7 +217,7 @@ export function updateUserPassword(body) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              updatePasswordResponse({
                 msg: 'Senha inválida, verifique se você esta preenchendo a senha corretamente.',
                 success: false,
               })
@@ -220,7 +227,7 @@ export function updateUserPassword(body) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
+        updatePasswordResponse({
           msg: 'Não foi possível atualizar esta senha',
           success: false,
         })
@@ -228,7 +235,7 @@ export function updateUserPassword(body) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
+        updatePasswordResponse({
           msg: 'Não foi possível atualizar esta senha',
           success: false,
         })
@@ -248,7 +255,7 @@ export function deleteUserAccount(userId) {
           .then(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              deleteAccountResponse({
                 msg: 'Usuário foi deletado com sucesso!',
                 success: true,
               })
@@ -257,7 +264,7 @@ export function deleteUserAccount(userId) {
           .catch(() => {
             dispatch(unload());
             dispatch(
-              userFeedback({
+              deleteAccountResponse({
                 msg: 'Não foi possível deletar este usuário',
                 success: false,
               })
@@ -267,7 +274,7 @@ export function deleteUserAccount(userId) {
 
       dispatch(unload());
       dispatch(
-        userFeedback({
+        deleteAccountResponse({
           msg: 'Não foi possível deletar este usuário',
           success: false,
         })
@@ -275,7 +282,7 @@ export function deleteUserAccount(userId) {
     } catch (error) {
       dispatch(unload());
       dispatch(
-        userFeedback({
+        deleteAccountResponse({
           msg: 'Não foi possível deletar este usuário',
           success: false,
         })

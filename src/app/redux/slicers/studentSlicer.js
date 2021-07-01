@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+import { responseStatus } from '../../../constants/state/responseStatus';
+
 const reducers = {
   storeStudent: (state, action) => {
     state.data = action.payload;
@@ -10,8 +12,20 @@ const reducers = {
   collapseStudentEdit: (state, action) => {
     state.stateEdit = action.payload;
   },
-  studentFeedback: (state, action) => {
-    state.studentFeedback = action.payload;
+  createResponse: (state, action) => {
+    state.createStatus = action.payload;
+  },
+  updateProfileResponse: (state, action) => {
+    state.updateProfileStatus = action.payload;
+  },
+  updateEmailResponse: (state, action) => {
+    state.updateEmailStatus = action.payload;
+  },
+  updatePasswordResponse: (state, action) => {
+    state.updatePasswordStatus = action.payload;
+  },
+  deleteAccountResponse: (state, action) => {
+    state.deleteAccountStatus = action.payload;
   },
 };
 
@@ -21,10 +35,11 @@ const studentSlice = createSlice({
     stateCreate: false,
     stateEdit: false,
     data: [],
-    studentFeedback: {
-      msg: '',
-      success: false,
-    },
+    createStatus: responseStatus,
+    updateProfileStatus: responseStatus,
+    updateEmailStatus: responseStatus,
+    updatePasswordStatus: responseStatus,
+    deleteAccountStatus: responseStatus,
   },
   reducers,
 });
@@ -33,7 +48,11 @@ export const {
   storeStudent,
   collapseStudentCreate,
   collapseStudentEdit,
-  studentFeedback,
+  createResponse,
+  updateProfileResponse,
+  updateEmailResponse,
+  updatePasswordResponse,
+  deleteAccountResponse,
 } = studentSlice.actions;
 
 export default studentSlice.reducer;
