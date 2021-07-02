@@ -1,8 +1,4 @@
-import React,
-{
-  useState,
-  useEffect,
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -11,9 +7,7 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
-export const InputDialog = ({
-  children, description, fields, open, title,
-}) => {
+export function InputDialog({ children, description, fields, open, title }) {
   const [openModal, setModal] = useState(open);
 
   useEffect(() => {
@@ -27,9 +21,7 @@ export const InputDialog = ({
   return (
     <div>
       <Dialog open={openModal} onClose={handleClose} disableBackdropClick>
-        <DialogTitle className="text-danger">
-          {title}
-        </DialogTitle>
+        <DialogTitle className="text-danger">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText className="text-dark">
             {description}
@@ -40,4 +32,4 @@ export const InputDialog = ({
       </Dialog>
     </div>
   );
-};
+}

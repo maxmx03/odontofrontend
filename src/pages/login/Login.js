@@ -17,10 +17,14 @@ import {
   InputDialog,
   DialogResponse,
 } from '../../components';
-import { authFeedback } from '../../app/redux/slicers/authSlicer';
+import {
+  forgetResponse,
+  authResponse,
+} from '../../app/redux/slicers/authSlicer';
 import {
   selectUser,
-  selectAuthFeedback,
+  selectAuthResponse,
+  selectForgetResponse,
 } from '../../app/redux/selectors/authSelector';
 import {
   loginUser,
@@ -28,12 +32,14 @@ import {
   recoverUserPassword,
 } from '../../app/redux/actions/authAction';
 import { useStyles } from './style';
+import Validator from '../../utils/validators/Validator';
 
 const Login = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
-  const feedback = useSelector(selectAuthFeedback);
+  const loginResponse = useSelector(selectAuthResponse);
+  const forgetPassResponse = useSelector(selectForgetResponse);
   const user = useSelector(selectUser);
   const [state, setState] = useState({
     email: '',
@@ -42,22 +48,45 @@ const Login = () => {
     dialog: false,
   });
 
-  function handleState(key, value) {
-    setState({
-      ...state,
-      [key]: value,
-    });
-  }
-
-  function logUser(event) {
-    event.preventDefault();
-    dispatch(loginUser(state.email, state.password));
-  }
-
   useEffect(() => {
     dispatch(isUserLogged());
     user.isLogged && history.push('/home');
   }, [user.isLogged, dispatch, history]);
+
+  function handleState(key, value) {
+    setState({
+      ...state,
+      [key]: Validator.clearHTML(value),
+    });
+  }
+
+  function handleLoginUser(e) {
+    e.preventDefault();
+    dispatch(loginUser(state.email, state.password));
+  }
+
+  function handleForgetPassword() {
+    dispatch(recoverUserPassword(state.forgetEmail));
+    handleState('dialog', false);
+  }
+
+  function handleAlert() {
+    dispatch(
+      authResponse({
+        msg: null,
+        success: null,
+      })
+    );
+  }
+
+  function handleDialog() {
+    dispatch(
+      forgetResponse({
+        msg: null,
+        success: null,
+      })
+    );
+  }
 
   return (
     <>
@@ -71,7 +100,7 @@ const Login = () => {
               className="h-100 w-100"
               alt="odonto-easy-logo"
             />
-            <form className={classes.form} onSubmit={logUser}>
+            <form className={classes.form} onSubmit={handleLoginUser}>
               <TextField
                 variant="outlined"
                 margin="normal"
@@ -102,18 +131,6 @@ const Login = () => {
               >
                 Logar
               </Button>
-              <AlertError
-                msg={feedback.msg}
-                err={feedback.success === false}
-                close={() =>
-                  dispatch(
-                    authFeedback({
-                      msg: null,
-                      success: null,
-                    })
-                  )
-                }
-              />
               <Grid container>
                 <Grid>
                   <Button
@@ -132,6 +149,11 @@ const Login = () => {
           </div>
         </Grid>
       </Grid>
+      <AlertError
+        msg={loginResponse.msg}
+        err={loginResponse.success === false}
+        close={handleAlert}
+      />
       <InputDialog
         open={state.dialog}
         fields={() => (
@@ -152,13 +174,7 @@ const Login = () => {
         title="Esqueceu senha?"
         description="Para recuperar a senha, digite seu email"
       >
-        <Button
-          color="primary"
-          onClick={() => {
-            dispatch(recoverUserPassword(state.forgetEmail));
-            handleState('dialog', false);
-          }}
-        >
+        <Button color="primary" onClick={handleForgetPassword}>
           Confirmar
         </Button>
         <Button color="secondary" onClick={() => handleState('dialog', false)}>
@@ -166,20 +182,10 @@ const Login = () => {
         </Button>
       </InputDialog>
       <DialogResponse
-        err={feedback && feedback.success !== null}
-        msg={feedback && feedback.msg}
+        err={forgetPassResponse.success !== null}
+        msg={forgetPassResponse.msg}
       >
-        <Button
-          color="primary"
-          onClick={() =>
-            dispatch(
-              authFeedback({
-                msg: null,
-                success: null,
-              })
-            )
-          }
-        >
+        <Button color="primary" onClick={handleDialog}>
           Confirmar
         </Button>
       </DialogResponse>

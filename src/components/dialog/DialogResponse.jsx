@@ -6,14 +6,9 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@material-ui/core';
-import {
-  Error,
-  CheckCircle,
-} from '@material-ui/icons';
+import { Error, CheckCircle } from '@material-ui/icons';
 
-export function DialogResponse({
-  children, err, msg, type,
-}) {
+export function DialogResponse({ children, err, msg, type }) {
   return (
     <div>
       <Dialog

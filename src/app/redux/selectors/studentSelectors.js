@@ -2,11 +2,11 @@ export function selectUsers({ studentReducer }) {
   return studentReducer.data;
 }
 
-export function selectCollapseUserCreate({ studentReducer }) {
+export function selectCollapseStudentCreate({ studentReducer }) {
   return studentReducer.stateCreate;
 }
 
-export function selectCollapseUserEdit({ studentReducer }) {
+export function selectCollapseStudentEdit({ studentReducer }) {
   return studentReducer.stateEdit;
 }
 

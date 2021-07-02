@@ -2,11 +2,11 @@ export function selectUsers({ packageReducer }) {
   return packageReducer.data;
 }
 
-export function selectCollapseUserCreate({ packageReducer }) {
+export function selectCollapsePackageCreate({ packageReducer }) {
   return packageReducer.stateCreate;
 }
 
-export function selectCollapseUserEdit({ packageReducer }) {
+export function selectCollapsePackageEdit({ packageReducer }) {
   return packageReducer.stateEdit;
 }
 
