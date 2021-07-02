@@ -6,35 +6,36 @@ import SchoolIcon from '@material-ui/icons/School';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { selectUser } from '../../app/redux/selectors/authSelector';
 import { logOutUser } from '../../app/redux/actions/authAction';
-import Item from './Item';
+import MenuItem from './MenuItem';
 
-export function PrimaryList() {
+export function PrimaryMenuList() {
   return (
     <div>
-      <Item
+      <MenuItem
         path="/home"
         pathName="home"
         name="Painel"
         icon={<DashboardIcon />}
         isButton
       />
-      <Item
+      <MenuItem
         path="/home/packages"
         pathName="packages"
         name="Pacotes"
         icon={<ShoppingCartIcon />}
         isButton
       />
-      <Item
+      <MenuItem
         path="/home/students"
         pathName="students"
         name="Alunos"
         icon={<SchoolIcon />}
         isButton
       />
-      <Item
+      <MenuItem
         path="/home/users"
         pathName="users"
         name="Usuários"
@@ -44,7 +45,7 @@ export function PrimaryList() {
   );
 }
 
-export function SecondaryList() {
+export function SecondaryMenuList() {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
 
@@ -54,8 +55,8 @@ export function SecondaryList() {
 
   return (
     <div>
-      <Item name={`${user.firstName}`} icon={<AccountCircleIcon />} />
-      <Item
+      <MenuItem name={`${user.firstName}`} icon={<AccountCircleIcon />} />
+      <MenuItem
         name="Deslogar"
         icon={<ExitToAppIcon />}
         onClick={handleLogOut}

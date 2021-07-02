@@ -37,6 +37,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "watch": "sass --watch --no-source-map src/assets/scss:src/assets/css",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -55,6 +56,7 @@
     ]
   },
   "devDependencies": {
-    "prettier": "^2.3.2"
+    "prettier": "^2.3.2",
+    "sass": "^1.35.1"
   }
 }

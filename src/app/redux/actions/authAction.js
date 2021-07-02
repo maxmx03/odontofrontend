@@ -89,6 +89,17 @@ export function isUserLogged() {
       dispatch(load());
       const token = Session.get('token');
 
+      if (!Validator.isNotEmpty(token)) {
+        dispatch(unload());
+        return storeUser({
+          email: '',
+          firstName: '',
+          lastName: '',
+          type: '',
+          isLogged: false,
+        });
+      }
+
       return Axios.get(IS_USER_LOGGED, token)
         .then(({ data }) => {
           dispatch(unload());

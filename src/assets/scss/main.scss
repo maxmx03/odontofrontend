@@ -1,0 +1,70 @@
+@use './variables' as *;
+@import '../../../node_modules/bootstrap/scss/bootstrap';
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400&display=swap');
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.img-fluid {
+  width: 100%;
+}
+
+.img-logo {
+  width: 15em;
+  object-fit: cover;
+}
+
+.side-menu-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.MuiListItemIcon-root,
+.MuiListItem-button {
+  color: $white !important;
+}
+
+.MuiListItem-button:hover {
+  background-color: $dark !important;
+  color: $white !important;
+}
+
+.MuiListItem-button-active {
+  background-color: $dark !important;
+  color: $white !important;
+}
+
+.dropdown-toggle {
+  color: $white;
+}
+
+.dropdown-toggle:active {
+  color: $white;
+}
+
+.dropdown-toggle:hover {
+  color: $white;
+}
+
+.dropdown-toggle:focus {
+  color: $white;
+}
+
+.MuiTablePagination-menuItem {
+  background-color: $white !important;
+  color: $dark !important;
+}
+
+@media print {
+  .print-font-style {
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .print-title {
+    text-decoration: underline;
+  }
+}

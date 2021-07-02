@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@material-ui/core/styles';
 
-import App from './App';
+import { Routes as App } from './routes/Routes';
 import theme from './utils/MuiTheme';
 import { store } from './app/store';
+
+import './assets/css/main.css';
 
 ReactDOM.render(
   <React.StrictMode>

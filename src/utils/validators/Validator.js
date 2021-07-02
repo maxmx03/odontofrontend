@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 const validator = require('validator');
 
 export default class Validator {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, useHistory } from 'react-router-dom';
 
-export default function ProtectedRoute({
+export function ProtectedRoute({
   component: Component,
   hasPermission,
   redirect,

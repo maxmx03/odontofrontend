@@ -19,7 +19,7 @@ import {
 import { selectUser } from '../../app/redux/selectors/authSelector';
 import { useEffect } from 'react';
 
-export default function Item({ path, pathName, name, icon }) {
+export default function MenuItem({ path, pathName, name, icon }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const location = useLocation();
