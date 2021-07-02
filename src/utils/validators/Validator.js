@@ -1,5 +1,6 @@
 /* eslint-disable eqeqeq */
-const validator = require('validator');
+import validator from 'validator';
+import moment from 'moment';
 
 export default class Validator {
   static isNotEmpty(value) {
@@ -8,13 +9,6 @@ export default class Validator {
     }
 
     return !!value;
-  }
-
-  static clearHTML(value) {
-    const filter = new RegExp('(<[a-z0-9]+>)|(</[a-z0-9]+>)|([</>])', 'gi');
-    const toFilter = value + '';
-
-    return toFilter.replace(filter, '');
   }
 
   static isShift(value) {
@@ -93,5 +87,32 @@ export default class Validator {
 
   static areEqual(value, valueToCompare) {
     return value === valueToCompare;
+  }
+
+  static clearHTML(value) {
+    const filter = new RegExp('(<[a-z0-9]+>)|(</[a-z0-9]+>)|([</>])', 'gi');
+    const toFilter = value + '';
+
+    return toFilter.replace(filter, '');
+  }
+
+  static createDashboardRow(response) {
+    return response.services.map((date) => {
+      let columns = {
+        ...date,
+        date: moment(date.createdAt).format('L'),
+        operation: date.operation,
+        description: date.description,
+        userName: date.user.firstName,
+        userType: date.user.type,
+        studentName: date.student.firstName,
+        studentCpf: date.student.cpf,
+      };
+
+      delete columns.users;
+      delete columns.students;
+
+      return columns;
+    });
   }
 }

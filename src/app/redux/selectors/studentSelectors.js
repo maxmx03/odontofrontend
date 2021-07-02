@@ -1,4 +1,4 @@
-export function selectUsers({ studentReducer }) {
+export function selectStudents({ studentReducer }) {
   return studentReducer.data;
 }
 

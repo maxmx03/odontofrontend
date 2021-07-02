@@ -1,4 +1,4 @@
-export function selectUsers({ packageReducer }) {
+export function selectPackages({ packageReducer }) {
   return packageReducer.data;
 }
 

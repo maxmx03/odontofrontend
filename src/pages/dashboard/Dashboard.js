@@ -1,82 +1,44 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Container, Row, Col } from 'reactstrap';
-import {
-  findDashPackages,
-  findDashStudants,
-  findDashAtendimentos,
-  selectAtendimentos,
-  selectPackages,
-  selectStudants,
-} from '../../app/reducers/dashboard';
+
+import Validator from '../../utils/validators/Validator';
+import { getPackages } from '../../app/redux/actions/packageAction';
+import { selectPackages } from '../../app/redux/selectors/packageSelector';
+import { getStudents } from '../../app/redux/actions/studentAction';
+import { selectStudents } from '../../app/redux/selectors/studentSelectors';
+import { getServices } from '../../app/redux/actions/serviceAction';
+import { selectServices } from '../../app/redux/selectors/serviceSelector';
 import { MaterialTable, InfoCard } from '../../components';
+import { columns } from '../../constants/dashboard';
 
-const columns = [
-  {
-    id: 'createdAt',
-    label: 'Data',
-    minWidth: 170,
-  },
-  {
-    id: 'atendenteNome',
-    label: 'Atendente',
-    minWidth: 170,
-  },
-  {
-    id: 'atendenteTipo',
-    label: 'Tipo',
-    minWidth: 100,
-  },
-  {
-    id: 'operacao',
-    label: 'Operação',
-    minWidth: 170,
-    align: 'right',
-  },
-  {
-    id: 'alunoNome',
-    label: 'Aluno',
-    minWidth: 170,
-    align: 'right',
-  },
-  {
-    id: 'alunoCPF',
-    label: 'CPF',
-    minWidth: 170,
-    align: 'right',
-  },
-  {
-    id: 'detalhes',
-    label: 'Descrição',
-    minWidth: 170,
-    align: 'right',
-  },
-];
-
-const Dashboard = () => {
+export default function Dashboard() {
   const dispatch = useDispatch();
-  const atendimentosData = useSelector(selectAtendimentos);
-  const studants = useSelector(selectStudants);
+  const servicesDate = useSelector(selectServices);
+  const students = useSelector(selectStudents);
   const packages = useSelector(selectPackages);
 
   useEffect(() => {
-    dispatch(findDashPackages());
-    dispatch(findDashAtendimentos());
-    dispatch(findDashStudants());
+    dispatch(getPackages());
+    dispatch(getStudents());
+    dispatch(getServices());
   }, [dispatch]);
 
   return (
     <Container fluid>
       <Row>
         <Col lg="auto">
-          <MaterialTable rows={atendimentosData} columns={columns} />
+          <MaterialTable
+            rows={Validator.createDashboardRow(servicesDate)}
+            columns={columns}
+          />
         </Col>
         <Col lg="auto">
           <InfoCard
-            total={studants && studants.length}
+            total={students && students.length}
             title="Total de Alunos"
             className="shadow p-3 mb-5 bg-white rounded"
-            data={studants && studants.length ? studants[0].createdAt : ''}
+            data={students && students.length ? students[0].createdAt : ''}
           />
           <InfoCard
             total={packages && packages.length}
@@ -88,6 +50,4 @@ const Dashboard = () => {
       </Row>
     </Container>
   );
-};
-
-export default Dashboard;
+}
