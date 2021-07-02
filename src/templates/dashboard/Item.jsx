@@ -58,19 +58,13 @@ export default function Item({ path, pathName, name, icon }) {
 
     switch (pathName) {
       case 'packages':
-        if (location.pathname !== path) {
-          handleCloseExpectPackage();
-        }
+        handleCloseExpectPackage();
         break;
       case 'students':
-        if (location.pathname !== path) {
-          handleCloseExpectStudent();
-        }
+        handleCloseExpectStudent();
         break;
       case 'users':
-        if (location.pathname !== path) {
-          handleCloseExpectUser();
-        }
+        handleCloseExpectUser();
         break;
       default:
         handleCloseAll();
