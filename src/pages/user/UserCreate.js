@@ -1,17 +1,8 @@
 import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
+import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 import Select from 'react-select';
-import {
-  toTitleCaseFirst,
-  toTitleCaseAll,
-} from '../../helpers/toTitleCase';
+import { toTitleCaseFirst, toTitleCaseAll } from '../../helpers/toTitleCase';
 import { htmlPurify } from '../../helpers/htmlPurify';
 import {
   createUser,
@@ -19,10 +10,7 @@ import {
   collapseUserCreate,
   createResponse,
 } from '../../app/reducers/user';
-import {
-  DialogResponse,
-  PassIndicator,
-} from '../../components';
+import { DialogResponse, PassIndicator } from '../../components';
 
 class UserCreate extends React.Component {
   constructor(props) {
@@ -63,8 +51,8 @@ class UserCreate extends React.Component {
     }
 
     if (
-      prevState.senha !== senha
-      || prevState.confirmaSenha !== confirmaSenha
+      prevState.senha !== senha ||
+      prevState.confirmaSenha !== confirmaSenha
     ) {
       this.setState({
         passwordRules: {
@@ -86,7 +74,7 @@ class UserCreate extends React.Component {
     type = 'text',
     required = true,
     rows,
-    spellcheck = false,
+    spellcheck = false
   ) => (
     <FormGroup>
       <Label>{label}</Label>
@@ -115,7 +103,7 @@ class UserCreate extends React.Component {
     type = 'text',
     required = true,
     rows,
-    spellcheck = false,
+    spellcheck = false
   ) => (
     <FormGroup>
       <Label>{label}</Label>
@@ -148,7 +136,7 @@ class UserCreate extends React.Component {
     label,
     options,
     placeholder,
-    disabled = false,
+    disabled = false
   ) => (
     <FormGroup>
       <Label>{label}</Label>
@@ -168,10 +156,10 @@ class UserCreate extends React.Component {
           },
         })}
         styles={{
-          option: ((provided, state) => ({
+          option: (provided, state) => ({
             ...provided,
             color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          })),
+          }),
         }}
         options={options}
         placeholder={placeholder}
@@ -208,17 +196,15 @@ class UserCreate extends React.Component {
   };
 
   postForm = () => {
-    const {
-      confirmaSenha, email, nome, senha, sobrenome, tipo,
-    } = this.state;
+    const { confirmaSenha, email, nome, senha, sobrenome, tipo } = this.state;
     const { createUser } = this.props;
 
     if (
-      /^.{8,}$/.test(senha)
-      && /[0-9]/.test(senha)
-      && /[!@#$%^&*]/.test(senha)
-      && /[A-Z]/.test(senha)
-      && senha === confirmaSenha
+      /^.{8,}$/.test(senha) &&
+      /[0-9]/.test(senha) &&
+      /[!@#$%^&*]/.test(senha) &&
+      /[A-Z]/.test(senha) &&
+      senha === confirmaSenha
     ) {
       createUser(
         toTitleCaseAll(nome),
@@ -226,7 +212,7 @@ class UserCreate extends React.Component {
         tipo,
         email,
         senha,
-        confirmaSenha,
+        confirmaSenha
       );
     }
   };
@@ -244,20 +230,11 @@ class UserCreate extends React.Component {
       tipos,
     } = this.state;
 
-    const {
-      equals,
-      minChar,
-      minNum,
-      specialChar,
-      upperCaseChar,
-    } = passwordRules;
+    const { equals, minChar, minNum, specialChar, upperCaseChar } =
+      passwordRules;
 
-    const {
-      collapseUserCreate,
-      createResponse,
-      findUsers,
-      response,
-    } = this.props;
+    const { collapseUserCreate, createResponse, findUsers, response } =
+      this.props;
 
     return (
       <>
@@ -277,7 +254,7 @@ class UserCreate extends React.Component {
             'confirmaSenha',
             'Confirma Senha',
             '',
-            'password',
+            'password'
           )}
           <PassIndicator
             equals={equals}
@@ -335,7 +312,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   collapseUserCreate: (state) => dispatch(collapseUserCreate(state)),
   findUsers: () => dispatch(findUsers()),
-  createUser: (nome, sobrenome, tipo, email, senha, confirmaSenha) => dispatch(createUser(nome, sobrenome, tipo, email, senha, confirmaSenha)),
+  createUser: (nome, sobrenome, tipo, email, senha, confirmaSenha) =>
+    dispatch(createUser(nome, sobrenome, tipo, email, senha, confirmaSenha)),
   createResponse: (response = {}) => dispatch(createResponse(response)),
 });
 

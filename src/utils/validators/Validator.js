@@ -97,16 +97,16 @@ export default class Validator {
   }
 
   static createDashboardRow(response) {
-    return response.services.map((date) => {
+    return response.services.map((data) => {
       let columns = {
-        ...date,
-        date: moment(date.createdAt).format('L'),
-        operation: date.operation,
-        description: date.description,
-        userName: date.user.firstName,
-        userType: date.user.type,
-        studentName: date.student.firstName,
-        studentCpf: date.student.cpf,
+        ...data,
+        data: moment(data.createdAt).format('L'),
+        operation: data.operation,
+        description: data.description,
+        userName: data.user.firstName,
+        userType: data.user.type,
+        studentName: data.student.firstName,
+        studentCpf: data.student.cpf,
       };
 
       delete columns.users;
@@ -114,5 +114,24 @@ export default class Validator {
 
       return columns;
     });
+  }
+
+  static limitNumChar(string = '') {
+    const stringLength = string;
+    if (stringLength && stringLength.length > 50) {
+      return stringLength.substr(0, stringLength.length - 10);
+    }
+
+    return stringLength;
+  }
+
+  static toTitleCase(string = '') {
+    const regex = /^[a-z]{0,1}|\s\w/gi;
+
+    string.match(regex).forEach((char) => {
+      string = string.replace(char, char.toUpperCase());
+    });
+
+    return string;
   }
 }

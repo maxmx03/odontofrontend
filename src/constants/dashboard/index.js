@@ -1,6 +1,6 @@
 export const columns = [
   {
-    id: 'date',
+    id: 'data',
     label: 'Data',
     minWidth: 170,
   },

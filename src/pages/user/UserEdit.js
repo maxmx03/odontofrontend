@@ -1,20 +1,12 @@
-import React from 'react';
-import {
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
-import {
-  Route,
-  useLocation,
-  useHistory,
-} from 'react-router-dom';
+import { Nav, NavItem, NavLink } from 'reactstrap';
+import { Route, useLocation, useHistory } from 'react-router-dom';
+
 import EditInfo from './form/editInfo';
 import EditEmail from './form/editEmail';
 import EditPassword from './form/editPassword';
 import DeleteUser from './form/deleteUser';
 
-const UserEdit = ({ data }) => {
+export default function UserEdit({ data }) {
   const location = useLocation();
   const history = useHistory();
 
@@ -24,8 +16,8 @@ const UserEdit = ({ data }) => {
         <Nav tabs>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/users')}
-              active={location.pathname === '/home/users'}
+              onClick={() => history.push('/dashboard/users')}
+              active={location.pathname === '/dashboard/users'}
               href="#"
             >
               Perfil
@@ -33,8 +25,8 @@ const UserEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/users/edit/email')}
-              active={location.pathname === '/home/users/edit/email'}
+              onClick={() => history.push('/dashboard/users/edit/email')}
+              active={location.pathname === '/dashboard/users/edit/email'}
               href="#"
             >
               Email
@@ -42,8 +34,8 @@ const UserEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/users/edit/password')}
-              active={location.pathname === '/home/users/edit/password'}
+              onClick={() => history.push('/dashboard/users/edit/password')}
+              active={location.pathname === '/dashboard/users/edit/password'}
               href="#"
             >
               Senha
@@ -51,8 +43,8 @@ const UserEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/users/delete/account')}
-              active={location.pathname === '/home/users/delete/account'}
+              onClick={() => history.push('/dashboard/users/delete/account')}
+              active={location.pathname === '/dashboard/users/delete/account'}
               href="#"
             >
               Deletar
@@ -63,24 +55,22 @@ const UserEdit = ({ data }) => {
       <div>
         <Route
           exact
-          path="/home/users"
+          path="/dashboard/users"
           component={() => <EditInfo data={data} />}
         />
         <Route
-          path="/home/users/edit/email"
+          path="/dashboard/users/edit/email"
           component={() => <EditEmail data={data} />}
         />
         <Route
-          path="/home/users/edit/password"
+          path="/dashboard/users/edit/password"
           component={() => <EditPassword data={data} />}
         />
         <Route
-          path="/home/users/delete/account"
+          path="/dashboard/users/delete/account"
           component={() => <DeleteUser data={data} />}
         />
       </div>
     </>
   );
-};
-
-export default UserEdit;
+}

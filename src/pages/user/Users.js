@@ -1,23 +1,20 @@
 import React from 'react';
 import Collapse from '@kunukn/react-collapse';
-import {
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import EditIcon from '@material-ui/icons/Edit';
-import ReactTable from '../../components/tableFilter/ReactTable';
+
 import UserCreate from './UserCreate';
 import UserEdit from './UserEdit';
+import ReactTable from '../../templates/user/tableFilter/ReactTable';
+import { getUsers } from '../../app/redux/actions/userAction';
 import {
-  findUsers,
   collapseUserCreate,
   collapseUserEdit,
-} from '../../app/reducers/user';
-import { limitNumChar } from '../../helpers';
+} from '../../app/redux/slicers/userSlicer';
+import Validator from '../../utils/validators/Validator';
 
 class Users extends React.Component {
   constructor(props) {
@@ -31,11 +28,19 @@ class Users extends React.Component {
         columns: [
           {
             Header: 'Nome',
-            accessor: 'nome',
+            accessor: 'firstName',
+            Cell: ({ row }) => {
+              const { original: user } = row;
+              return <span>{Validator.toTitleCase(user.firstName)}</span>;
+            },
           },
           {
             Header: 'Sobrenome',
-            accessor: 'sobrenome',
+            accessor: 'lastName',
+            Cell: ({ row }) => {
+              const { original: user } = row;
+              return <span>{Validator.toTitleCase(user.lastName)}</span>;
+            },
             filter: 'fuzzyText',
           },
         ],
@@ -47,13 +52,13 @@ class Users extends React.Component {
             Header: 'E-mail',
             accessor: 'email',
             Cell: ({ row }) => {
-              const { original } = row;
-              return <span>{limitNumChar(original.email)}</span>;
+              const { original: user } = row;
+              return <span>{Validator.limitNumChar(user.email)}</span>;
             },
           },
           {
             Header: 'Tipo',
-            accessor: 'tipo',
+            accessor: 'type',
           },
         ],
       },
@@ -110,8 +115,7 @@ class Users extends React.Component {
   }
 
   componentDidMount() {
-    const { findUsers } = this.props;
-    findUsers();
+    this.props?.getUsers();
   }
 
   showEditUser = (original) => {
@@ -178,9 +182,11 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseUserCreate: (stateCreate, stateEdit) => dispatch(collapseUserCreate(stateCreate, stateEdit)),
-  collapseUserEdit: (stateCreate, stateEdit) => dispatch(collapseUserEdit(stateCreate, stateEdit)),
-  findUsers: () => dispatch(findUsers()),
+  collapseUserCreate: (stateCreate, stateEdit) =>
+    dispatch(collapseUserCreate(stateCreate, stateEdit)),
+  collapseUserEdit: (stateCreate, stateEdit) =>
+    dispatch(collapseUserEdit(stateCreate, stateEdit)),
+  getUsers: () => dispatch(getUsers()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);
