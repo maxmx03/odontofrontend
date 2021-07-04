@@ -1,239 +1,131 @@
-import React from 'react';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import Select from 'react-select';
-import { toTitleCaseFirst, toTitleCaseAll } from '../../helpers/toTitleCase';
-import { htmlPurify } from '../../helpers/htmlPurify';
+
+import { ReactForms } from '../../components';
 import {
-  createUser,
-  findUsers,
-  collapseUserCreate,
   createResponse,
-} from '../../app/reducers/user';
+  collapseUserCreate,
+} from '../../app/redux/slicers/userSlicer';
+import { getUsers, createUser } from '../../app/redux/actions/userAction';
 import { DialogResponse, PassIndicator } from '../../components';
 
-class UserCreate extends React.Component {
+class UserCreate extends ReactForms {
   constructor(props) {
     super(props);
     this.state = {
-      confirmaSenha: '',
+      firstName: '',
+      lastName: '',
       email: '',
-      nome: '',
-      passwordRules: {
+      password: '',
+      confirmPassword: '',
+      passwordIndicator: {
         equals: false,
         minChar: false,
         minNum: false,
         specialChar: false,
         upperCaseChar: false,
       },
-      senha: '',
-      showIndicator: false,
-      sobrenome: '',
-      tipo: '',
-      tipos: [
+      type: '',
+      types: [
         {
           label: 'Laboratorista',
-          value: 'laboratorista',
+          value: 'user',
         },
         {
           label: 'Administrador',
-          value: 'administrador',
+          value: 'admin',
         },
       ],
     };
+
+    this.resetAllInput.bind(this);
+    this.postForm.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {
     const { isOpen } = this.props;
-    const { confirmaSenha, senha } = this.state;
+    const { confirmPassword, password } = this.state;
     if (!isOpen && prevProp.isOpen !== isOpen) {
       this.resetAllInput();
     }
 
     if (
-      prevState.senha !== senha ||
-      prevState.confirmaSenha !== confirmaSenha
+      prevState.password !== password ||
+      prevState.confirmPassword !== confirmPassword
     ) {
       this.setState({
-        passwordRules: {
-          equals: senha && senha === confirmaSenha,
-          minChar: /^.{8,}$/.test(senha),
-          minNum: /[0-9]/.test(senha),
-          specialChar: /[!@#$%^&*]/.test(senha),
-          upperCaseChar: /[A-Z]/.test(senha),
+        passwordIndicator: {
+          equals: password && password === confirmPassword,
+          minChar: /^.{8,}$/.test(password),
+          minNum: /[0-9]/.test(password),
+          specialChar: /[!@#$%^&*]/.test(password),
+          upperCaseChar: /[A-Z]/.test(password),
         },
       });
     }
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => {
-          type === 'text'
-            ? this.setValue(state, htmlPurify(e.target.value))
-            : this.setValue(state, e.target.value);
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  createInputPassword = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        onFocus={() => {
-          this.setState({
-            showIndicator: true,
-          });
-        }}
-        onBlur={() => {
-          this.setState({
-            showIndicator: false,
-          });
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  createSelect = (
-    value,
-    state,
-    label,
-    options,
-    placeholder,
-    disabled = false
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Select
-        value={{
-          label: toTitleCaseFirst(value),
-          value,
-        }}
-        onChange={(e) => this.setValue(state, e.value)}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: '.25rem',
-          colors: {
-            ...theme.colors,
-            primary: '#fd7e14',
-            primary25: '#fd7e14',
-          },
-        })}
-        styles={{
-          option: (provided, state) => ({
-            ...provided,
-            color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          }),
-        }}
-        options={options}
-        placeholder={placeholder}
-        isDisabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
-
-  resetAllInput = () => {
+  resetAllInput() {
     this.setState({
-      confirmaSenha: '',
+      confirmPassword: '',
       email: '',
-      nome: '',
-      senha: '',
-      sobrenome: '',
-      tipo: '',
-      tipos: [
+      firstName: '',
+      password: '',
+      lastName: '',
+      type: '',
+      types: [
         {
           label: 'Laboratorista',
-          value: 'laboratorista',
+          value: 'user',
         },
         {
           label: 'Administrador',
-          value: 'administrador',
+          value: 'admin',
         },
       ],
     });
-  };
+  }
 
-  postForm = () => {
-    const { confirmaSenha, email, nome, senha, sobrenome, tipo } = this.state;
+  postForm() {
+    const { confirmPassword, email, firstName, password, lastName, type } =
+      this.state;
     const { createUser } = this.props;
 
     if (
-      /^.{8,}$/.test(senha) &&
-      /[0-9]/.test(senha) &&
-      /[!@#$%^&*]/.test(senha) &&
-      /[A-Z]/.test(senha) &&
-      senha === confirmaSenha
+      /^.{8,}$/.test(password) &&
+      /[0-9]/.test(password) &&
+      /[!@#$%&*^~+?(){}]/.test(password) &&
+      /[A-Z]/.test(password) &&
+      password === confirmPassword
     ) {
       createUser(
-        toTitleCaseAll(nome),
-        toTitleCaseAll(sobrenome),
-        tipo,
+        firstName.toLowerCase(),
+        lastName.toLowerCase(),
+        type,
         email,
-        senha,
-        confirmaSenha
+        password,
+        confirmPassword
       );
     }
-  };
+  }
 
   render() {
     const {
-      confirmaSenha,
+      confirmPassword,
       email,
-      nome,
-      passwordRules,
-      senha,
+      firstName,
+      passwordIndicator,
+      password,
       showIndicator,
-      sobrenome,
-      tipo,
-      tipos,
+      lastName,
+      type,
+      types,
     } = this.state;
 
     const { equals, minChar, minNum, specialChar, upperCaseChar } =
-      passwordRules;
+      passwordIndicator;
 
-    const { collapseUserCreate, createResponse, findUsers, response } =
+    const { collapseUserCreate, createResponse, getUsers, response } =
       this.props;
 
     return (
@@ -245,13 +137,19 @@ class UserCreate extends React.Component {
             this.postForm();
           }}
         >
-          {this.createInput(nome, 'nome', 'Nome')}
-          {this.createInput(sobrenome, 'sobrenome', 'Sobrenome')}
+          {this.createInput(firstName, 'firstName', 'Nome')}
+          {this.createInput(lastName, 'lastName', 'Sobrenome')}
           {this.createInput(email, 'email', 'Email', '', 'email')}
-          {this.createInputPassword(senha, 'senha', 'Senha', '', 'password')}
           {this.createInputPassword(
-            confirmaSenha,
-            'confirmaSenha',
+            password,
+            'password',
+            'Senha',
+            '',
+            'password'
+          )}
+          {this.createInputPassword(
+            confirmPassword,
+            'confirmPassword',
             'Confirma Senha',
             '',
             'password'
@@ -264,7 +162,7 @@ class UserCreate extends React.Component {
             upperCaseChar={upperCaseChar}
             showIndicator={showIndicator}
           />
-          {this.createSelect(tipo, 'tipo', 'Tipo', tipos)}
+          {this.createSelect(type, 'type', 'Tipo', types)}
           <Button color="primary">Cadastrar usuário</Button>
         </Form>
         <DialogResponse
@@ -293,7 +191,7 @@ class UserCreate extends React.Component {
                 msg: null,
                 success: null,
               });
-              findUsers();
+              getUsers();
               collapseUserCreate();
             }}
           >
@@ -311,9 +209,11 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   collapseUserCreate: (state) => dispatch(collapseUserCreate(state)),
-  findUsers: () => dispatch(findUsers()),
-  createUser: (nome, sobrenome, tipo, email, senha, confirmaSenha) =>
-    dispatch(createUser(nome, sobrenome, tipo, email, senha, confirmaSenha)),
+  getUsers: () => dispatch(getUsers()),
+  createUser: (firstName, lastName, type, email, password, confirmPassword) =>
+    dispatch(
+      createUser(firstName, lastName, type, email, password, confirmPassword)
+    ),
   createResponse: (response = {}) => dispatch(createResponse(response)),
 });
 

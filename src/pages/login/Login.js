@@ -62,7 +62,12 @@ const Login = () => {
 
   function handleLoginUser(e) {
     e.preventDefault();
-    dispatch(loginUser(state.email, state.password));
+    dispatch(
+      loginUser({
+        email: state.email,
+        password: state.password,
+      })
+    );
   }
 
   function handleForgetPassword() {

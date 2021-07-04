@@ -1,146 +1,63 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import Select from 'react-select';
+
+import { ReactForms } from '../../../components';
 import {
-  toTitleCaseFirst,
-  toTitleCaseAll,
-  htmlPurify,
-} from '../../../helpers';
-import {
-  findUsers,
   collapseUserEdit,
-  updateUserPerfil,
-  updatePerfilResponse,
-} from '../../../app/reducers/user';
+  updateProfileResponse,
+} from '../../../app/redux/slicers/userSlicer';
+import {
+  getUsers,
+  updateUserProfile,
+} from '../../../app/redux/actions/userAction';
 import { DialogResponse } from '../../../components';
 
-class UserEdit extends React.Component {
+class UserEdit extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
 
     this.state = {
       id: data.id,
-      nome: data.nome,
-      sobrenome: data.sobrenome,
-      tipo: data.tipo,
-      tipos: [
+      firstName: data.firstName,
+      lastName: data.lastName,
+      type: data.type,
+      types: [
         {
           label: 'Laboratorista',
-          value: 'laboratorista',
+          value: 'user',
         },
         {
           label: 'Administrador',
-          value: 'administrador',
+          value: 'admin',
         },
         {
           label: 'Desativado',
-          value: 'desativado',
+          value: 'disabled',
         },
       ],
     };
+
+    this.editForm.bind(this);
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => {
-          type === 'text'
-            ? this.setValue(state, htmlPurify(e.target.value))
-            : this.setValue(state, e.target.value);
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
+  editForm() {
+    const { id, firstName, lastName, type } = this.state;
+    const { updateUserProfile } = this.props;
 
-  createSelect = (
-    value,
-    state,
-    label,
-    options,
-    placeholder,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Select
-        value={{
-          label: toTitleCaseFirst(value),
-          value,
-        }}
-        onChange={(e) => this.setValue(state, e.value)}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: '.25rem',
-          colors: {
-            ...theme.colors,
-            primary: '#fd7e14',
-            primary25: '#fd7e14',
-          },
-        })}
-        styles={{
-          option: ((provided, state) => ({
-            ...provided,
-            color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          })),
-        }}
-        options={options}
-        placeholder={placeholder}
-        isDisabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
-
-  editForm = () => {
-    const {
-      id, nome, sobrenome, tipo,
-    } = this.state;
-    const { updateUserPerfil } = this.props;
-
-    updateUserPerfil(toTitleCaseAll(nome), toTitleCaseAll(sobrenome), tipo, id);
-  };
+    updateUserProfile(
+      firstName.toLowerCase(),
+      lastName.toLowerCase(),
+      type,
+      id
+    );
+  }
 
   render() {
-    const {
-      nome, sobrenome, tipo, tipos,
-    } = this.state;
+    const { firstName, lastName, type, types } = this.state;
 
-    const {
-      collapseUserEdit,
-      findUsers,
-      response,
-      updatePerfilResponse,
-    } = this.props;
+    const { collapseUserEdit, getUsers, response, updateProfileResponse } =
+      this.props;
 
     return (
       <>
@@ -152,9 +69,9 @@ class UserEdit extends React.Component {
             this.editForm();
           }}
         >
-          {this.createSelect(tipo, 'tipo', 'Tipo', tipos)}
-          {this.createInput(nome, 'nome', 'Nome')}
-          {this.createInput(sobrenome, 'sobrenome', 'Sobrenome')}
+          {this.createSelect(type, 'type', 'Tipo', types)}
+          {this.createInput(firstName, 'firstName', 'Nome')}
+          {this.createInput(lastName, 'lastName', 'Sobrenome')}
           <Button color="primary">Mudar Perfil</Button>
         </Form>
         <DialogResponse
@@ -165,7 +82,7 @@ class UserEdit extends React.Component {
           <Button
             color="primary"
             onClick={() => {
-              updatePerfilResponse({
+              updateProfileResponse({
                 msg: null,
                 success: null,
               });
@@ -178,11 +95,11 @@ class UserEdit extends React.Component {
           <Button
             color="primary"
             onClick={() => {
-              updatePerfilResponse({
+              updateProfileResponse({
                 msg: null,
                 success: null,
               });
-              findUsers();
+              getUsers();
               collapseUserEdit();
             }}
           >
@@ -195,14 +112,17 @@ class UserEdit extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  response: state.userReducer.updatePerfilStatus,
+  response: state.userReducer.updateProfileStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseUserEdit: (stateCreate, stateEdit) => dispatch(collapseUserEdit(stateCreate, stateEdit)),
-  findUsers: () => dispatch(findUsers()),
-  updatePerfilResponse: (response = {}) => dispatch(updatePerfilResponse(response)),
-  updateUserPerfil: (nome, sobrenome, tipo, userId) => dispatch(updateUserPerfil(nome, sobrenome, tipo, userId)),
+  collapseUserEdit: (stateCreate, stateEdit) =>
+    dispatch(collapseUserEdit(stateCreate, stateEdit)),
+  getUsers: () => dispatch(getUsers()),
+  updateProfileResponse: (response = {}) =>
+    dispatch(updateProfileResponse(response)),
+  updateUserProfile: (firstName, lastName, type, userId) =>
+    dispatch(updateUserProfile(firstName, lastName, type, userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserEdit);

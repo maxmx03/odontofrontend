@@ -1,147 +1,81 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  findUsers,
-  collapseUserEdit,
-  updateUserPassword,
-  updatePasswordResponse,
-} from '../../../app/reducers/user';
-import {
-  DialogResponse,
-  PassIndicator,
-} from '../../../components';
 
-class UserEdit extends React.Component {
+import { ReactForms } from '../../../components';
+import {
+  collapseUserEdit,
+  updatePasswordResponse,
+} from '../../../app/redux/slicers/userSlicer';
+import {
+  getUsers,
+  updateUserPassword,
+} from '../../../app/redux/actions/userAction';
+import { DialogResponse, PassIndicator } from '../../../components';
+
+class UserEdit extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
 
     this.state = {
-      confirmaSenha: '',
+      confirmPassword: '',
       id: data.id,
-      passwordRules: {
+      passwordIndicator: {
         equals: false,
         minChar: false,
         minNum: false,
         specialChar: false,
         upperCaseChar: false,
       },
-      senha: '',
+      password: '',
     };
+
+    this.editForm.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {
-    const { confirmaSenha, senha } = this.state;
+    const { confirmPassword, password } = this.state;
 
     if (
-      prevState.senha !== senha
-      || prevState.confirmaSenha !== confirmaSenha
+      prevState.password !== password ||
+      prevState.confirmPassword !== confirmPassword
     ) {
       this.setState({
-        passwordRules: {
-          equals: senha && senha === confirmaSenha,
-          minChar: /^.{8,}$/.test(senha),
-          minNum: /[0-9]/.test(senha),
-          specialChar: /[!@#$%^&*]/.test(senha),
-          upperCaseChar: /[A-Z]/.test(senha),
+        passwordIndicator: {
+          equals: password && password === confirmPassword,
+          minChar: /^.{8,}$/.test(password),
+          minNum: /[0-9]/.test(password),
+          specialChar: /[!@#$%^&*]/.test(password),
+          upperCaseChar: /[A-Z]/.test(password),
         },
       });
     }
   }
 
-  createInputPassword = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        onFocus={() => {
-          this.setState({
-            showIndicator: true,
-          });
-        }}
-        onBlur={() => {
-          this.setState({
-            showIndicator: false,
-          });
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
-
-  editForm = () => {
-    const {
-      confirmaSenha,
-      id,
-      senha,
-    } = this.state;
+  editForm() {
+    const { confirmPassword, id, password } = this.state;
     const { updateUserPassword } = this.props;
 
     if (
-      /^.{8,}$/.test(senha)
-      && /[0-9]/.test(senha)
-      && /[!@#$%^&*]/.test(senha)
-      && /[A-Z]/.test(senha)
-      && senha === confirmaSenha
+      /^.{8,}$/.test(password) &&
+      /[0-9]/.test(password) &&
+      /[!@#$%^&*]/.test(password) &&
+      /[A-Z]/.test(password) &&
+      password === confirmPassword
     ) {
-      updateUserPassword(
-        senha,
-        confirmaSenha,
-        id,
-      );
+      updateUserPassword(password, confirmPassword, id);
     }
-  };
+  }
 
   render() {
-    const {
-      confirmaSenha,
-      passwordRules,
-      senha,
-      showIndicator,
-    } = this.state;
+    const { confirmPassword, passwordIndicator, password, showIndicator } =
+      this.state;
 
-    const {
-      equals,
-      minChar,
-      minNum,
-      specialChar,
-      upperCaseChar,
-    } = passwordRules;
+    const { equals, minChar, minNum, specialChar, upperCaseChar } =
+      passwordIndicator;
 
-    const {
-      collapseUserEdit,
-      findUsers,
-      response,
-      updatePasswordResponse,
-    } = this.props;
+    const { collapseUserEdit, getUsers, response, updatePasswordResponse } =
+      this.props;
 
     return (
       <>
@@ -153,13 +87,19 @@ class UserEdit extends React.Component {
             this.editForm();
           }}
         >
-          {this.createInputPassword(senha, 'senha', 'Nova Senha', '', 'password')}
           {this.createInputPassword(
-            confirmaSenha,
-            'confirmaSenha',
+            password,
+            'password',
+            'Nova Senha',
+            '',
+            'password'
+          )}
+          {this.createInputPassword(
+            confirmPassword,
+            'confirmPassword',
             'Confirmar Senha',
             '',
-            'password',
+            'password'
           )}
           <PassIndicator
             equals={equals}
@@ -171,7 +111,11 @@ class UserEdit extends React.Component {
           />
           <Button color="primary">Mudar Senha</Button>
         </Form>
-        <DialogResponse type="error" msg={response.msg} err={response.success === false}>
+        <DialogResponse
+          type="error"
+          msg={response.msg}
+          err={response.success === false}
+        >
           <Button
             color="primary"
             onClick={() => {
@@ -192,7 +136,7 @@ class UserEdit extends React.Component {
                 msg: null,
                 success: null,
               });
-              findUsers();
+              getUsers();
               collapseUserEdit();
             }}
           >
@@ -209,12 +153,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseUserEdit: (stateCreate, stateEdit) => dispatch(collapseUserEdit(stateCreate, stateEdit)),
-  findUsers: () => dispatch(findUsers()),
-  updatePasswordResponse: (response = {}) => dispatch(updatePasswordResponse(response)),
-  updateUserPassword: (senha, confirmaSenha, userId) => dispatch(
-    updateUserPassword(senha, confirmaSenha, userId),
-  ),
+  collapseUserEdit: (stateCreate, stateEdit) =>
+    dispatch(collapseUserEdit(stateCreate, stateEdit)),
+  getUsers: () => dispatch(getUsers()),
+  updatePasswordResponse: (response = {}) =>
+    dispatch(updatePasswordResponse(response)),
+  updateUserPassword: (password, confirmPassword, userId) =>
+    dispatch(updateUserPassword(password, confirmPassword, userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserEdit);

@@ -88,7 +88,7 @@ export function isUserLogged() {
     try {
       dispatch(load());
       const token = Session.get('token');
-
+      console.log(token);
       if (!Validator.isNotEmpty(token)) {
         dispatch(unload());
         return storeUser({

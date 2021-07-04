@@ -1,23 +1,18 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  findUsers,
-  collapseUserEdit,
-  updateUserEmail,
-  updateEmailResponse,
-} from '../../../app/reducers/user';
-import {
-  DialogResponse,
-} from '../../../components';
 
-class UserEdit extends React.Component {
+import { ReactForms } from '../../../components';
+import {
+  collapseUserEdit,
+  updateEmailResponse,
+} from '../../../app/redux/slicers/userSlicer';
+import {
+  getUsers,
+  updateUserEmail,
+} from '../../../app/redux/actions/userAction';
+import { DialogResponse } from '../../../components';
+
+class UserEdit extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
@@ -26,63 +21,22 @@ class UserEdit extends React.Component {
       email: data.email,
       id: data.id,
     };
+
+    this.editForm.bind(this);
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
-
-  editForm = () => {
-    const {
-      email,
-      id,
-    } = this.state;
+  editForm() {
+    const { email, id } = this.state;
     const { updateUserEmail } = this.props;
 
-    updateUserEmail(
-      email,
-      id,
-    );
-  };
+    updateUserEmail(email, id);
+  }
 
   render() {
-    const {
-      email,
-    } = this.state;
+    const { email } = this.state;
 
-    const {
-      collapseUserEdit,
-      findUsers,
-      response,
-      updateEmailResponse,
-    } = this.props;
+    const { collapseUserEdit, getUsers, response, updateEmailResponse } =
+      this.props;
 
     return (
       <>
@@ -97,7 +51,11 @@ class UserEdit extends React.Component {
           {this.createInput(email, 'email', 'Email', '', 'email')}
           <Button color="primary">Mudar E-Mail</Button>
         </Form>
-        <DialogResponse type="error" msg={response.msg} err={response.success === false}>
+        <DialogResponse
+          type="error"
+          msg={response.msg}
+          err={response.success === false}
+        >
           <Button
             color="primary"
             onClick={() => {
@@ -118,7 +76,7 @@ class UserEdit extends React.Component {
                 msg: null,
                 success: null,
               });
-              findUsers();
+              getUsers();
               collapseUserEdit();
             }}
           >
@@ -135,12 +93,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseUserEdit: (stateCreate, stateEdit) => dispatch(collapseUserEdit(stateCreate, stateEdit)),
-  findUsers: () => dispatch(findUsers()),
-  updateEmailResponse: (response = {}) => dispatch(updateEmailResponse(response)),
-  updateUserEmail: (email, userId) => dispatch(
-    updateUserEmail(email, userId),
-  ),
+  collapseUserEdit: (stateCreate, stateEdit) =>
+    dispatch(collapseUserEdit(stateCreate, stateEdit)),
+  getUsers: () => dispatch(getUsers()),
+  updateEmailResponse: (response = {}) =>
+    dispatch(updateEmailResponse(response)),
+  updateUserEmail: (email, userId) => dispatch(updateUserEmail(email, userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserEdit);

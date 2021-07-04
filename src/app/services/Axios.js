@@ -1,11 +1,8 @@
 import axios from 'axios';
 import Validator from '../../utils/validators/Validator';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const instance = axios.create({
-  baseURL: process.env.API_URL || 'http://localhost:8080',
+  baseURL: 'http://localhost:8080',
 });
 
 const error = {
@@ -15,8 +12,8 @@ const error = {
 };
 
 export default class Axios {
-  static get(url, { token }) {
-    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(token)) {
+  static get(url, token) {
+    if (Validator.isNotEmpty(url)) {
       return instance.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -27,12 +24,8 @@ export default class Axios {
     return Promise.reject(error);
   }
 
-  static post(url, body, { token }) {
-    if (
-      Validator.isNotEmpty(url) &&
-      Validator.isNotEmpty(body) &&
-      Validator.isNotEmpty(token)
-    ) {
+  static post(url, body, token) {
+    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(body)) {
       return instance.post(url, body, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,12 +36,8 @@ export default class Axios {
     return Promise.reject(error);
   }
 
-  static patch(url, body, { token }) {
-    if (
-      Validator.isNotEmpty(url) &&
-      Validator.isNotEmpty(body) &&
-      Validator.isNotEmpty(token)
-    ) {
+  static patch(url, body, token) {
+    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(body)) {
       return instance.patch(url, body, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,12 +48,8 @@ export default class Axios {
     return Promise.reject(error);
   }
 
-  static delete(url, id, { token }) {
-    if (
-      Validator.isNotEmpty(url) &&
-      Validator.isNotEmpty(id) &&
-      Validator.isNotEmpty(token)
-    ) {
+  static delete(url, id, token) {
+    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(id)) {
       return instance.delete(`${url}/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,

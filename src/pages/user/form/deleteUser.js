@@ -1,26 +1,19 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import Select from 'react-select';
-import {
-  findUsers,
-  collapseUserEdit,
-  deleteUserAccount,
-  deleteAccountResponse,
-} from '../../../app/reducers/user';
-import { toTitleCaseFirst } from '../../../helpers';
-import {
-  DialogResponse,
-  InputDialog,
-} from '../../../components';
 
-class DeleteUser extends React.Component {
+import { ReactForms } from '../../../components';
+import {
+  collapseUserEdit,
+  deleteAccountResponse,
+} from '../../../app/redux/slicers/userSlicer';
+import {
+  getUsers,
+  deleteUserAccount,
+} from '../../../app/redux/actions/userAction';
+import { DialogResponse, InputDialog } from '../../../components';
+import Validator from '../../../utils/validators/Validator';
+
+class DeleteUser extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
@@ -28,80 +21,21 @@ class DeleteUser extends React.Component {
     this.state = {
       dialogState: false,
       id: data.id,
+      fullName: Validator.toTitleCase(data.firstName + ' ' + data.lastName),
     };
+
+    this.deleteForm.bind(this);
+    this.showDeleteUser.bind(this);
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-    disabled,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createSelect = (
-    value,
-    state,
-    label,
-    options,
-    placeholder,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Select
-        value={{
-          label: toTitleCaseFirst(value),
-          value,
-        }}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: '.25rem',
-          colors: {
-            ...theme.colors,
-            primary: '#fd7e14',
-            primary25: '#fd7e14',
-          },
-        })}
-        styles={{
-          option: ((provided, state) => ({
-            ...provided,
-            color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          })),
-        }}
-        options={options}
-        placeholder={placeholder}
-        isDisabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  deleteForm = () => {
+  deleteForm() {
     const { deleteUserAccount } = this.props;
     const { id } = this.state;
     deleteUserAccount(id);
     this.setState({
       dialogState: false,
     });
-  };
+  }
 
   showDeleteUser = () => {
     this.setState({
@@ -110,13 +44,13 @@ class DeleteUser extends React.Component {
   };
 
   render() {
-    const { dialogState } = this.state;
+    const { dialogState, fullName } = this.state;
 
     const {
       collapseUserEdit,
       data,
       deleteAccountResponse,
-      findUsers,
+      getUsers,
       response,
     } = this.props;
 
@@ -130,35 +64,35 @@ class DeleteUser extends React.Component {
           }}
         >
           {this.createInput(
-            data.nome,
-            'nome',
+            data.firstName,
+            'firstName',
             'Nome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
-            data.sobrenome,
-            'sobrenome',
+            data.lastName,
+            'lastName',
             'Sobrenome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
-          {this.createSelect(data.tipo, 'tipo', 'Tipo', '', '', true)}
+          {this.createSelect(data.type, 'tipo', 'Tipo', '', '', true)}
           <Button color="danger">Deletar Usuário</Button>
         </Form>
         <InputDialog
           open={dialogState}
           fields={() => <></>}
           title="Atenção!"
-          description={`Tem certeza que deseja deletar ${data.nome} ${data.sobrenome} ?`}
+          description={`Tem certeza que deseja deletar ${fullName} ?`}
         >
           <Button color="primary" onClick={() => this.deleteForm()}>
             Sim
@@ -195,7 +129,7 @@ class DeleteUser extends React.Component {
                 msg: null,
                 success: null,
               });
-              findUsers();
+              getUsers();
               collapseUserEdit();
             }}
           >
@@ -212,10 +146,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseUserEdit: (stateCreate, stateEdit) => dispatch(collapseUserEdit(stateCreate, stateEdit)),
-  deleteAccountResponse: (response = {}) => dispatch(deleteAccountResponse(response)),
+  collapseUserEdit: (stateCreate, stateEdit) =>
+    dispatch(collapseUserEdit(stateCreate, stateEdit)),
+  deleteAccountResponse: (response = {}) =>
+    dispatch(deleteAccountResponse(response)),
   deleteUserAccount: (userId) => dispatch(deleteUserAccount(userId)),
-  findUsers: () => dispatch(findUsers()),
+  getUsers: () => dispatch(getUsers()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeleteUser);
