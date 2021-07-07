@@ -88,7 +88,6 @@ export function isUserLogged() {
     try {
       dispatch(load());
       const token = Session.get('token');
-      console.log(token);
       if (!Validator.isNotEmpty(token)) {
         dispatch(unload());
         return storeUser({
@@ -105,16 +104,17 @@ export function isUserLogged() {
           dispatch(unload());
           dispatch(
             storeUser({
-              email: data.user.email,
-              firstName: data.user.firstName,
-              lastName: data.user.lastName,
-              type: data.user.type,
+              email: data.token.email,
+              firstName: data.token.firstName,
+              lastName: data.token.lastName,
+              type: data.token.type,
               isLogged: true,
             })
           );
         })
         .catch(() => {
           dispatch(unload());
+          console.log('reset token');
           Session.reset('token');
           dispatch(
             storeUser({

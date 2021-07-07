@@ -1,25 +1,22 @@
 import React from 'react';
 import Collapse from '@kunukn/react-collapse';
-import {
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import EditIcon from '@material-ui/icons/Edit';
-import ReactTable from '../../components/tableFilter/ReactTable';
-import StudantCreate from './StudentCreate';
-import StudantEdit from './StudentEdit';
-import {
-  findStudants,
-  collapseStudantsCreate,
-  collapseStudantsEdit,
-} from '../../app/reducers/studant';
-import { limitNumChar } from '../../helpers';
 
-class Studants extends React.Component {
+import ReactTable from '../../components/tableFilter/ReactTable';
+import StudentCreate from './StudentCreate';
+import StudentEdit from './StudentEdit';
+import { getStudents } from '../../app/redux/actions/studentAction';
+import {
+  collapseStudentCreate,
+  collapseStudentEdit,
+} from '../../app/redux/slicers/studentSlicer';
+import Validator from '../../utils/validators/Validator';
+
+class Students extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,11 +28,19 @@ class Studants extends React.Component {
         columns: [
           {
             Header: 'Nome',
-            accessor: 'nome',
+            accessor: 'firstName',
+            Cell: ({ row }) => {
+              const { original: student } = row;
+              return <span>{Validator.toTitleCase(student.firstName)}</span>;
+            },
           },
           {
             Header: 'Sobrenome',
-            accessor: 'sobrenome',
+            accessor: 'lastName',
+            Cell: ({ row }) => {
+              const { original: student } = row;
+              return <span>{Validator.toTitleCase(student.lastName)}</span>;
+            },
             filter: 'fuzzyText',
           },
         ],
@@ -47,8 +52,8 @@ class Studants extends React.Component {
             Header: 'E-mail',
             accessor: 'email',
             Cell: ({ row }) => {
-              const { original } = row;
-              return <span>{limitNumChar(original.email)}</span>;
+              const { original: student } = row;
+              return <span>{Validator.limitNumChar(student.email)}</span>;
             },
           },
           {
@@ -57,15 +62,15 @@ class Studants extends React.Component {
           },
           {
             Header: 'Telefone',
-            accessor: 'telefone',
+            accessor: 'phone',
           },
           {
             Header: 'Turno',
-            accessor: 'turno',
+            accessor: 'shift',
           },
           {
             Header: 'N° de Pacotes',
-            accessor: 'qtPacote',
+            accessor: 'qtPackage',
           },
         ],
       },
@@ -76,17 +81,17 @@ class Studants extends React.Component {
             Header: 'Data de Criação',
             accessor: 'createdAt',
             Cell: ({ row }) => {
-              const { original } = row;
+              const { original: student } = row;
 
-              return <span>{moment(original.createdAt).format('L')}</span>;
+              return <span>{moment(student.createdAt).format('L')}</span>;
             },
           },
           {
             Header: 'Data de Atualização',
             accessor: 'updatedAt',
             Cell: ({ row }) => {
-              const { original } = row;
-              return <span>{moment(original.updatedAt).format('L')}</span>;
+              const { original: student } = row;
+              return <span>{moment(student.updatedAt).format('L')}</span>;
             },
           },
         ],
@@ -99,7 +104,7 @@ class Studants extends React.Component {
             accessor: 'acoes',
             disableFilters: true,
             Cell: ({ row }) => {
-              const { original } = row;
+              const { original: student } = row;
 
               return (
                 <div style={{ textAlign: 'center' }}>
@@ -108,7 +113,7 @@ class Studants extends React.Component {
                     startIcon={<EditIcon />}
                     variant="contained"
                     size="small"
-                    onClick={() => this.showEditStudant(original)}
+                    onClick={() => this.showEditStudent(student)}
                   >
                     Editar
                   </Button>
@@ -119,18 +124,20 @@ class Studants extends React.Component {
         ],
       },
     ];
+
+    this.showEditStudent.bind(this);
   }
 
   componentDidMount() {
-    const { findAllStudants } = this.props;
-    findAllStudants();
+    const { getStudents } = this.props;
+    getStudents();
   }
 
-  showEditStudant = (original) => {
-    const { collapseEdit, collapseStudantsEdit } = this.props;
+  showEditStudent(original) {
+    const { collapseEdit, collapseStudentEdit } = this.props;
     this.setState({ data: original });
-    collapseStudantsEdit(!collapseEdit);
-  };
+    collapseStudentEdit(!collapseEdit);
+  }
 
   render() {
     const { columns } = this;
@@ -138,9 +145,9 @@ class Studants extends React.Component {
     const {
       collapseCreate,
       collapseEdit,
-      collapseStudantsCreate,
-      collapseStudantsEdit,
-      studantsData,
+      collapseStudentCreate,
+      collapseStudentEdit,
+      studentsData,
     } = this.props;
 
     return (
@@ -148,13 +155,13 @@ class Studants extends React.Component {
         <div className="align-self-left ml-auto">
           <Nav tabs>
             {!collapseEdit ? (
-              <NavItem onClick={() => collapseStudantsCreate(!collapseCreate)}>
+              <NavItem onClick={() => collapseStudentCreate(!collapseCreate)}>
                 <NavLink className="bg-primary text-light border-0" active>
                   {collapseCreate ? 'Lista de Alunos' : 'Cadastrar Aluno'}
                 </NavLink>
               </NavItem>
             ) : (
-              <NavItem onClick={() => collapseStudantsEdit(!collapseEdit)}>
+              <NavItem onClick={() => collapseStudentEdit(!collapseEdit)}>
                 <NavLink className="bg-primary text-light border-0" active>
                   {collapseEdit ? 'Lista de Alunos' : 'Editar Aluno'}
                 </NavLink>
@@ -164,19 +171,19 @@ class Studants extends React.Component {
         </div>
         <Collapse
           isOpen={collapseCreate}
-          render={() => <StudantCreate isOpen={collapseCreate} />}
+          render={() => <StudentCreate isOpen={collapseCreate} />}
           transition="height 800ms cubic-bezier(.4, 0, .2, 1)"
         />
         <Collapse
           isOpen={collapseEdit}
-          render={() => <StudantEdit data={data} />}
+          render={() => <StudentEdit data={data} />}
           transition="height 800ms cubic-bezier(.4, 0, .2, 1)"
         />
         <Collapse
           isOpen={!collapseCreate && !collapseEdit}
           transition="height 800ms cubic-bezier(.4, 0, .2, 1)"
         >
-          <ReactTable data={studantsData || []} columns={columns} />
+          <ReactTable data={studentsData || []} columns={columns} />
         </Collapse>
       </div>
     );
@@ -184,15 +191,15 @@ class Studants extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  collapseCreate: state.studantReducer.stateCreate,
-  collapseEdit: state.studantReducer.stateEdit,
-  studantsData: state.studantReducer.data,
+  collapseCreate: state.studentReducer.stateCreate,
+  collapseEdit: state.studentReducer.stateEdit,
+  studentsData: state.studentReducer.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseStudantsCreate: (state) => dispatch(collapseStudantsCreate(state)),
-  collapseStudantsEdit: (state) => dispatch(collapseStudantsEdit(state)),
-  findAllStudants: () => dispatch(findStudants()),
+  collapseStudentCreate: (state) => dispatch(collapseStudentCreate(state)),
+  collapseStudentEdit: (state) => dispatch(collapseStudentEdit(state)),
+  getStudents: () => dispatch(getStudents()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Studants);
+export default connect(mapStateToProps, mapDispatchToProps)(Students);

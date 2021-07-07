@@ -4,7 +4,7 @@ import { responseStatus } from '../../../constants/state/responseStatus';
 
 const reducers = {
   storeUser: (state, action) => {
-    state.data = action.payload;
+    state.user = action.payload;
   },
   authResponse: (state, action) => {
     state.authStatus = action.payload;
@@ -22,7 +22,7 @@ const authSlice = createSlice({
       firstName: '',
       lastName: '',
       type: '',
-      isLogged: false,
+      isLogged: false
     },
     authStatus: responseStatus,
     forgetPassStatus: responseStatus,

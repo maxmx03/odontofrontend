@@ -1,18 +1,12 @@
-import React,
-{
-  useEffect,
-  useState,
-} from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  Modal,
-  CircularProgress,
-} from '@material-ui/core';
-import { selectLoading } from '../../app/reducers/loading';
+import { Modal, CircularProgress } from '@material-ui/core';
 
-export const Loading = () => {
+import { selectLoadState } from '../../app/redux/selectors/loadSelector';
+
+export function Loading() {
   const [load, setLoad] = useState(false);
-  const loading = useSelector(selectLoading);
+  const loading = useSelector(selectLoadState);
 
   useEffect(() => {
     setLoad(loading);
@@ -35,4 +29,4 @@ export const Loading = () => {
       <CircularProgress color="primary" />
     </Modal>
   );
-};
+}

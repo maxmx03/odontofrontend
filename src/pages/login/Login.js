@@ -50,7 +50,9 @@ const Login = () => {
 
   useEffect(() => {
     dispatch(isUserLogged());
-    user.isLogged && history.push('/home');
+    if (user.isLogged) {
+      history.push('/dashboard');
+    }
   }, [user.isLogged, dispatch, history]);
 
   function handleState(key, value) {

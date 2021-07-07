@@ -3,10 +3,11 @@ import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Login from '../pages/login/Login';
+import Menu from '../pages/menu/Menu';
 import App from '../app/App';
 import { isUserLogged } from '../app/redux/actions/authAction';
 import { selectUser } from '../app/redux/selectors/authSelector';
-import { ProtectedRoute } from '../components';
+import { ProtectedRoute, Loading } from '../components';
 
 export function Routes() {
   const dispatch = useDispatch();
@@ -17,12 +18,20 @@ export function Routes() {
   }, [user, dispatch]);
 
   return (
-    <Router>
-      <Switch>
-        <Route exact path="/" component={App} />
-        <Route exact path="/login" component={Login} />
-        <ProtectedRoute path="/dashboard" />
-      </Switch>
-    </Router>
+    <>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={App} />
+          <Route path="/login" component={Login} />
+          <ProtectedRoute
+            path="/dashboard"
+            component={Menu}
+            hasPermission={user.isLogged}
+            redirect
+          />
+        </Switch>
+      </Router>
+      <Loading />
+    </>
   );
 }

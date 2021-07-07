@@ -9,12 +9,12 @@ import { getStudents } from '../../app/redux/actions/studentAction';
 import { selectStudents } from '../../app/redux/selectors/studentSelectors';
 import { getServices } from '../../app/redux/actions/serviceAction';
 import { selectServices } from '../../app/redux/selectors/serviceSelector';
-import { MaterialTable, InfoCard } from '../../components';
+import { InfoCard, MaterialTable } from '../../templates/dashboard';
 import { columns } from '../../constants/dashboard';
 
 export default function Dashboard() {
   const dispatch = useDispatch();
-  const servicesDate = useSelector(selectServices);
+  const servicesData = useSelector(selectServices);
   const students = useSelector(selectStudents);
   const packages = useSelector(selectPackages);
 
@@ -29,7 +29,7 @@ export default function Dashboard() {
       <Row>
         <Col lg="auto">
           <MaterialTable
-            rows={Validator.createDashboardRow(servicesDate)}
+            rows={Validator.createDashboardRow(servicesData)}
             columns={columns}
           />
         </Col>

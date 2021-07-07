@@ -96,8 +96,8 @@ export default class Validator {
     return toFilter.replace(filter, '');
   }
 
-  static createDashboardRow(response) {
-    return response.services.map((data) => {
+  static createDashboardRow(services) {
+    return services.map((data) => {
       let columns = {
         ...data,
         data: moment(data.createdAt).format('L'),

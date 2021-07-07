@@ -1,7 +1,7 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ptBR } from '@material-ui/core/locale';
 
-export default createMuiTheme(
+const theme = createMuiTheme(
   {
     palette: {
       primary: {
@@ -14,3 +14,5 @@ export default createMuiTheme(
   },
   ptBR
 );
+
+export default theme;

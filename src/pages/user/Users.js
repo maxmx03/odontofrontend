@@ -69,17 +69,17 @@ class Users extends React.Component {
             Header: 'Data de Criação',
             accessor: 'createdAt',
             Cell: ({ row }) => {
-              const { original } = row;
+              const { original: user } = row;
 
-              return <span>{moment(original.createdAt).format('L')}</span>;
+              return <span>{moment(user.createdAt).format('L')}</span>;
             },
           },
           {
             Header: 'Data de Atualização',
             accessor: 'updatedAt',
             Cell: ({ row }) => {
-              const { original } = row;
-              return <span>{moment(original.updatedAt).format('L')}</span>;
+              const { original: user } = row;
+              return <span>{moment(user.updatedAt).format('L')}</span>;
             },
           },
         ],
@@ -92,7 +92,7 @@ class Users extends React.Component {
             accessor: 'acoes',
             disableFilters: true,
             Cell: ({ row }) => {
-              const { original } = row;
+              const { original: user } = row;
 
               return (
                 <div style={{ textAlign: 'center' }}>
@@ -101,7 +101,7 @@ class Users extends React.Component {
                     startIcon={<EditIcon />}
                     variant="contained"
                     size="small"
-                    onClick={() => this.showEditUser(original)}
+                    onClick={() => this.showEditUser(user)}
                   >
                     Editar
                   </Button>
@@ -112,17 +112,18 @@ class Users extends React.Component {
         ],
       },
     ];
+    this.showEditUser.bind(this);
   }
 
   componentDidMount() {
     this.props?.getUsers();
   }
 
-  showEditUser = (original) => {
+  showEditUser(original) {
     const { collapseEdit, collapseUserEdit } = this.props;
     this.setState({ data: original });
     collapseUserEdit(!collapseEdit);
-  };
+  }
 
   render() {
     const { columns } = this;

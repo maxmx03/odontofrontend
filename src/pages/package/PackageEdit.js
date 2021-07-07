@@ -12,7 +12,7 @@ import {
 import EditInfo from './form/editInfo';
 import EditCode from './form/editCode';
 import DeletePackage from './form/deletePackage';
-import { PackagePrint } from '../../components';
+import { PackagePrint } from '../../templates/package';
 
 const StudantEdit = ({ data }) => {
   const location = useLocation();

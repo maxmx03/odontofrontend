@@ -21,8 +21,8 @@ import { Copyright, ProtectedRoute } from '../../components';
 import { selectUser } from '../../app/redux/selectors/authSelector';
 import { useStyles } from './style';
 import { odontoEasy } from '../../assets/images';
-import Students from '../student/Students';
-import Packages from '../package/Packages';
+// import Students from '../student/Students';
+// import Packages from '../package/Packages';
 import Users from '../user/Users';
 import Dashboard from '../dashboard/Dashboard';
 
@@ -87,8 +87,8 @@ export default function Home() {
           <Row>
             <Col lg="12">
               <Route exact path="/dashboard" component={Dashboard} />
-              <Route path="/dashboard/students" component={Students} />
-              <Route path="/dashboard/packages" component={Packages} />
+              {/* <Route path="/dashboard/students" component={Students} /> */}
+              {/* <Route path="/dashboard/packages" component={Packages} /> */}
               <ProtectedRoute
                 path="/dashboard/users"
                 component={Users}

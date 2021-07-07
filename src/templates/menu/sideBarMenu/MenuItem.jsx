@@ -7,19 +7,19 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {
   collapseUserCreate,
   collapseUserEdit,
-} from '../../app/redux/slicers/userSlicer';
+} from '../../../app/redux/slicers/userSlicer';
 import {
   collapseStudentCreate,
   collapseStudentEdit,
-} from '../../app/redux/slicers/studentSlicer';
+} from '../../../app/redux/slicers/studentSlicer';
 import {
   collapsePackageCreate,
   collapsePackageEdit,
-} from '../../app/redux/slicers/packageSlicer';
-import { selectUser } from '../../app/redux/selectors/authSelector';
+} from '../../../app/redux/slicers/packageSlicer';
+import { selectUser } from '../../../app/redux/selectors/authSelector';
 import { useEffect } from 'react';
 
-export default function MenuItem({ path, pathName, name, icon }) {
+export default function MenuItem({ path, pathName, name, icon, onClick }) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const location = useLocation();
@@ -83,7 +83,7 @@ export default function MenuItem({ path, pathName, name, icon }) {
   return (
     <ListItem
       button
-      onClick={handleOnClick}
+      onClick={onClick || handleOnClick}
       className={location.pathname === path && 'MuiListItem-button-active'}
     >
       <ListItemIcon>{icon}</ListItemIcon>

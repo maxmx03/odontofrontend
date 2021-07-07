@@ -15,7 +15,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.21.1",
-    "bootstrap": "^5.0.2",
+    "bootstrap": "^4.5.3",
     "clsx": "^1.1.1",
     "moment": "^2.29.1",
     "prop-types": "^15.7.2",
@@ -36,7 +36,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "watch": "sass --watch --no-source-map src/assets/scss:src/assets/css",
+    "watch": "sass --watch src/assets/scss:src/assets/css",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
