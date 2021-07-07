@@ -15,7 +15,7 @@ export function Routes() {
 
   useEffect(() => {
     dispatch(isUserLogged);
-  }, [user, dispatch]);
+  }, [user.isLogged, dispatch]);
 
   return (
     <>

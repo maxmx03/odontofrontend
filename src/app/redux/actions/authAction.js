@@ -27,6 +27,12 @@ export function loginUser(body) {
                 success: true,
               })
             );
+
+            dispatch(
+              storeUser({
+                isLogged: true,
+              })
+            );
           })
           .catch(({ response }) => {
             dispatch(unload());
