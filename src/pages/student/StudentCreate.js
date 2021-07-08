@@ -45,6 +45,11 @@ class StudentCreate extends ReactForms {
         },
       ],
     };
+
+    this.createInput.bind(this);
+    this.createInputPassword.bind(this);
+    this.createSelect.bind(this);
+    this.createInputMask.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {

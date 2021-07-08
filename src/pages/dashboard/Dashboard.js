@@ -9,7 +9,7 @@ import { getStudents } from '../../app/redux/actions/studentAction';
 import { selectStudents } from '../../app/redux/selectors/studentSelectors';
 import { getServices } from '../../app/redux/actions/serviceAction';
 import { selectServices } from '../../app/redux/selectors/serviceSelector';
-import { InfoCard, MaterialTable } from '../../templates/dashboard';
+import { InfoCard, MaterialTable } from '../../components/templates/dashboard';
 import { columns } from '../../constants/dashboard';
 
 export default function Dashboard() {

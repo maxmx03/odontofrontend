@@ -1,97 +1,56 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Button,
-  Label,
-  Input,
-} from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  WeakPassIndicator,
-  DialogResponse,
-} from '../../../components';
-import {
-  updateStudantPassword,
-  findStudants,
-  collapseStudantsEdit,
-  updatePasswordResponse,
-} from '../../../app/reducers/studant';
 
-class EditPassword extends React.Component {
+import { ReactForms } from '../../../components';
+import { WeakPassIndicator, DialogResponse } from '../../../components';
+import {
+  collapseStudentEdit,
+  updatePasswordResponse,
+} from '../../../app/redux/slicers/studentSlicer';
+import {
+  updateStudentPassword,
+  getStudents,
+} from '../../../app/redux/actions/studentAction';
+
+class EditPassword extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
     this.state = {
-      confirmaSenha: null,
+      confirmPassword: null,
       id: data.id,
-      passwordRules: {
+      passwordIndicator: {
         equals: false,
         minAlphaNum: false,
         minChar: false,
       },
-      senha: null,
+      password: null,
       showIndicator: false,
     };
   }
 
   componentDidUpdate(prevProp, prevState) {
-    const { confirmaSenha, senha } = this.state;
+    const { confirmPassword, password } = this.state;
 
     if (
-      prevState.senha !== senha
-      || prevState.confirmaSenha !== confirmaSenha
+      prevState.password !== password ||
+      prevState.confirmPassword !== confirmPassword
     ) {
       this.setState({
-        passwordRules: {
-          equals: senha && senha === confirmaSenha,
-          minAlphaNum: /\D/.test(senha) && /\d/.test(senha),
-          minChar: /^.{5,}$/.test(senha),
+        passwordIndicator: {
+          equals: password && password === confirmPassword,
+          minAlphaNum: /\D/.test(password) && /\d/.test(password),
+          minChar: /^.{5,}$/.test(password),
         },
       });
     }
   }
 
-  createInputPassword = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        onFocus={() => {
-          this.setState({
-            showIndicator: true,
-          });
-        }}
-        onBlur={() => {
-          this.setState({
-            showIndicator: false,
-          });
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
   editForm = () => {
-    const { confirmaSenha, id, senha } = this.state;
-    const { pathStudantPassword } = this.props;
+    const { confirmPassword, id, password } = this.state;
+    const { updateStudentPassword } = this.props;
 
-    pathStudantPassword(senha, confirmaSenha, id);
+    updateStudentPassword(password, confirmPassword, id);
   };
 
   setValue = async (state, value) => {
@@ -101,25 +60,13 @@ class EditPassword extends React.Component {
   };
 
   render() {
-    const {
-      confirmaSenha,
-      passwordRules,
-      senha,
-      showIndicator,
-    } = this.state;
+    const { confirmPassword, passwordIndicator, password, showIndicator } =
+      this.state;
 
-    const {
-      equals,
-      minAlphaNum,
-      minChar,
-    } = passwordRules;
+    const { equals, minAlphaNum, minChar } = passwordIndicator;
 
-    const {
-      collapseStudantsEdit,
-      getAllStudants,
-      pathPassResponse,
-      response,
-    } = this.props;
+    const { collapseStudentEdit, getStudents, pathPassResponse, response } =
+      this.props;
 
     return (
       <>
@@ -130,13 +77,19 @@ class EditPassword extends React.Component {
             this.editForm();
           }}
         >
-          {this.createInputPassword(senha, 'senha', 'Senha', '', 'password')}
           {this.createInputPassword(
-            confirmaSenha,
-            'confirmaSenha',
+            password,
+            'password',
+            'Senha',
+            '',
+            'password'
+          )}
+          {this.createInputPassword(
+            confirmPassword,
+            'confirmPassword',
             'Confirma Senha',
             '',
-            'password',
+            'password'
           )}
           <WeakPassIndicator
             equals={equals}
@@ -146,7 +99,11 @@ class EditPassword extends React.Component {
           />
           <Button color="primary">Mudar E-mail</Button>
         </Form>
-        <DialogResponse type="error" msg={response.msg} err={response.success === false}>
+        <DialogResponse
+          type="error"
+          msg={response.msg}
+          err={response.success === false}
+        >
           <Button
             color="primary"
             onClick={() => {
@@ -167,8 +124,8 @@ class EditPassword extends React.Component {
                 msg: null,
                 success: null,
               });
-              getAllStudants();
-              collapseStudantsEdit();
+              getStudents();
+              collapseStudentEdit();
             }}
           >
             Confirmar
@@ -180,14 +137,16 @@ class EditPassword extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  response: state.studantReducer.updatePasswordStatus,
+  response: state.studentReducer.updatePasswordStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseStudantsEdit: () => dispatch(collapseStudantsEdit()),
-  getAllStudants: () => dispatch(findStudants()),
-  pathPassResponse: (response = {}) => dispatch(updatePasswordResponse(response)),
-  pathStudantPassword: (senha, confirmaSenha, studantId) => dispatch(updateStudantPassword(senha, confirmaSenha, studantId)),
+  collapseStudentEdit: () => dispatch(collapseStudentEdit()),
+  getStudents: () => dispatch(getStudents()),
+  pathPassResponse: (response = {}) =>
+    dispatch(updatePasswordResponse(response)),
+  updateStudentPassword: (password, confirmPassword, studentId) =>
+    dispatch(updateStudentPassword(password, confirmPassword, studentId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPassword);

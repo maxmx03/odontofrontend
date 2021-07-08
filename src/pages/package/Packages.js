@@ -1,24 +1,21 @@
 import React from 'react';
 import Collapse from '@kunukn/react-collapse';
-import {
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
+import { Nav, NavItem, NavLink } from 'reactstrap';
 import { Button } from '@material-ui/core';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import EditIcon from '@material-ui/icons/Edit';
-import ReactTable from '../../components/tableFilter/ReactTable';
+
+import { ReactTable } from '../../components';
 import PackageCreate from './PackageCreate';
 import PackageEdit from './PackageEdit';
 import {
-  findPackages,
-  collapsePackagesCreate,
-  collapsePackagesEdit,
-} from '../../app/reducers/package';
-import { limitNumChar } from '../../helpers';
-import { findStudants } from '../../app/reducers/studant';
+  collapsePackageCreate,
+  collapsePackageEdit,
+} from '../../app/redux/slicers/packageSlicer';
+import { getPackages } from '../../app/redux/actions/packageAction';
+import { getStudents } from '../../app/redux/actions/studentAction';
+import Validator from '../../utils/validators/Validator';
 
 class Packages extends React.Component {
   constructor(props) {
@@ -32,15 +29,31 @@ class Packages extends React.Component {
         columns: [
           {
             Header: 'N° Pacote',
-            accessor: 'packageCode',
+            accessor: 'code',
           },
           {
             Header: 'Nome',
-            accessor: 'Aluno.nome',
+            accessor: 'student.firstName',
+            Cell: ({ row }) => {
+              const { original: studentPackage } = row;
+              return (
+                <span>
+                  {Validator.toTitleCase(studentPackage.student.firstName)}
+                </span>
+              );
+            },
           },
           {
             Header: 'Sobrenome',
-            accessor: 'Aluno.sobrenome',
+            accessor: 'student.lastName',
+            Cell: ({ row }) => {
+              const { original: studentPackage } = row;
+              return (
+                <span>
+                  {Validator.toTitleCase(studentPackage.student.lastName)}
+                </span>
+              );
+            },
           },
         ],
       },
@@ -49,23 +62,25 @@ class Packages extends React.Component {
         columns: [
           {
             Header: 'E-mail',
-            accessor: 'Aluno.email',
+            accessor: 'student.email',
             Cell: ({ row }) => {
-              const { original } = row;
-              return <span>{limitNumChar(original.Aluno.email)}</span>;
+              const { original: studentPackage } = row;
+              return (
+                <span>{Validator.limitNumChar(studentPackage.student.email)}</span>
+              );
             },
           },
           {
             Header: 'CPF',
-            accessor: 'Aluno.cpf',
+            accessor: 'student.cpf',
           },
           {
             Header: 'Telefone',
-            accessor: 'Aluno.telefone',
+            accessor: 'student.phone',
           },
           {
             Header: 'Turno',
-            accessor: 'Aluno.turno',
+            accessor: 'student.shift',
           },
           {
             Header: 'Status',
@@ -92,8 +107,9 @@ class Packages extends React.Component {
               const { original } = row;
               const validity = moment(original.validityAt).format('L');
               const today = moment();
-              const compareDate = moment(original.validityAt).isSame(today, 'days')
-                || moment(original.validityAt).isBefore(today, 'days');
+              const compareDate =
+                moment(original.validityAt).isSame(today, 'days') ||
+                moment(original.validityAt).isBefore(today, 'days');
               return (
                 <span className={compareDate ? 'text-danger' : 'text-light'}>
                   {validity}
@@ -134,15 +150,15 @@ class Packages extends React.Component {
   }
 
   componentDidMount() {
-    const { findPackages, findStudants } = this.props;
-    findPackages();
-    findStudants();
+    const { getPackages, getStudents } = this.props;
+    getPackages();
+    getStudents();
   }
 
   showEditPackage = (original) => {
-    const { collapseEdit, collapsePackagesEdit } = this.props;
+    const { collapseEdit, collapsePackageEdit } = this.props;
     this.setState({ data: original });
-    collapsePackagesEdit(!collapseEdit);
+    collapsePackageEdit(!collapseEdit);
   };
 
   render() {
@@ -151,10 +167,10 @@ class Packages extends React.Component {
     const {
       collapseCreate,
       collapseEdit,
-      collapsePackagesCreate,
-      collapsePackagesEdit,
+      collapsePackageCreate,
+      collapsePackageEdit,
       packageData,
-      studantsData,
+      studentsData,
     } = this.props;
 
     return (
@@ -162,13 +178,13 @@ class Packages extends React.Component {
         <div className="align-self-left ml-auto">
           <Nav tabs>
             {!collapseEdit ? (
-              <NavItem onClick={() => collapsePackagesCreate(!collapseCreate)}>
+              <NavItem onClick={() => collapsePackageCreate(!collapseCreate)}>
                 <NavLink className="bg-primary text-light border-0" active>
                   {collapseCreate ? 'Lista de Pacotes' : 'Cadastrar Pacote'}
                 </NavLink>
               </NavItem>
             ) : (
-              <NavItem onClick={() => collapsePackagesEdit(!collapseEdit)}>
+              <NavItem onClick={() => collapsePackageEdit(!collapseEdit)}>
                 <NavLink className="bg-primary text-light border-0" active>
                   {collapseEdit ? 'Lista de Pacotes' : 'Editar Pacote'}
                 </NavLink>
@@ -180,7 +196,7 @@ class Packages extends React.Component {
           isOpen={collapseCreate}
           render={() => (
             <PackageCreate
-              studantsData={studantsData}
+              studentsData={studentsData}
               isOpen={collapseCreate}
             />
           )}
@@ -206,14 +222,14 @@ const mapStateToProps = (state) => ({
   collapseCreate: state.packageReducer.stateCreate,
   collapseEdit: state.packageReducer.stateEdit,
   packageData: state.packageReducer.data,
-  studantsData: state.studantReducer.data,
+  studentsData: state.studentReducer.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapsePackagesCreate: (state) => dispatch(collapsePackagesCreate(state)),
-  collapsePackagesEdit: (state) => dispatch(collapsePackagesEdit(state)),
-  findPackages: () => dispatch(findPackages()),
-  findStudants: () => dispatch(findStudants()),
+  collapsePackageCreate: (state) => dispatch(collapsePackageCreate(state)),
+  collapsePackageEdit: (state) => dispatch(collapsePackageEdit(state)),
+  getPackages: () => dispatch(getPackages()),
+  getStudents: () => dispatch(getStudents()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Packages);

@@ -1,25 +1,19 @@
 import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Button,
-  Label,
-  Input,
-} from 'reactstrap';
-import InputMask from 'react-input-mask';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  findStudants,
-  collapseStudantsEdit,
-  deleteStudantAccount,
-  deleteAccountResponse,
-} from '../../../app/reducers/studant';
-import {
-  DialogResponse,
-  InputDialog,
-} from '../../../components';
 
-class DeleteStudent extends React.Component {
+import { ReactForms } from '../../../components';
+import {
+  collapseStudentEdit,
+  deleteAccountResponse,
+} from '../../../app/redux/slicers/studentSlicer';
+import {
+  getStudents,
+  deleteStudentAccount,
+} from '../../../app/redux/actions/studentAction';
+import { DialogResponse, InputDialog } from '../../../components';
+
+class DeleteStudent extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
@@ -28,92 +22,34 @@ class DeleteStudent extends React.Component {
       dialogState: false,
       email: data.email,
       id: data.id,
-      nome: data.nome,
-      sobrenome: data.sobrenome,
+      firstName: data.firstName,
+      lastName: data.lastName,
     };
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-    disabled,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createInputMask = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    mask,
-    disabled,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <InputMask
-        className="form-control"
-        placeholder={placeholder}
-        type={type}
-        mask={mask}
-        value={value}
-        required={required}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  deleteForm = () => {
-    const { deleteStudantAccount } = this.props;
+  deleteForm() {
+    const { deleteStudentAccount } = this.props;
     const { id } = this.state;
-    deleteStudantAccount(id);
+    deleteStudentAccount(id);
     this.setState({
       dialogState: false,
     });
-  };
+  }
 
-  showDeleteStudant = () => {
+  showDeleteStudent() {
     this.setState({
       dialogState: true,
     });
-  };
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
+  }
 
   render() {
-    const {
-      cpf, dialogState, email, nome, sobrenome,
-    } = this.state;
+    const { cpf, dialogState, email, firstName, lastName } = this.state;
 
     const {
-      collapseStudantsEdit,
+      collapseStudentEdit,
       data,
       deleteAccountResponse,
-      getAllStudants,
+      getStudents,
       response,
     } = this.props;
 
@@ -123,30 +59,30 @@ class DeleteStudent extends React.Component {
           className="m-5"
           onSubmit={(e) => {
             e.preventDefault();
-            this.showDeleteStudant();
+            this.showDeleteStudent();
           }}
         >
           {this.createInput(
-            nome,
-            'nome',
+            firstName,
+            'firstName',
             'Nome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
-            sobrenome,
-            'sobrenome',
+            lastName,
+            'lastName',
             'Sobrenome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
             email,
@@ -157,7 +93,7 @@ class DeleteStudent extends React.Component {
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInputMask(
             cpf,
@@ -167,23 +103,31 @@ class DeleteStudent extends React.Component {
             'text',
             true,
             '999.999.999-99',
-            true,
+            true
           )}
           <Button color="danger">Deletar Aluno</Button>
         </Form>
         <InputDialog
           open={dialogState}
-          fields={() => (
-            <>
-            </>
-          )}
+          fields={() => <></>}
           title="Atenção!"
-          description={`Tem certeza que deseja deletar ${data.nome} ${data.sobrenome} ?`}
+          description={`Tem certeza que deseja deletar ${data.firstName} ${data.lastName} ?`}
         >
-          <Button color="primary" onClick={() => this.deleteForm()}>Sim</Button>
-          <Button color="secondary" onClick={() => this.setState({ dialogState: false })}>Cancelar</Button>
+          <Button color="primary" onClick={() => this.deleteForm()}>
+            Sim
+          </Button>
+          <Button
+            color="secondary"
+            onClick={() => this.setState({ dialogState: false })}
+          >
+            Cancelar
+          </Button>
         </InputDialog>
-        <DialogResponse type="error" msg={response.msg} err={response.success === false}>
+        <DialogResponse
+          type="error"
+          msg={response.msg}
+          err={response.success === false}
+        >
           <Button
             color="primary"
             onClick={() => {
@@ -204,8 +148,8 @@ class DeleteStudent extends React.Component {
                 msg: null,
                 success: null,
               });
-              getAllStudants();
-              collapseStudantsEdit();
+              getStudents();
+              collapseStudentEdit();
             }}
           >
             Confirmar
@@ -217,14 +161,16 @@ class DeleteStudent extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  response: state.studantReducer.deleteAccountStatus,
+  response: state.studentReducer.deleteAccountStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseStudantsEdit: () => dispatch(collapseStudantsEdit()),
-  deleteAccountResponse: (response = {}) => dispatch(deleteAccountResponse(response)),
-  deleteStudantAccount: (studantId) => dispatch(deleteStudantAccount(studantId)),
-  getAllStudants: () => dispatch(findStudants()),
+  collapseStudentEdit: () => dispatch(collapseStudentEdit()),
+  deleteAccountResponse: (response = {}) =>
+    dispatch(deleteAccountResponse(response)),
+  deleteStudentAccount: (studantId) =>
+    dispatch(deleteStudentAccount(studantId)),
+  getStudents: () => dispatch(getStudents()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeleteStudent);

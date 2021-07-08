@@ -16,13 +16,13 @@ import { Container, Row, Col } from 'reactstrap';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
-import { PrimaryMenuList, SecondaryMenuList } from '../../templates/menu';
+import { PrimaryMenuList, SecondaryMenuList } from '../../components/templates/menu';
 import { Copyright, ProtectedRoute } from '../../components';
 import { selectUser } from '../../app/redux/selectors/authSelector';
 import { useStyles } from './style';
 import { odontoEasy } from '../../assets/images';
-// import Students from '../student/Students';
-// import Packages from '../package/Packages';
+import Students from '../student/Students';
+import Packages from '../package/Packages';
 import Users from '../user/Users';
 import Dashboard from '../dashboard/Dashboard';
 

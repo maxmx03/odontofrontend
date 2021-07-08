@@ -1,7 +1,7 @@
 import Validator from '../../../utils/validators/Validator';
 import Axios from '../../services/Axios';
 import Session from '../../services/Session';
-import { FIND_SERVICES } from '../../../constants/api/serviceRoutes';
+import { FIND_SERVICES } from '../../../constants/routes/api/serviceRoutes';
 import { storeServices } from '../slicers/serviceSlicer';
 
 export function getServices() {

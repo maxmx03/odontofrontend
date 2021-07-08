@@ -8,7 +8,7 @@ import {
   UPDATE_STUDENT_EMAIL,
   UPDATE_STUDENT_PASSWORD,
   DELETE_STUDENT,
-} from '../../../constants/api/studentRoutes';
+} from '../../../constants/routes/api/studentRoutes';
 import {
   storeStudent,
   createResponse,

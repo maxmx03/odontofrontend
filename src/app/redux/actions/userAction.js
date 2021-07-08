@@ -8,7 +8,7 @@ import {
   UPDATE_USER_EMAIL,
   UPDATE_USER_PASSWORD,
   DELETE_USER,
-} from '../../../constants/api/userRoutes';
+} from '../../../constants/routes/api/userRoutes';
 import {
   storeUsers,
   createResponse,

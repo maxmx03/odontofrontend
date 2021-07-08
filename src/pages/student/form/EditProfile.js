@@ -1,9 +1,7 @@
-import React from 'react';
-import { Form, FormGroup, Button, Label, Input } from 'reactstrap';
-import Select from 'react-select';
-import InputMask from 'react-input-mask';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
+import { ReactForms } from '../../../components';
 import {
   collapseStudentEdit,
   updateProfileResponse,
@@ -14,84 +12,53 @@ import {
 } from '../../../app/redux/actions/studentAction';
 import { DialogResponse } from '../../../components';
 
-class EditProfile extends React.Component {
+class EditProfile extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
+
     this.state = {
       cpf: data.cpf,
       id: data.id,
-      nome: data.nome,
-      sobrenome: data.sobrenome,
-      telefone: data.telefone,
-      turno: data.turno,
-      turnos: [
+      firstName: data.firstName,
+      lastName: data.lastName,
+      phone: data.phone,
+      shift: data.shift,
+      shifts: [
         {
+          value: 'morning',
           label: 'Matutino',
-          value: 'matutino',
         },
         {
+          value: 'afternoon',
           label: 'Vespertino',
-          value: 'vespertino',
         },
         {
-          label: 'Noturno ',
-          value: 'noturno ',
+          value: 'night',
+          label: 'Noturno',
         },
       ],
     };
+
+    this.createInput.bind(this);
+    this.createSelect.bind(this);
+    this.createInputMask.bind(this);
+    this.editForm.bind(this);
   }
 
-
-  createInputMask = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    mask
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <InputMask
-        className="form-control"
-        placeholder={placeholder}
-        type={type}
-        mask={mask}
-        value={value}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        required={required}
-      />
-    </FormGroup>
-  );
-
-  editForm = () => {
-    const { cpf, id, nome, sobrenome, telefone, turno } = this.state;
+  editForm() {
+    const { cpf, id, firstName, lastName, phone, shift } = this.state;
     const { updateStudentProfile } = this.props;
 
-    updateStudentProfile(
-      toTitleCaseAll(nome),
-      toTitleCaseAll(sobrenome),
-      cpf,
-      telefone,
-      turno,
-      id
-    );
-  };
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
+    updateStudentProfile(firstName, lastName, cpf, phone, shift, id);
+  }
 
   render() {
-    const { cpf, nome, sobrenome, telefone, turno, turnos } = this.state;
+    const { cpf, firstName, lastName, phone, shift, shifts } = this.state;
 
     const {
       collapseStudentEdit,
-      getAllStudants,
+      getStudents,
       response,
       updateProfileResponse,
     } = this.props;
@@ -105,12 +72,12 @@ class EditProfile extends React.Component {
             this.editForm();
           }}
         >
-          {this.createInput(nome, 'nome', 'Nome')}
-          {this.createInput(sobrenome, 'sobrenome', 'Sobrenome')}
-          {this.createSelect(turno, 'turno', 'Turno', turnos)}
+          {this.createInput(firstName, 'firstName', 'Nome')}
+          {this.createInput(lastName, 'lastName', 'Sobrenome')}
+          {this.createSelect(shift, 'shift', 'Turno', shifts)}
           {this.createInputMask(
-            telefone,
-            'telefone',
+            phone,
+            'phone',
             'Telefone',
             '',
             'tel',
@@ -153,7 +120,7 @@ class EditProfile extends React.Component {
                 msg: null,
                 success: null,
               });
-              getAllStudants();
+              getStudents();
               collapseStudentEdit();
             }}
           >
@@ -166,17 +133,17 @@ class EditProfile extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  response: state.studantReducer.updatePerfilStatus,
+  response: state.studentReducer.updateProfileStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   collapseStudentEdit: () => dispatch(collapseStudentEdit()),
-  getAllStudants: () => dispatch(getStudents()),
+  getStudents: () => dispatch(getStudents()),
   updateProfileResponse: (response = {}) =>
     dispatch(updateProfileResponse(response)),
-  updateStudentProfile: (nome, sobrenome, cpf, telefone, turno, studantId) =>
+  updateStudentProfile: (firstName, lastName, cpf, phone, shift, studentId) =>
     dispatch(
-      updateStudentProfile(nome, sobrenome, cpf, telefone, turno, studantId)
+      updateStudentProfile(firstName, lastName, cpf, phone, shift, studentId)
     ),
 });
 

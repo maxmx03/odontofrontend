@@ -5,7 +5,7 @@ import {
   USER_LOGIN,
   IS_USER_LOGGED,
   RECOVER_PASSWORD,
-} from '../../../constants/api/authRoutes';
+} from '../../../constants/routes/api/authRoutes';
 import { storeUser, authResponse, forgetResponse } from '../slicers/authSlicer';
 import { load, unload } from '../slicers/loadSlicer';
 

@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import EditIcon from '@material-ui/icons/Edit';
 
+import { ReactTable } from '../../components';
 import UserCreate from './UserCreate';
 import UserEdit from './UserEdit';
-import ReactTable from '../../templates/user/tableFilter/ReactTable';
 import { getUsers } from '../../app/redux/actions/userAction';
 import {
   collapseUserCreate,

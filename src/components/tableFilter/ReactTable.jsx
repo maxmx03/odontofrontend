@@ -81,7 +81,7 @@ function Pagination({
   );
 }
 
-function ReactTable({ columns, data }) {
+export function ReactTable({ columns, data }) {
   const defaultColumn = React.useMemo(
     () => ({
       Filter: DefaultColumnFilter,
@@ -157,5 +157,3 @@ function ReactTable({ columns, data }) {
     </Table>
   );
 }
-
-export default ReactTable;

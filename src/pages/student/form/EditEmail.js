@@ -1,23 +1,18 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Button,
-  Label,
-  Input,
-} from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  updateStudantEmail,
-  findStudants,
-  collapseStudantsEdit,
-  updateEmailResponse,
-} from '../../../app/reducers/studant';
-import {
-  DialogResponse,
-} from '../../../components';
 
-class EditEmail extends React.Component {
+import { ReactForms } from '../../../components';
+import {
+  updateStudentEmail,
+  getStudents,
+} from '../../../app/redux/actions/studentAction';
+import {
+  collapseStudentEdit,
+  updateEmailResponse,
+} from '../../../app/redux/slicers/studentSlicer';
+import { DialogResponse } from '../../../components';
+
+class EditEmail extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
@@ -26,57 +21,23 @@ class EditEmail extends React.Component {
       email: data.email,
       id: data.id,
     };
+
+    this.createInput.bind(this);
+    this.editForm.bind(this);
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  editForm = () => {
+  editForm() {
     const { email, id } = this.state;
-    const { updateStudantEmail } = this.props;
+    const { updateStudentEmail } = this.props;
 
-    updateStudantEmail(email, id);
-  };
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
+    updateStudentEmail(email, id);
+  }
 
   render() {
-    const {
-      email,
-    } = this.state;
+    const { email } = this.state;
 
-    const {
-      collapseStudantsEdit,
-      getAllStudants,
-      response,
-      updateEmailResponse,
-    } = this.props;
+    const { collapseStudentEdit, getStudents, response, updateEmailResponse } =
+      this.props;
 
     return (
       <>
@@ -90,7 +51,11 @@ class EditEmail extends React.Component {
           {this.createInput(email, 'email', 'Email', '', 'email')}
           <Button color="primary">Mudar E-mail</Button>
         </Form>
-        <DialogResponse type="error" msg={response.msg} err={response.success === false}>
+        <DialogResponse
+          type="error"
+          msg={response.msg}
+          err={response.success === false}
+        >
           <Button
             color="primary"
             onClick={() => {
@@ -111,8 +76,8 @@ class EditEmail extends React.Component {
                 msg: null,
                 success: null,
               });
-              getAllStudants();
-              collapseStudantsEdit();
+              getStudents();
+              collapseStudentEdit();
             }}
           >
             Confirmar
@@ -124,14 +89,16 @@ class EditEmail extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  response: state.studantReducer.updateEmailStatus,
+  response: state.studentReducer.updateEmailStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseStudantsEdit: () => dispatch(collapseStudantsEdit()),
-  getAllStudants: () => dispatch(findStudants()),
-  updateEmailResponse: (response = {}) => dispatch(updateEmailResponse(response)),
-  updateStudantEmail: (email, studantId) => dispatch(updateStudantEmail(email, studantId)),
+  collapseStudentEdit: () => dispatch(collapseStudentEdit()),
+  getStudents: () => dispatch(getStudents()),
+  updateEmailResponse: (response = {}) =>
+    dispatch(updateEmailResponse(response)),
+  updateStudentEmail: (email, studantId) =>
+    dispatch(updateStudentEmail(email, studantId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditEmail);

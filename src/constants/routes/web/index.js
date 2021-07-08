@@ -24,3 +24,10 @@ export const STUDENTS_ROUTES = {
   DASHBOARD_STUDENT_EDIT_PASSWORD: '/dashboard/student/edit/password',
   DASHBOARD_STUDENT_DELETE_ACCOUNT: '/dashboard/student/delete',
 };
+
+export const PACKAGES_ROUTES = {
+  DASHBOARD_PACKAGES: '/dashboard/packages',
+  DASHBOARD_PACKAGE_EDIT_CODE: '/dashboard/package/edit/code',
+  DASHBOARD_PACKAGE_DELETE_ACCOUNT: '/dashboard/package/delete',
+  DASHBOARD_PACKAGE_PRINT: '/dashboard/package/print',
+};

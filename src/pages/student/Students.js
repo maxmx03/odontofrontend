@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import EditIcon from '@material-ui/icons/Edit';
 
-import ReactTable from '../../components/tableFilter/ReactTable';
+import { ReactTable } from '../../components';
 import StudentCreate from './StudentCreate';
 import StudentEdit from './StudentEdit';
 import { getStudents } from '../../app/redux/actions/studentAction';

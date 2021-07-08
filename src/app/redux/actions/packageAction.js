@@ -7,7 +7,7 @@ import {
   UPDATE_PACKAGE_PROFILE,
   UPDATE_PACKAGE_CODE,
   DELETE_PACKAGE,
-} from '../../../constants/api/packageRoutes';
+} from '../../../constants/routes/api/packageRoutes';
 import {
   storePackage,
   createResponse,

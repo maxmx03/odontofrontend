@@ -12,7 +12,7 @@ import {
   Button,
 } from '@material-ui/core';
 import DescriptionIcon from '@material-ui/icons/Description';
-import { InputDialog } from '../../../components';
+import { InputDialog } from '../../../../components';
 
 const StyledTableCell = withStyles((theme) => ({
   head: {

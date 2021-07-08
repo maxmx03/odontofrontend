@@ -6,3 +6,4 @@ export * from './protectedRoute/ProtectedRoute';
 export * from './form/ReactForms';
 export * from './loading/Loading';
 export * from './passIndicator/PassIndicator';
+export * from './tableFilter/ReactTable';

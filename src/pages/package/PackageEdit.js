@@ -1,30 +1,24 @@
-import React from 'react';
-import {
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
-import {
-  Route,
-  useLocation,
-  useHistory,
-} from 'react-router-dom';
-import EditInfo from './form/editInfo';
-import EditCode from './form/editCode';
-import DeletePackage from './form/deletePackage';
+import { Nav, NavItem, NavLink } from 'reactstrap';
+import { Route, useLocation, useHistory } from 'react-router-dom';
+
+import EditInfo from './form/EditInfo';
+import EditCode from './form/EditCode';
+import DeletePackage from './form/DeletePackage';
+import { PACKAGES_ROUTES } from '../../constants/routes/web';
 import { PackagePrint } from '../../templates/package';
 
-const StudantEdit = ({ data }) => {
+export default function PackageEdit({ data }) {
   const location = useLocation();
   const history = useHistory();
+
   return (
     <>
       <div>
         <Nav tabs>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/packages')}
-              active={location.pathname === '/home/packages'}
+              onClick={() => history.push(PACKAGES_ROUTES.DASHBOARD_PACKAGES)}
+              active={location.pathname === PACKAGES_ROUTES.DASHBOARD_PACKAGES}
               href="#"
             >
               Informação
@@ -32,8 +26,13 @@ const StudantEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/packages/edit/code')}
-              active={location.pathname === '/home/packages/edit/code'}
+              onClick={() =>
+                history.push(PACKAGES_ROUTES.DASHBOARD_PACKAGE_EDIT_CODE)
+              }
+              active={
+                location.pathname ===
+                PACKAGES_ROUTES.DASHBOARD_PACKAGE_EDIT_CODE
+              }
               href="#"
             >
               N° Pacote
@@ -41,8 +40,13 @@ const StudantEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/packages/delete')}
-              active={location.pathname === '/home/packages/delete'}
+              onClick={() =>
+                history.push(PACKAGES_ROUTES.DASHBOARD_PACKAGE_DELETE_ACCOUNT)
+              }
+              active={
+                location.pathname ===
+                PACKAGES_ROUTES.DASHBOARD_PACKAGE_DELETE_ACCOUNT
+              }
               href="#"
             >
               Deletar
@@ -50,8 +54,12 @@ const StudantEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/packages/print')}
-              active={location.pathname === '/home/packages/print'}
+              onClick={() =>
+                history.push(PACKAGES_ROUTES.DASHBOARD_PACKAGE_PRINT)
+              }
+              active={
+                location.pathname === PACKAGES_ROUTES.DASHBOARD_PACKAGE_PRINT
+              }
               href="#"
             >
               Imprimir
@@ -62,24 +70,22 @@ const StudantEdit = ({ data }) => {
       <div>
         <Route
           exact
-          path="/home/packages"
+          path={PACKAGES_ROUTES.DASHBOARD_PACKAGES}
           component={() => <EditInfo data={data} />}
         />
         <Route
-          path="/home/packages/edit/code"
+          path={PACKAGES_ROUTES.DASHBOARD_PACKAGE_EDIT_CODE}
           component={() => <EditCode data={data} />}
         />
         <Route
-          path="/home/packages/delete"
+          path={PACKAGES_ROUTES.DASHBOARD_PACKAGE_DELETE_ACCOUNT}
           component={() => <DeletePackage data={data} />}
         />
         <Route
-          path="/home/packages/print"
+          path={PACKAGES_ROUTES.DASHBOARD_PACKAGE_PRINT}
           component={() => <PackagePrint data={data} />}
         />
       </div>
     </>
   );
-};
-
-export default StudantEdit;
+}

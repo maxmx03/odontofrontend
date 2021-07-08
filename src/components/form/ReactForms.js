@@ -3,6 +3,7 @@ import { FormGroup, Label, Input } from 'reactstrap';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import InputMask from 'react-input-mask';
+import 'moment/locale/pt-br';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
