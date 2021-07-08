@@ -12,7 +12,7 @@ import {
 } from '../../../app/redux/actions/userAction';
 import { DialogResponse, PassIndicator } from '../../../components';
 
-class UserEdit extends ReactForms {
+class EditPassword extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
@@ -31,6 +31,7 @@ class UserEdit extends ReactForms {
     };
 
     this.editForm.bind(this);
+    this.createInputPassword.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {
@@ -162,4 +163,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updateUserPassword(password, confirmPassword, userId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(EditPassword);

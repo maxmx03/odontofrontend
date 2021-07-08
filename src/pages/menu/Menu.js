@@ -87,8 +87,8 @@ export default function Home() {
           <Row>
             <Col lg="12">
               <Route exact path="/dashboard" component={Dashboard} />
-              {/* <Route path="/dashboard/students" component={Students} /> */}
-              {/* <Route path="/dashboard/packages" component={Packages} /> */}
+              <Route path="/dashboard/students" component={Students} />
+              <Route path="/dashboard/packages" component={Packages} />
               <ProtectedRoute
                 path="/dashboard/users"
                 component={Users}

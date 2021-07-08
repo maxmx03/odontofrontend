@@ -1,10 +1,11 @@
 import { Nav, NavItem, NavLink } from 'reactstrap';
 import { Route, useLocation, useHistory } from 'react-router-dom';
 
-import EditInfo from './form/editInfo';
-import EditEmail from './form/editEmail';
-import EditPassword from './form/editPassword';
-import DeleteUser from './form/deleteUser';
+import { USERS_ROUTES } from '../../constants/routes/web';
+import EditProfile from './form/EditProfile';
+import EditEmail from './form/EditEmail';
+import EditPassword from './form/EditPassword';
+import DeleteUser from './form/DeleteUser';
 
 export default function UserEdit({ data }) {
   const location = useLocation();
@@ -16,8 +17,8 @@ export default function UserEdit({ data }) {
         <Nav tabs>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/dashboard/users')}
-              active={location.pathname === '/dashboard/users'}
+              onClick={() => history.push(USERS_ROUTES.DASHBOARD_USERS)}
+              active={location.pathname === USERS_ROUTES.DASHBOARD_USERS}
               href="#"
             >
               Perfil
@@ -25,8 +26,12 @@ export default function UserEdit({ data }) {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/dashboard/users/edit/email')}
-              active={location.pathname === '/dashboard/users/edit/email'}
+              onClick={() =>
+                history.push(USERS_ROUTES.DASHBOARD_USER_EDIT_EMAIL)
+              }
+              active={
+                location.pathname === USERS_ROUTES.DASHBOARD_USER_EDIT_EMAIL
+              }
               href="#"
             >
               Email
@@ -34,8 +39,12 @@ export default function UserEdit({ data }) {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/dashboard/users/edit/password')}
-              active={location.pathname === '/dashboard/users/edit/password'}
+              onClick={() =>
+                history.push(USERS_ROUTES.DASHBOARD_USER_EDIT_PASSWORD)
+              }
+              active={
+                location.pathname === USERS_ROUTES.DASHBOARD_USER_EDIT_PASSWORD
+              }
               href="#"
             >
               Senha
@@ -43,8 +52,12 @@ export default function UserEdit({ data }) {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/dashboard/users/delete/account')}
-              active={location.pathname === '/dashboard/users/delete/account'}
+              onClick={() =>
+                history.push(USERS_ROUTES.DASHBOARD_USER_DELETE_ACCOUNT)
+              }
+              active={
+                location.pathname === USERS_ROUTES.DASHBOARD_USER_DELETE_ACCOUNT
+              }
               href="#"
             >
               Deletar
@@ -55,19 +68,19 @@ export default function UserEdit({ data }) {
       <div>
         <Route
           exact
-          path="/dashboard/users"
-          component={() => <EditInfo data={data} />}
+          path={USERS_ROUTES.DASHBOARD_USERS}
+          component={() => <EditProfile data={data} />}
         />
         <Route
-          path="/dashboard/users/edit/email"
+          path={USERS_ROUTES.DASHBOARD_USER_EDIT_EMAIL}
           component={() => <EditEmail data={data} />}
         />
         <Route
-          path="/dashboard/users/edit/password"
+          path={USERS_ROUTES.DASHBOARD_USER_EDIT_PASSWORD}
           component={() => <EditPassword data={data} />}
         />
         <Route
-          path="/dashboard/users/delete/account"
+          path={USERS_ROUTES.DASHBOARD_USER_DELETE_ACCOUNT}
           component={() => <DeleteUser data={data} />}
         />
       </div>

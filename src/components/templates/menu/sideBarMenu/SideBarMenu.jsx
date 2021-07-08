@@ -9,37 +9,39 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { selectUser } from '../../../app/redux/selectors/authSelector';
 import { logOutUser } from '../../../app/redux/actions/authAction';
+import { SIDEBAR_ROUTES } from '../../../../constants/routes/web';
 import MenuItem from './MenuItem';
 
 export function PrimaryMenuList() {
   return (
     <div>
       <MenuItem
-        path="/dashboard"
+        path={SIDEBAR_ROUTES.DASHBOARD}
         pathName="dashboard"
         name="Painel"
         icon={<DashboardIcon />}
         isButton
       />
       <MenuItem
-        path="/dashboard/packages"
+        path={SIDEBAR_ROUTES.DASHBOARD_PACKAGES}
         pathName="packages"
         name="Pacotes"
         icon={<ShoppingCartIcon />}
         isButton
       />
       <MenuItem
-        path="/dashboard/students"
+        path={SIDEBAR_ROUTES.DASHBOARD_STUDENTS}
         pathName="students"
         name="Alunos"
         icon={<SchoolIcon />}
         isButton
       />
       <MenuItem
-        path="/dashboard/users"
+        path={SIDEBAR_ROUTES.DASHBOARD_USERS}
         pathName="users"
         name="Usuários"
         icon={<PeopleIcon />}
+        restrict
       />
     </div>
   );

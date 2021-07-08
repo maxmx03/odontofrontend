@@ -19,7 +19,14 @@ import {
 import { selectUser } from '../../../app/redux/selectors/authSelector';
 import { useEffect } from 'react';
 
-export default function MenuItem({ path, pathName, name, icon, onClick }) {
+export default function MenuItem({
+  path,
+  pathName,
+  name,
+  icon,
+  restrict,
+  onClick,
+}) {
   const dispatch = useDispatch();
   const user = useSelector(selectUser);
   const location = useLocation();
@@ -76,7 +83,7 @@ export default function MenuItem({ path, pathName, name, icon, onClick }) {
     history.push(path);
   }
 
-  if (pathName === 'users' && user.type !== 'admin') {
+  if (restrict && user.type !== 'admin') {
     return <></>;
   }
 

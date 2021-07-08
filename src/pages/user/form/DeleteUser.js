@@ -26,6 +26,8 @@ class DeleteUser extends ReactForms {
 
     this.deleteForm.bind(this);
     this.showDeleteUser.bind(this);
+    this.createInput.bind(this);
+    this.createSelect.bind(this);
   }
 
   deleteForm() {
@@ -37,7 +39,7 @@ class DeleteUser extends ReactForms {
     });
   }
 
-  showDeleteUser = () => {
+  showDeleteUser() {
     this.setState({
       dialogState: true,
     });

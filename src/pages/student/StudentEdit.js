@@ -1,20 +1,13 @@
-import React from 'react';
-import {
-  Nav,
-  NavItem,
-  NavLink,
-} from 'reactstrap';
-import {
-  Route,
-  useLocation,
-  useHistory,
-} from 'react-router-dom';
-import EditInfo from './form/editInfo';
-import EditEmail from './form/editEmail';
-import EditPassword from './form/editPassword';
-import DeleteUser from './form/deleteStudant';
+import { Nav, NavItem, NavLink } from 'reactstrap';
+import { Route, useLocation, useHistory } from 'react-router-dom';
 
-const StudantEdit = ({ data }) => {
+import { STUDENTS_ROUTES } from '../../constants/routes/web';
+import EditProfile from './form/EditProfile';
+import EditEmail from './form/EditEmail';
+import EditPassword from './form/EditPassword';
+import DeleteStudent from './form/DeleteStudent';
+
+export default function StudentEdit({ data }) {
   const location = useLocation();
   const history = useHistory();
 
@@ -24,8 +17,8 @@ const StudantEdit = ({ data }) => {
         <Nav tabs>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/studants')}
-              active={location.pathname === '/home/studants'}
+              onClick={() => history.push(STUDENTS_ROUTES.DASHBOARD_STUDENTS)}
+              active={location.pathname === STUDENTS_ROUTES.DASHBOARD_STUDENTS}
               href="#"
             >
               Perfil
@@ -33,8 +26,13 @@ const StudantEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/studants/edit/email')}
-              active={location.pathname === '/home/studants/edit/email'}
+              onClick={() =>
+                history.push(STUDENTS_ROUTES.DASHBOARD_STUDENT_EDIT_EMAIL)
+              }
+              active={
+                location.pathname ===
+                STUDENTS_ROUTES.DASHBOARD_STUDENT_EDIT_EMAIL
+              }
               href="#"
             >
               Email
@@ -42,8 +40,13 @@ const StudantEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/studants/edit/password')}
-              active={location.pathname === '/home/studants/edit/password'}
+              onClick={() =>
+                history.push(STUDENTS_ROUTES.DASHBOARD_STUDENT_EDIT_PASSWORD)
+              }
+              active={
+                location.pathname ===
+                STUDENTS_ROUTES.DASHBOARD_STUDENT_EDIT_PASSWORD
+              }
               href="#"
             >
               Senha
@@ -51,8 +54,13 @@ const StudantEdit = ({ data }) => {
           </NavItem>
           <NavItem>
             <NavLink
-              onClick={() => history.push('/home/studants/delete/account')}
-              active={location.pathname === '/home/studants/delete/account'}
+              onClick={() =>
+                history.push(STUDENTS_ROUTES.DASHBOARD_STUDENT_DELETE_ACCOUNT)
+              }
+              active={
+                location.pathname ===
+                STUDENTS_ROUTES.DASHBOARD_STUDENT_DELETE_ACCOUNT
+              }
               href="#"
             >
               Deletar
@@ -63,24 +71,22 @@ const StudantEdit = ({ data }) => {
       <div>
         <Route
           exact
-          path="/home/studants"
-          component={() => <EditInfo data={data} />}
+          path={STUDENTS_ROUTES.DASHBOARD_STUDENTS}
+          component={() => <EditProfile data={data} />}
         />
         <Route
-          path="/home/studants/edit/email"
+          path={STUDENTS_ROUTES.DASHBOARD_STUDENT_EDIT_EMAIL}
           component={() => <EditEmail data={data} />}
         />
         <Route
-          path="/home/studants/edit/password"
+          path={STUDENTS_ROUTES.DASHBOARD_STUDENT_EDIT_PASSWORD}
           component={() => <EditPassword data={data} />}
         />
         <Route
-          path="/home/studants/delete/account"
-          component={() => <DeleteUser data={data} />}
+          path={STUDENTS_ROUTES.DASHBOARD_STUDENT_DELETE_ACCOUNT}
+          component={() => <DeleteStudent data={data} />}
         />
       </div>
     </>
   );
-};
-
-export default StudantEdit;
+}

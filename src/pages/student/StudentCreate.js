@@ -1,60 +1,47 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Button,
-  Label,
-  Input,
-} from 'reactstrap';
-import Select from 'react-select';
-import InputMask from 'react-input-mask';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  toTitleCaseFirst,
-  toTitleCaseAll,
-  htmlPurify,
-} from '../../helpers';
-import {
-  WeakPassIndicator,
-  DialogResponse,
-} from '../../components';
-import {
-  createResponse,
-  findStudants,
-  collapseStudantsCreate,
-  createStudant,
-} from '../../app/reducers/studant';
 
-class StudantCreate extends React.Component {
+import { ReactForms } from '../../components';
+import { WeakPassIndicator, DialogResponse } from '../../components';
+import {
+  collapseStudentCreate,
+  createResponse,
+} from '../../app/redux/slicers/studentSlicer';
+import {
+  getStudents,
+  createStudent,
+} from '../../app/redux/actions/studentAction';
+
+class StudentCreate extends ReactForms {
   constructor(props) {
     super(props);
     this.state = {
-      confirmaSenha: '',
+      confirmPassword: '',
       cpf: '',
       email: '',
-      nome: '',
-      passwordRules: {
+      firstName: '',
+      lastName: '',
+      passwordIndicator: {
         equals: false,
         minAlphaNum: false,
         minChar: false,
       },
-      senha: '',
+      password: '',
       showIndicator: false,
-      sobrenome: '',
-      telefone: '',
-      turno: '',
-      turnos: [
+      phone: '',
+      shift: '',
+      shifts: [
         {
-          value: 'matutino',
+          value: 'morning',
           label: 'Matutino',
         },
         {
-          value: 'vespertino',
+          value: 'afternoon',
           label: 'Vespertino',
         },
         {
-          value: 'noturno ',
-          label: 'Noturno ',
+          value: 'night',
+          label: 'Noturno',
         },
       ],
     };
@@ -62,179 +49,54 @@ class StudantCreate extends React.Component {
 
   componentDidUpdate(prevProp, prevState) {
     const { isOpen } = this.props;
-    const { confirmaSenha, senha } = this.state;
+    const { confirmPassword, password } = this.state;
 
     if (!isOpen && prevProp.isOpen !== isOpen) {
       this.resetAllInput();
     }
 
     if (
-      prevState.senha !== senha
-      || prevState.confirmaSenha !== confirmaSenha
+      prevState.password !== password ||
+      prevState.confirmPassword !== confirmPassword
     ) {
       this.setState({
-        passwordRules: {
-          equals: senha && senha === confirmaSenha,
-          minAlphaNum: /\D/.test(senha) && /\d/.test(senha),
-          minChar: /^.{5,}$/.test(senha),
+        passwordIndicator: {
+          equals: password && password === confirmPassword,
+          minAlphaNum: /\D/.test(password) && /\d/.test(password),
+          minChar: /^.{5,}$/.test(password),
         },
       });
     }
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => {
-          type === 'text'
-            ? this.setValue(state, htmlPurify(e.target.value))
-            : this.setValue(state, e.target.value);
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  createSelect = (
-    value,
-    state,
-    label,
-    options,
-    placeholder,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Select
-        value={{
-          label: toTitleCaseFirst(value),
-          value,
-        }}
-        onChange={(e) => this.setValue(state, e.value)}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: '.25rem',
-          colors: {
-            ...theme.colors,
-            primary: '#fd7e14',
-            primary25: '#fd7e14',
-          },
-        })}
-        styles={{
-          option: ((provided, state) => ({
-            ...provided,
-            color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          })),
-        }}
-        options={options}
-        placeholder={placeholder}
-        isDisabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createInputPassword = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        onFocus={() => {
-          this.setState({
-            showIndicator: true,
-          });
-        }}
-        onBlur={() => {
-          this.setState({
-            showIndicator: false,
-          });
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  createInputMask = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    mask,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <InputMask
-        className="form-control"
-        placeholder={placeholder}
-        type={type}
-        mask={mask}
-        value={value}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        required={required}
-      />
-    </FormGroup>
-  );
-
   resetAllInput = () => {
     this.setState({
-      confirmaSenha: '',
+      confirmPassword: '',
       cpf: '',
       email: '',
-      nome: '',
-      passwordRules: {
+      firstName: '',
+      passwordIndicator: {
         equals: false,
         minAlphaNum: false,
         minChar: false,
       },
-      senha: '',
+      password: '',
       showIndicator: false,
-      sobrenome: '',
-      telefone: '',
-      turno: '',
-      turnos: [
+      lastName: '',
+      phone: '',
+      shift: '',
+      shifts: [
         {
-          value: 'matutino',
+          value: 'morning',
           label: 'Matutino',
         },
         {
-          value: 'vespertino',
+          value: 'afternoon',
           label: 'Vespertino',
         },
         {
-          value: 'noturno ',
-          label: 'Noturno ',
+          value: 'night',
+          label: 'Noturno',
         },
       ],
     });
@@ -242,31 +104,31 @@ class StudantCreate extends React.Component {
 
   postForm = () => {
     const {
-      confirmaSenha,
+      confirmPassword,
       cpf,
       email,
-      nome,
-      senha,
-      sobrenome,
-      telefone,
-      turno,
+      firstName,
+      password,
+      lastName,
+      phone,
+      shift,
     } = this.state;
-    const { createStudant } = this.props;
+    const { createStudent } = this.props;
 
     if (
-      /^.{5,}$/.test(senha)
-      && /[A-Za-z0-9_]/.test(senha)
-      && senha === confirmaSenha
+      /^.{5,}$/.test(password) &&
+      /[A-Za-z0-9_]/.test(password) &&
+      password === confirmPassword
     ) {
-      createStudant(
-        toTitleCaseAll(nome),
-        toTitleCaseAll(sobrenome),
+      createStudent(
+        firstName,
+        lastName,
         cpf,
         email,
-        senha,
-        confirmaSenha,
-        telefone,
-        turno,
+        password,
+        confirmPassword,
+        phone,
+        shift
       );
     }
   };
@@ -279,27 +141,23 @@ class StudantCreate extends React.Component {
 
   render() {
     const {
-      confirmaSenha,
+      confirmPassword,
       cpf,
       email,
-      nome,
-      passwordRules,
-      senha,
+      firstName,
+      passwordIndicator,
+      password,
       showIndicator,
-      sobrenome,
-      telefone,
-      turno,
-      turnos,
+      lastName,
+      phone,
+      shift,
+      shifts,
     } = this.state;
 
-    const { equals, minAlphaNum, minChar } = passwordRules;
+    const { equals, minAlphaNum, minChar } = passwordIndicator;
 
-    const {
-      collapseStudantsCreate,
-      createResponse,
-      findStudants,
-      response,
-    } = this.props;
+    const { collapseStudentCreate, createResponse, getStudents, response } =
+      this.props;
 
     return (
       <>
@@ -310,16 +168,22 @@ class StudantCreate extends React.Component {
             this.postForm();
           }}
         >
-          {this.createInput(nome, 'nome', 'Nome')}
-          {this.createInput(sobrenome, 'sobrenome', 'Sobrenome')}
+          {this.createInput(firstName, 'firstName', 'Nome')}
+          {this.createInput(lastName, 'lastName', 'Sobrenome')}
           {this.createInput(email, 'email', 'Email', '', 'email')}
-          {this.createInputPassword(senha, 'senha', 'Senha', '', 'password')}
           {this.createInputPassword(
-            confirmaSenha,
-            'confirmaSenha',
+            password,
+            'password',
+            'Senha',
+            '',
+            'password'
+          )}
+          {this.createInputPassword(
+            confirmPassword,
+            'confirmPassword',
             'Confirma Senha',
             '',
-            'password',
+            'password'
           )}
           <WeakPassIndicator
             equals={equals}
@@ -327,15 +191,15 @@ class StudantCreate extends React.Component {
             minAlphaNum={minAlphaNum}
             showIndicator={showIndicator}
           />
-          {this.createSelect(turno, 'turno', 'Turno', turnos)}
+          {this.createSelect(shift, 'shift', 'Turno', shifts)}
           {this.createInputMask(
-            telefone,
-            'telefone',
+            phone,
+            'phone',
             'Telefone',
             '',
             'tel',
             true,
-            '(99) 9999-999999',
+            '(99) 9999-999999'
           )}
           {this.createInputMask(
             cpf,
@@ -344,7 +208,7 @@ class StudantCreate extends React.Component {
             '',
             'text',
             true,
-            '999.999.999-99',
+            '999.999.999-99'
           )}
           <Button color="primary">Cadastrar Aluno</Button>
         </Form>
@@ -374,8 +238,8 @@ class StudantCreate extends React.Component {
                 msg: null,
                 success: null,
               });
-              findStudants();
-              collapseStudantsCreate();
+              getStudents();
+              collapseStudentCreate();
             }}
           >
             Confirmar
@@ -387,34 +251,35 @@ class StudantCreate extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-  response: state.studantReducer.createStatus,
+  response: state.studentReducer.createStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapseStudantsCreate: () => dispatch(collapseStudantsCreate()),
-  findStudants: () => dispatch(findStudants()),
-  createStudant: (
-    nome,
-    sobrenome,
+  collapseStudentCreate: () => dispatch(collapseStudentCreate()),
+  getStudents: () => dispatch(getStudents()),
+  createStudent: (
+    firstName,
+    lastName,
     cpf,
     email,
-    senha,
-    confirmaSenha,
-    telefone,
-    turno,
-  ) => dispatch(
-    createStudant(
-      nome,
-      sobrenome,
-      cpf,
-      email,
-      senha,
-      confirmaSenha,
-      telefone,
-      turno,
+    password,
+    confirmPassword,
+    phone,
+    shift
+  ) =>
+    dispatch(
+      createStudent(
+        firstName,
+        lastName,
+        cpf,
+        email,
+        password,
+        confirmPassword,
+        phone,
+        shift
+      )
     ),
-  ),
   createResponse: (response = {}) => dispatch(createResponse(response)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudantCreate);
+export default connect(mapStateToProps, mapDispatchToProps)(StudentCreate);

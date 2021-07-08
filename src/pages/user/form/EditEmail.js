@@ -4,59 +4,39 @@ import { connect } from 'react-redux';
 import { ReactForms } from '../../../components';
 import {
   collapseUserEdit,
-  updateProfileResponse,
+  updateEmailResponse,
 } from '../../../app/redux/slicers/userSlicer';
 import {
   getUsers,
-  updateUserProfile,
+  updateUserEmail,
 } from '../../../app/redux/actions/userAction';
 import { DialogResponse } from '../../../components';
 
-class UserEdit extends ReactForms {
+class EditEmail extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
 
     this.state = {
+      email: data.email,
       id: data.id,
-      firstName: data.firstName,
-      lastName: data.lastName,
-      type: data.type,
-      types: [
-        {
-          label: 'Laboratorista',
-          value: 'user',
-        },
-        {
-          label: 'Administrador',
-          value: 'admin',
-        },
-        {
-          label: 'Desativado',
-          value: 'disabled',
-        },
-      ],
     };
 
     this.editForm.bind(this);
+    this.createInput.bind(this);
   }
 
   editForm() {
-    const { id, firstName, lastName, type } = this.state;
-    const { updateUserProfile } = this.props;
+    const { email, id } = this.state;
+    const { updateUserEmail } = this.props;
 
-    updateUserProfile(
-      firstName.toLowerCase(),
-      lastName.toLowerCase(),
-      type,
-      id
-    );
+    updateUserEmail(email, id);
   }
 
   render() {
-    const { firstName, lastName, type, types } = this.state;
+    const { email } = this.state;
 
-    const { collapseUserEdit, getUsers, response, updateProfileResponse } =
+    const { collapseUserEdit, getUsers, response, updateEmailResponse } =
       this.props;
 
     return (
@@ -69,10 +49,8 @@ class UserEdit extends ReactForms {
             this.editForm();
           }}
         >
-          {this.createSelect(type, 'type', 'Tipo', types)}
-          {this.createInput(firstName, 'firstName', 'Nome')}
-          {this.createInput(lastName, 'lastName', 'Sobrenome')}
-          <Button color="primary">Mudar Perfil</Button>
+          {this.createInput(email, 'email', 'Email', '', 'email')}
+          <Button color="primary">Mudar E-Mail</Button>
         </Form>
         <DialogResponse
           type="error"
@@ -82,7 +60,7 @@ class UserEdit extends ReactForms {
           <Button
             color="primary"
             onClick={() => {
-              updateProfileResponse({
+              updateEmailResponse({
                 msg: null,
                 success: null,
               });
@@ -95,7 +73,7 @@ class UserEdit extends ReactForms {
           <Button
             color="primary"
             onClick={() => {
-              updateProfileResponse({
+              updateEmailResponse({
                 msg: null,
                 success: null,
               });
@@ -112,17 +90,16 @@ class UserEdit extends ReactForms {
 }
 
 const mapStateToProps = (state) => ({
-  response: state.userReducer.updateProfileStatus,
+  response: state.userReducer.updateEmailStatus,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   collapseUserEdit: (stateCreate, stateEdit) =>
     dispatch(collapseUserEdit(stateCreate, stateEdit)),
   getUsers: () => dispatch(getUsers()),
-  updateProfileResponse: (response = {}) =>
-    dispatch(updateProfileResponse(response)),
-  updateUserProfile: (firstName, lastName, type, userId) =>
-    dispatch(updateUserProfile(firstName, lastName, type, userId)),
+  updateEmailResponse: (response = {}) =>
+    dispatch(updateEmailResponse(response)),
+  updateUserEmail: (email, userId) => dispatch(updateUserEmail(email, userId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(EditEmail);

@@ -40,6 +40,9 @@ class UserCreate extends ReactForms {
 
     this.resetAllInput.bind(this);
     this.postForm.bind(this);
+    this.createInput.bind(this);
+    this.createInputPassword.bind(this);
+    this.createSelect.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {
