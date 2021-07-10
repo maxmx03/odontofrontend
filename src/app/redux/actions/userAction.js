@@ -22,11 +22,16 @@ import { load, unload } from '../slicers/loadSlicer';
 export function getUsers() {
   return function (dispatch) {
     const token = Session.get('token');
+    dispatch(load());
 
     if (Validator.isNotEmpty(token)) {
-      Axios.get(FIND_USERS, token).then(({ data }) => {
-        dispatch(storeUsers(data.users));
-      });
+      Axios.get(FIND_USERS, token)
+        .then(({ data }) => {
+          dispatch(storeUsers(data.users));
+        })
+        .finally(() => {
+          dispatch(unload());
+        });
     }
   };
 }

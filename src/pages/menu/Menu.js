@@ -16,7 +16,10 @@ import { Container, Row, Col } from 'reactstrap';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 
-import { PrimaryMenuList, SecondaryMenuList } from '../../components/templates/menu';
+import {
+  PrimaryMenuList,
+  SecondaryMenuList,
+} from '../../components/templates/menu';
 import { Copyright, ProtectedRoute } from '../../components';
 import { selectUser } from '../../app/redux/selectors/authSelector';
 import { useStyles } from './style';
@@ -25,6 +28,12 @@ import Students from '../student/Students';
 import Packages from '../package/Packages';
 import Users from '../user/Users';
 import Dashboard from '../dashboard/Dashboard';
+import {
+  SWITCH_ROUTES,
+  USERS_ROUTES,
+  STUDENTS_ROUTES,
+  PACKAGES_ROUTES,
+} from '../../constants/routes/web';
 
 export default function Home() {
   const classes = useStyles();
@@ -86,11 +95,21 @@ export default function Home() {
         <Container fluid className="mt-3">
           <Row>
             <Col lg="12">
-              <Route exact path="/dashboard" component={Dashboard} />
-              <Route path="/dashboard/students" component={Students} />
-              <Route path="/dashboard/packages" component={Packages} />
+              <Route
+                exact
+                path={SWITCH_ROUTES.DASHBOARD}
+                component={Dashboard}
+              />
+              <Route
+                path={STUDENTS_ROUTES.DASHBOARD_STUDENTS}
+                component={Students}
+              />
+              <Route
+                path={PACKAGES_ROUTES.DASHBOARD_PACKAGES}
+                component={Packages}
+              />
               <ProtectedRoute
-                path="/dashboard/users"
+                path={USERS_ROUTES.DASHBOARD_USERS}
                 component={Users}
                 hasPermission={user.type && user.type === 'admin'}
               />

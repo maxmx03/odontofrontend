@@ -59,7 +59,7 @@ export class ReactForms extends React.Component {
     );
   }
 
-  createInputPassword = (
+  createInputPassword(
     value,
     state,
     label,
@@ -69,72 +69,65 @@ export class ReactForms extends React.Component {
     rows,
     spellcheck = false,
     disabled
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        onFocus={() => {
-          this.setValue({
-            showIndicator: true,
-          });
-        }}
-        onBlur={() => {
-          this.setValue({
-            showIndicator: false,
-          });
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
+  ) {
+    return (
+      <FormGroup>
+        <Label>{label}</Label>
+        <Input
+          type={type}
+          value={value}
+          placeholder={placeholder}
+          required={required}
+          onChange={(e) => this.setValue(state, e.target.value)}
+          onFocus={() => {
+            this.setValue('showIndicator', true);
+          }}
+          onBlur={() => {
+            this.setValue('showIndicator', false);
+          }}
+          rows={rows}
+          spellCheck={spellcheck}
+          style={{ resize: 'none' }}
+          disabled={disabled}
+        />
+      </FormGroup>
+    );
+  }
 
-  createSelect = (
-    value,
-    state,
-    label,
-    options,
-    placeholder,
-    disabled = false
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Select
-        value={{
-          label: Validator.toTitleCase(value),
-          value,
-        }}
-        onChange={(e) => this.setValue(state, e.value)}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: '.25rem',
-          colors: {
-            ...theme.colors,
-            primary: '#fd7e14',
-            primary25: '#fd7e14',
-          },
-        })}
-        styles={{
-          option: (provided, state) => ({
-            ...provided,
-            color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          }),
-        }}
-        options={options}
-        placeholder={placeholder}
-        isDisabled={disabled}
-      />
-    </FormGroup>
-  );
+  createSelect(value, state, label, options, placeholder, disabled = false) {
+    return (
+      <FormGroup>
+        <Label>{label}</Label>
+        <Select
+          value={{
+            label: value === 'user' ? 'Laboratorista' : 'Administrador',
+            value,
+          }}
+          onChange={(e) => this.setValue(state, e.value)}
+          theme={(theme) => ({
+            ...theme,
+            borderRadius: '.25rem',
+            colors: {
+              ...theme.colors,
+              primary: '#fd7e14',
+              primary25: '#fd7e14',
+            },
+          })}
+          styles={{
+            option: (provided, state) => ({
+              ...provided,
+              color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
+            }),
+          }}
+          options={options}
+          placeholder={placeholder}
+          isDisabled={disabled}
+        />
+      </FormGroup>
+    );
+  }
 
-  createInputMask = (
+  createInputMask(
     value,
     state,
     label,
@@ -143,48 +136,52 @@ export class ReactForms extends React.Component {
     required = true,
     mask,
     disabled
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <InputMask
-        className="form-control"
-        placeholder={placeholder}
-        type={type}
-        mask={mask}
-        value={value}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        required={required}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
+  ) {
+    return (
+      <FormGroup>
+        <Label>{label}</Label>
+        <InputMask
+          className="form-control"
+          placeholder={placeholder}
+          type={type}
+          mask={mask}
+          value={value}
+          onChange={(e) => this.setValue(state, e.target.value)}
+          required={required}
+          disabled={disabled}
+        />
+      </FormGroup>
+    );
+  }
 
-  createAutoComplete = (value, state, label, options) => (
-    <FormGroup>
-      <Autocomplete
-        onChange={(e, v) => {
-          if (e.target.textContent.length === 0) {
-            this.resetAutoCompleteInput();
-          }
-          this.setValue(state, v);
-        }}
-        value={value}
-        options={options}
-        getOptionLabel={(option) => option.email}
-        renderInput={(params) => (
-          <TextField {...params} label={label} variant="standard" />
-        )}
-      />
-    </FormGroup>
-  );
+  createAutoComplete(value, state, label, options, callback) {
+    return (
+      <FormGroup>
+        <Autocomplete
+          onChange={(e, v) => {
+            if (e.target.textContent.length === 0) {
+              callback();
+            }
+            this.setValue(state, v);
+          }}
+          value={value}
+          options={options}
+          getOptionLabel={(option) => option.email}
+          renderInput={(params) => (
+            <TextField {...params} label={label} variant="standard" />
+          )}
+        />
+      </FormGroup>
+    );
+  }
 
-  createDatePicker = (
+  createDatePicker(
     value,
     state,
     label,
     format = 'DD/MM/YYYY',
     disabled = false
-  ) => {
+  ) {
     const { dateWarning } = this.state;
 
     moment.locale('pt-br');
@@ -235,5 +232,5 @@ export class ReactForms extends React.Component {
         </FormGroup>
       </MuiPickersUtilsProvider>
     );
-  };
+  }
 }

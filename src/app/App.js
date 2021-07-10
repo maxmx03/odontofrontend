@@ -18,7 +18,7 @@ export default function App() {
     }
 
     history.push('/login');
-  }, [dispatch, history, user]);
+  }, [dispatch, history, user.isLogged]);
 
   return <></>;
 }

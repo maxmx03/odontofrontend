@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import Collapse from '@kunukn/react-collapse';
 import { Nav, NavItem, NavLink } from 'reactstrap';
 import { Button } from '@material-ui/core';
@@ -17,7 +17,7 @@ import { getPackages } from '../../app/redux/actions/packageAction';
 import { getStudents } from '../../app/redux/actions/studentAction';
 import Validator from '../../utils/validators/Validator';
 
-class Packages extends React.Component {
+class Packages extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -66,7 +66,9 @@ class Packages extends React.Component {
             Cell: ({ row }) => {
               const { original: studentPackage } = row;
               return (
-                <span>{Validator.limitNumChar(studentPackage.student.email)}</span>
+                <span>
+                  {Validator.limitNumChar(studentPackage.student.email)}
+                </span>
               );
             },
           },

@@ -128,10 +128,14 @@ export default class Validator {
   static toTitleCase(string = '') {
     const regex = /^[a-z]{0,1}|\s\w/gi;
 
-    string.match(regex).forEach((char) => {
-      string = string.replace(char, char.toUpperCase());
-    });
+    if (typeof string === 'string') {
+      string.match(regex).forEach((char) => {
+        string = string.replace(char, char.toUpperCase());
+      });
 
-    return string;
+      return string;
+    }
+
+    return '';
   }
 }

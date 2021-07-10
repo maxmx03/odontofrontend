@@ -53,7 +53,7 @@ const Login = () => {
     if (user.isLogged) {
       history.push('/dashboard');
     }
-  }, [user, dispatch, history]);
+  }, [user.isLogged, dispatch, history]);
 
   function handleState(key, value) {
     setState({

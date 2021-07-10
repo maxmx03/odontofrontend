@@ -7,16 +7,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {
   collapseUserCreate,
   collapseUserEdit,
-} from '../../../app/redux/slicers/userSlicer';
+} from '../../../../app/redux/slicers/userSlicer';
 import {
   collapseStudentCreate,
   collapseStudentEdit,
-} from '../../../app/redux/slicers/studentSlicer';
+} from '../../../../app/redux/slicers/studentSlicer';
 import {
   collapsePackageCreate,
   collapsePackageEdit,
-} from '../../../app/redux/slicers/packageSlicer';
-import { selectUser } from '../../../app/redux/selectors/authSelector';
+} from '../../../../app/redux/slicers/packageSlicer';
+import { selectUser } from '../../../../app/redux/selectors/authSelector';
 import { useEffect } from 'react';
 
 export default function MenuItem({
@@ -33,6 +33,17 @@ export default function MenuItem({
   const history = useHistory();
 
   useEffect(() => {
+    function getLocation(pathname) {
+      const regex = /users|students|packages/gi;
+      const result = pathname.match(regex);
+
+      if (!!result) {
+        return result[0];
+      }
+
+      return '';
+    }
+
     function handleCloseAll() {
       dispatch(collapseUserCreate(false));
       dispatch(collapseUserEdit(false));
@@ -63,7 +74,7 @@ export default function MenuItem({
       dispatch(collapsePackageEdit(false));
     }
 
-    switch (pathName) {
+    switch (getLocation(location.pathname)) {
       case 'packages':
         handleCloseExpectPackage();
         break;
@@ -79,6 +90,18 @@ export default function MenuItem({
     }
   }, [location.pathname, path, pathName, dispatch]);
 
+  function sameLocation(pathname, path) {
+    const regex =
+      /^\/dashboard$|\/dashboard\/users|\/dashboard\/students|\/dashboard\/packages/gi;
+    const result = pathname.match(regex);
+
+    if (!!result) {
+      return result[0] === path;
+    }
+
+    return false;
+  }
+
   function handleOnClick() {
     history.push(path);
   }
@@ -91,7 +114,9 @@ export default function MenuItem({
     <ListItem
       button
       onClick={onClick || handleOnClick}
-      className={location.pathname === path && 'MuiListItem-button-active'}
+      className={
+        sameLocation(location.pathname, path) && 'MuiListItem-button-active'
+      }
     >
       <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText primary={name} />

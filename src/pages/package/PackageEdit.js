@@ -5,7 +5,7 @@ import EditInfo from './form/EditInfo';
 import EditCode from './form/EditCode';
 import DeletePackage from './form/DeletePackage';
 import { PACKAGES_ROUTES } from '../../constants/routes/web';
-import { PackagePrint } from '../../templates/package';
+import { PackagePrint } from '../../components/templates/package';
 
 export default function PackageEdit({ data }) {
   const location = useLocation();

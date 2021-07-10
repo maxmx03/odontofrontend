@@ -1,49 +1,40 @@
-import React,
-{
-  Component,
-  useRef,
-} from 'react';
-import {
-  Container,
-  Col,
-  Row,
-  Button,
-} from 'reactstrap';
+import { Component, useRef } from 'react';
+import { Container, Col, Row, Button } from 'reactstrap';
 import moment from 'moment';
 import ReactToPrint from 'react-to-print';
-import { odontoEasy } from '../../../assets/images';
-import { toTitleCaseFirst } from '../../helpers/toTitleCase';
+import { odontoEasy } from '../../../../assets/images';
+import Validator from '../../../../utils/validators/Validator';
 
 export class PrintComponent extends Component {
   constructor(props) {
     super(props);
     const { data } = this.props;
     this.state = {
-      cpf: data.Aluno && data.Aluno.cpf,
-      email: data.Aluno && data.Aluno.email,
-      nome: data.Aluno && data.Aluno.nome,
-      sobrenome: data.Aluno && data.Aluno.sobrenome,
-      telefone: data.Aluno && data.Aluno.telefone,
-      turno: data.Aluno && data.Aluno.turno,
-      validade: data.validityAt,
+      cpf: data.student?.cpf,
+      email: data.student?.email,
+      firstName: data.student?.firstName,
+      lastName: data.student?.lastName,
+      phone: data.student?.phone,
+      shift: data.student?.shift,
+      validity: data.validityAt,
       status: data.status,
-      descricao: data.descricao,
-      packageCode: data.id,
+      description: data.description,
+      code: data.code,
     };
   }
 
   render() {
     const {
       cpf,
-      descricao,
+      description,
       email,
-      nome,
-      packageCode,
-      sobrenome,
+      firstName,
+      code,
+      lastName,
       status,
-      telefone,
-      turno,
-      validade,
+      phone,
+      shift,
+      validity,
     } = this.state;
     return (
       <>
@@ -52,60 +43,20 @@ export class PrintComponent extends Component {
             <img src={odontoEasy} alt="odonto logo" className="w-25" />
           </Row>
           <Col>
-            <h3 className="print-title">Informações do Aluno</h3>
-            <p>
-              Nome:
-              {' '}
-              {nome}
-            </p>
-            <p>
-              Sobrenome:
-              {' '}
-              {sobrenome}
-            </p>
-            <p>
-              Telefone:
-              {' '}
-              {telefone}
-            </p>
-            <p>
-              Turno:
-              {' '}
-              {turno}
-            </p>
-            <p>
-              CPF:
-              {' '}
-              {cpf}
-            </p>
-            <p>
-              Email:
-              {' '}
-              {email}
-            </p>
+            <h3 className="print-title">Informações do student</h3>
+            <p>Nome: {firstName}</p>
+            <p>Sobrenome: {lastName}</p>
+            <p>Telefone: {phone}</p>
+            <p>Turno: {shift}</p>
+            <p>CPF: {cpf}</p>
+            <p>Email: {email}</p>
           </Col>
           <Col>
             <h3 className="print-title">Informações do Pacote</h3>
-            <p>
-              N° do Pacote:
-              {' '}
-              {packageCode}
-            </p>
-            <p>
-              Data de Validade:
-              {' '}
-              {moment(validade).format('L')}
-            </p>
-            <p>
-              Situação:
-              {' '}
-              {toTitleCaseFirst(status)}
-            </p>
-            <p>
-              Descrição:
-              {' '}
-              {descricao}
-            </p>
+            <p>N° do Pacote: {code}</p>
+            <p>Data de Validade: {moment(validity).format('L')}</p>
+            <p>Situação: {Validator.toTitleCase(status)}</p>
+            <p>Descrição: {description}</p>
           </Col>
         </Row>
       </>
@@ -113,7 +64,7 @@ export class PrintComponent extends Component {
   }
 }
 
-export const PackagePrint = ({ data }) => {
+export function PackagePrint({ data }) {
   const componentRef = useRef();
 
   return (
@@ -125,4 +76,4 @@ export const PackagePrint = ({ data }) => {
       <PrintComponent ref={componentRef} data={data} />
     </Container>
   );
-};
+}

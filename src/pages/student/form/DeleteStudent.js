@@ -17,6 +17,7 @@ class DeleteStudent extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
+
     this.state = {
       cpf: data.cpf,
       dialogState: false,
@@ -44,11 +45,11 @@ class DeleteStudent extends ReactForms {
   }
 
   render() {
-    const { cpf, dialogState, email, firstName, lastName, fullName } = this.state;
+    const { cpf, dialogState, email, firstName, lastName, fullName } =
+      this.state;
 
     const {
       collapseStudentEdit,
-      data,
       deleteAccountResponse,
       getStudents,
       response,

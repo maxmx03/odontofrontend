@@ -100,14 +100,14 @@ class UserCreate extends ReactForms {
       /[A-Z]/.test(password) &&
       password === confirmPassword
     ) {
-      createUser(
-        firstName.toLowerCase(),
-        lastName.toLowerCase(),
+      createUser({
+        firstName: firstName.toLowerCase(),
+        lastName: lastName.toLowerCase(),
         type,
         email,
         password,
-        confirmPassword
-      );
+        confirmPassword,
+      });
     }
   }
 
@@ -212,10 +212,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   collapseUserCreate: (state) => dispatch(collapseUserCreate(state)),
   getUsers: () => dispatch(getUsers()),
-  createUser: (firstName, lastName, type, email, password, confirmPassword) =>
-    dispatch(
-      createUser(firstName, lastName, type, email, password, confirmPassword)
-    ),
+  createUser: (body) => dispatch(createUser(body)),
   createResponse: (response = {}) => dispatch(createResponse(response)),
 });
 

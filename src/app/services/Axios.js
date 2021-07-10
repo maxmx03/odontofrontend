@@ -50,7 +50,7 @@ export default class Axios {
 
   static delete(url, id, token) {
     if (Validator.isNotEmpty(url) && Validator.isNotEmpty(id)) {
-      return instance.delete(`${url}/${id}`, {
+      return instance.delete(`${url}${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

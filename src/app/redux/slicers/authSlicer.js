@@ -22,7 +22,6 @@ const authSlice = createSlice({
       firstName: '',
       lastName: '',
       type: '',
-      isLogged: false
     },
     authStatus: responseStatus,
     forgetPassStatus: responseStatus,

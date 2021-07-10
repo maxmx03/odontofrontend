@@ -222,11 +222,10 @@ class PackageCreate extends ReactForms {
       createResponse,
       getPackages,
       response,
-      studantsData,
+      studentData,
     } = this.props;
 
     const { equals } = passwordIndicator;
-
     return (
       <>
         <Form
@@ -240,7 +239,8 @@ class PackageCreate extends ReactForms {
             student,
             'student',
             'Pesquisar Aluno',
-            studantsData
+            studentData,
+            this.resetAutoCompleteInput
           )}
           {this.createInput(
             firstName,
@@ -378,6 +378,7 @@ class PackageCreate extends ReactForms {
 
 const mapStateToProps = (state) => ({
   response: state.packageReducer.createStatus,
+  studentData: state.studentReducer.data
 });
 
 const mapDispatchToProps = (dispatch) => ({

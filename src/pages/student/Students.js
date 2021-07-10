@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import Collapse from '@kunukn/react-collapse';
 import { Nav, NavItem, NavLink } from 'reactstrap';
 import { Button } from '@material-ui/core';
@@ -16,7 +16,7 @@ import {
 } from '../../app/redux/slicers/studentSlicer';
 import Validator from '../../utils/validators/Validator';
 
-class Students extends React.Component {
+class Students extends Component {
   constructor(props) {
     super(props);
     this.state = {

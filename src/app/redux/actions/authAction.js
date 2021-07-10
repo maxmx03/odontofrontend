@@ -120,7 +120,6 @@ export function isUserLogged() {
         })
         .catch(() => {
           dispatch(unload());
-          console.log('reset token');
           Session.reset('token');
           dispatch(
             storeUser({

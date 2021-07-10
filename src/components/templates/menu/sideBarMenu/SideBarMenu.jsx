@@ -7,9 +7,10 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectUser } from '../../../app/redux/selectors/authSelector';
-import { logOutUser } from '../../../app/redux/actions/authAction';
+import { selectUser } from '../../../../app/redux/selectors/authSelector';
+import { logOutUser } from '../../../../app/redux/actions/authAction';
 import { SIDEBAR_ROUTES } from '../../../../constants/routes/web';
+import Validator from '../../../../utils/validators/Validator';
 import MenuItem from './MenuItem';
 
 export function PrimaryMenuList() {
@@ -57,7 +58,7 @@ export function SecondaryMenuList() {
 
   return (
     <div>
-      <MenuItem name={`${user.firstName}`} icon={<AccountCircleIcon />} />
+      <MenuItem name={`${Validator.toTitleCase(user.firstName) || 'Usuário'}`} icon={<AccountCircleIcon />} />
       <MenuItem
         name="Deslogar"
         icon={<ExitToAppIcon />}
