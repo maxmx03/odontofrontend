@@ -1,93 +1,88 @@
-import React from 'react';
 import moment from 'moment';
-import MomentUtils from '@date-io/moment';
 import 'moment/locale/pt-br';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
-import Select from 'react-select';
-import InputMask from 'react-input-mask';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import { TextField } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  toTitleCaseFirst,
-  htmlPurify,
-} from '../../helpers';
-import { OnePassIndicator } from '../../components/passwordIndicator/PassIndicator';
+
 import {
   createResponse,
-  findPackages,
-  collapsePackagesCreate,
+  collapsePackageCreate,
+} from '../../app/redux/slicers/packageSlicer';
+import {
+  getPackages,
   createPackage,
-} from '../../app/reducers/package';
+} from '../../app/redux/actions/packageAction';
 import {
   InputDialog,
   DialogResponse,
+  OnePassIndicator,
+  ReactForms,
 } from '../../components';
 
-class PackageCreate extends React.Component {
+class PackageCreate extends ReactForms {
   constructor(props) {
     super(props);
     this.state = {
-      aluno: '',
-      confirmaSenha: '',
+      student: '',
+      confirmPassword: '',
       dateWarning: false,
       dialogState: false,
-      descricao: '',
+      description: '',
       email: '',
-      nome: '',
-      passwordRules: {
+      firstName: '',
+      lastName: '',
+      password: '',
+      showIndicator: false,
+      passwordIndicator: {
         equals: false,
       },
-      studantId: '',
+      studentId: '',
       status: '',
       statusOptions: [
         {
           label: 'Armazenado',
-          value: 'armazenado',
+          value: 'stored',
         },
         {
           label: 'Retirado',
-          value: 'retirado',
+          value: 'withdraw',
         },
       ],
-      senha: '',
-      sobrenome: '',
-      showIndicator: false,
-      telefone: '',
-      turno: '',
-      turnos: [
+      phone: '',
+      shift: '',
+      shifts: [
         {
           label: 'Matutino',
-          value: 'matutino',
+          value: 'morning',
         },
         {
           label: 'Vespertino',
-          value: 'vespertino',
+          value: 'afternoon',
         },
         {
           label: 'Noturno',
-          value: 'noturno',
+          value: 'night',
         },
       ],
-      validade: moment().add(7, 'days').format(),
+      validity: moment().add(7, 'days').format(),
     };
+
+    this.autoFillInput.bind(this);
+    this.resetAutoCompleteInput.bind(this);
+    this.resetAllInput.bind(this);
+    this.postForm.bind(this);
+    this.createAutoComplete.bind(this);
+    this.createInput.bind(this);
+    this.createSelect.bind(this);
+    this.createInputMask.bind(this);
+    this.createDatePicker.bind(this);
+    this.createInputPassword.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {
-    const { aluno, confirmaSenha, senha } = this.state;
+    const { student, confirmPassword, password } = this.state;
     const { isOpen } = this.props;
 
-    if (aluno && prevState.aluno !== aluno) {
+    if (student && prevState.student !== student) {
       this.autoFillInput();
     }
 
@@ -96,365 +91,141 @@ class PackageCreate extends React.Component {
     }
 
     if (
-      prevState.senha !== senha
-      || prevState.confirmaSenha !== confirmaSenha
+      prevState.password !== password ||
+      prevState.confirmPassword !== confirmPassword
     ) {
       this.setState({
-        passwordRules: {
-          equals: senha && senha === confirmaSenha,
+        passwordIndicator: {
+          equals: password && password === confirmPassword,
         },
       });
     }
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => {
-          if (type === 'number') {
-            this.setValue(state, e.target.value >= 0 ? e.target.value : 0);
-          } else if (type !== 'email') {
-            this.setValue(state, htmlPurify(e.target.value));
-          } else {
-            this.setValue(state, e.target.value);
-          }
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createInputPassword = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        onFocus={() => {
-          this.setState({
-            showIndicator: true,
-          });
-        }}
-        onBlur={() => {
-          this.setState({
-            showIndicator: false,
-          });
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  createSelect = (
-    value,
-    state,
-    label,
-    options,
-    placeholder,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Select
-        value={{
-          label: toTitleCaseFirst(value),
-          value,
-        }}
-        onChange={(e) => this.setValue(state, e.value)}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: '.25rem',
-          colors: {
-            ...theme.colors,
-            primary: '#fd7e14',
-            primary25: '#fd7e14',
-          },
-        })}
-        styles={{
-          option: (provided, state) => ({
-            ...provided,
-            color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          }),
-        }}
-        options={options}
-        placeholder={placeholder}
-        isDisabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createInputMask = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    mask,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <InputMask
-        className="form-control"
-        placeholder={placeholder}
-        type={type}
-        mask={mask}
-        value={value}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        required={required}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createAutoComplete = (value, state, label, options) => (
-    <FormGroup>
-      <Autocomplete
-        onChange={(e, v) => {
-          if (e.target.textContent.length === 0) {
-            this.resetAutoCompleteInput();
-          }
-          this.setValue(state, v);
-        }}
-        value={value}
-        options={options}
-        getOptionLabel={(option) => option.email}
-        classes={{
-          inputRoot: '#000',
-          inputFocused: '#000',
-        }}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label={label}
-            classes={{
-              inputRoot: '#000',
-              inputFocused: '#000',
-            }}
-            variant="standard"
-          />
-        )}
-      />
-    </FormGroup>
-  );
-
-  createDatePicker = (value, state, label, format = 'DD/MM/YYYY') => {
-    const { dateWarning } = this.state;
-
-    moment.locale('pt-br');
-    return (
-      <MuiPickersUtilsProvider
-        libInstance={moment}
-        utils={MomentUtils}
-        locale="pt-br"
-      >
-        <FormGroup>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format={format}
-            margin="normal"
-            label={label}
-            value={
-              moment(value).isBefore(moment(), 'days')
-                ? moment().format()
-                : value
-            }
-            onChange={(e) => {
-              if (e && moment(e).isAfter(moment(), 'days')) {
-                this.setValue(state, e.format());
-              } else {
-                this.setValue(state, moment().format());
-                this.setState({ dateWarning: true });
-              }
-            }}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-          {dateWarning ? (
-            <>
-              <p className="text-danger mb-0">
-                A data não pode ser menor que
-                {' '}
-                {`${moment().format('L')}`}
-              </p>
-              <p className="text-danger mt-0">
-                Pacotes com a validade vencida precisam ser devolvidos ou
-                descartados
-              </p>
-            </>
-          ) : (
-            ''
-          )}
-        </FormGroup>
-      </MuiPickersUtilsProvider>
-    );
-  };
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
-
-  autoFillInput = () => {
-    const { aluno } = this.state;
+  autoFillInput() {
+    const { student } = this.state;
     this.setState({
-      email: aluno.email,
-      nome: aluno.nome,
-      sobrenome: aluno.sobrenome,
-      telefone: aluno.telefone,
-      turno: aluno.turno,
-      studantId: aluno.id,
+      email: student.email,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      phone: student.phone,
+      shift: student.shift,
+      studentId: student.id,
     });
-  };
+  }
 
-  resetAutoCompleteInput = () => {
+  resetAutoCompleteInput() {
     this.setState({
       email: '',
-      nome: '',
-      sobrenome: '',
-      telefone: '',
-      turno: '',
+      firstName: '',
+      lastName: '',
+      phone: '',
+      shift: '',
     });
-  };
+  }
 
-  resetAllInput = () => {
+  resetAllInput() {
     this.setState({
-      aluno: '',
-      confirmaSenha: '',
+      student: '',
+      confirmPassword: '',
       dateWarning: false,
-      descricao: '',
+      description: '',
       dialogState: false,
       email: '',
-      nome: '',
-      passwordRules: {
+      firstName: '',
+      lastName: '',
+      password: '',
+      showIndicator: false,
+      passwordIndicator: {
         equals: false,
         minAlphaNum: false,
         minChar: false,
       },
-      studantId: '',
+      studentId: '',
       status: '',
       statusOptions: [
         {
           label: 'Armazenado',
-          value: 'armazenado',
+          value: 'stored',
         },
         {
           label: 'Retirado',
-          value: 'retirado',
+          value: 'withdraw',
         },
       ],
-      showIndicator: false,
-      sobrenome: '',
-      senha: '',
-      telefone: '',
-      turno: '',
-      turnos: [
+      phone: '',
+      shift: '',
+      shifts: [
         {
           label: 'Matutino',
-          value: 'matutino',
+          value: 'morning',
         },
         {
           label: 'Vespertino',
-          value: 'vespertino',
+          value: 'afternoon',
         },
         {
           label: 'Noturno',
-          value: 'noturno',
+          value: 'night',
         },
       ],
-      validade: moment().add(7, 'days').format(),
+      validity: moment().add(7, 'days').format(),
     });
-  };
+  }
 
-  postForm = () => {
+  postForm() {
     const { createPackage } = this.props;
     const {
-      confirmaSenha,
-      descricao,
-      senha,
+      confirmPassword,
+      description,
+      password,
       status,
-      studantId,
-      validade,
+      studentId,
+      validity,
     } = this.state;
 
-    if (senha.length > 0 && senha === confirmaSenha) {
+    if (password.length > 0 && password === confirmPassword) {
       createPackage(
-        studantId,
-        senha,
-        confirmaSenha,
+        studentId,
+        password,
+        confirmPassword,
         status,
-        descricao,
-        validade,
+        description,
+        validity
       );
       this.setState({ dialogState: false });
     }
-  };
+  }
 
   render() {
     const {
-      aluno,
-      confirmaSenha,
-      descricao,
+      student,
+      confirmPassword,
+      description,
       dialogState,
       email,
-      nome,
-      passwordRules,
-      senha,
+      firstName,
+      passwordIndicator,
+      password,
       showIndicator,
-      sobrenome,
+      lastName,
       status,
       statusOptions,
-      telefone,
-      turno,
-      turnos,
-      validade,
+      phone,
+      shift,
+      shifts,
+      validity,
     } = this.state;
 
     const {
-      collapsePackagesCreate,
+      collapsePackageCreate,
       createResponse,
-      findPackages,
+      getPackages,
       response,
       studantsData,
     } = this.props;
 
-    const { equals } = passwordRules;
+    const { equals } = passwordIndicator;
 
     return (
       <>
@@ -466,32 +237,32 @@ class PackageCreate extends React.Component {
           }}
         >
           {this.createAutoComplete(
-            aluno,
-            'aluno',
+            student,
+            'student',
             'Pesquisar Aluno',
-            studantsData,
+            studantsData
           )}
           {this.createInput(
-            nome,
-            'nome',
+            firstName,
+            'firstName',
             'Nome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
-            sobrenome,
-            'sobrenome',
+            lastName,
+            'lastName',
             'Sobrenome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
             email,
@@ -502,30 +273,30 @@ class PackageCreate extends React.Component {
             false,
             '',
             false,
-            true,
+            true
           )}
-          {this.createSelect(turno, 'turno', 'Turno', turnos, '', true)}
+          {this.createSelect(shift, 'shift', 'Turno', shifts, '', true)}
           {this.createInputMask(
-            telefone,
-            'telefone',
+            phone,
+            'phone',
             'Telefone',
             '',
             'tel',
             true,
             '(99) 9999-999999',
-            true,
+            true
           )}
-          {this.createDatePicker(validade, 'validade', 'Validade do Pacote')}
+          {this.createDatePicker(validity, 'validity', 'Validade do Pacote')}
           {this.createSelect(status, 'status', 'Status', statusOptions, '')}
           {this.createInput(
-            descricao,
-            'descricao',
+            description,
+            'description',
             'Descrição do Pacote',
             'Exemplo Contém A, B, C',
             'textarea',
             true,
             '5',
-            true,
+            true
           )}
           <Button color="primary">Cadastrar Pacote</Button>
         </Form>
@@ -534,18 +305,18 @@ class PackageCreate extends React.Component {
           fields={() => (
             <>
               {this.createInputPassword(
-                senha,
-                'senha',
+                password,
+                'password',
                 'Senha',
                 '',
-                'password',
+                'password'
               )}
               {this.createInputPassword(
-                confirmaSenha,
-                'confirmaSenha',
+                confirmPassword,
+                'confirmPassword',
                 'Confirma Senha',
                 '',
-                'password',
+                'password'
               )}
               <OnePassIndicator
                 rule={equals}
@@ -555,7 +326,7 @@ class PackageCreate extends React.Component {
             </>
           )}
           title="Atenção"
-          description="Para salvar, digite a senha do usuário"
+          description="Para salvar, digite a password do usuário"
         >
           <Button color="primary" onClick={() => this.postForm()}>
             Confirmar
@@ -593,8 +364,8 @@ class PackageCreate extends React.Component {
                 msg: null,
                 success: null,
               });
-              findPackages();
-              collapsePackagesCreate();
+              getPackages();
+              collapsePackageCreate();
             }}
           >
             Confirmar
@@ -610,25 +381,26 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapsePackagesCreate: () => dispatch(collapsePackagesCreate()),
-  findPackages: () => dispatch(findPackages()),
+  collapsePackageCreate: () => dispatch(collapsePackageCreate()),
+  getPackages: () => dispatch(getPackages()),
   createPackage: (
-    studantId,
-    senha,
-    confirmaSenha,
+    studentId,
+    password,
+    confirmPassword,
     status,
-    descricao,
-    validade,
-  ) => dispatch(
-    createPackage(
-      studantId,
-      senha,
-      confirmaSenha,
-      status,
-      descricao,
-      validade,
+    description,
+    validity
+  ) =>
+    dispatch(
+      createPackage(
+        studentId,
+        password,
+        confirmPassword,
+        status,
+        description,
+        validity
+      )
     ),
-  ),
   createResponse: (response = {}) => dispatch(createResponse(response)),
 });
 

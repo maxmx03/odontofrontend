@@ -200,7 +200,7 @@ export function updatePackageCode(body) {
   };
 }
 
-export function deletePackageAccount(packageId) {
+export function deleteStudentPackage(packageId) {
   return function (dispatch) {
     try {
       dispatch(load());

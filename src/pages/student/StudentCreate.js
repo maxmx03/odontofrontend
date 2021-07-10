@@ -1,8 +1,11 @@
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { ReactForms } from '../../components';
-import { WeakPassIndicator, DialogResponse } from '../../components';
+import {
+  ReactForms,
+  WeakPassIndicator,
+  DialogResponse,
+} from '../../components';
 import {
   collapseStudentCreate,
   createResponse,

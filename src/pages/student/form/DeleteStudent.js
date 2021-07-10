@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { ReactForms } from '../../../components';
+import { ReactForms, DialogResponse, InputDialog } from '../../../components';
 import {
   collapseStudentEdit,
   deleteAccountResponse,
@@ -11,7 +11,7 @@ import {
   getStudents,
   deleteStudentAccount,
 } from '../../../app/redux/actions/studentAction';
-import { DialogResponse, InputDialog } from '../../../components';
+import Validator from '../../../utils/validators/Validator';
 
 class DeleteStudent extends ReactForms {
   constructor(props) {
@@ -24,6 +24,7 @@ class DeleteStudent extends ReactForms {
       id: data.id,
       firstName: data.firstName,
       lastName: data.lastName,
+      fullName: Validator.toTitleCase(data.firstName + ' ' + data.lastName),
     };
   }
 
@@ -43,7 +44,7 @@ class DeleteStudent extends ReactForms {
   }
 
   render() {
-    const { cpf, dialogState, email, firstName, lastName } = this.state;
+    const { cpf, dialogState, email, firstName, lastName, fullName } = this.state;
 
     const {
       collapseStudentEdit,
@@ -111,7 +112,7 @@ class DeleteStudent extends ReactForms {
           open={dialogState}
           fields={() => <></>}
           title="Atenção!"
-          description={`Tem certeza que deseja deletar ${data.firstName} ${data.lastName} ?`}
+          description={`Tem certeza que deseja deletar ${fullName} ?`}
         >
           <Button color="primary" onClick={() => this.deleteForm()}>
             Sim

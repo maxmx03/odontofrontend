@@ -1,7 +1,7 @@
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { ReactForms } from '../../../components';
+import { ReactForms, DialogResponse } from '../../../components';
 import {
   updateStudentEmail,
   getStudents,
@@ -10,7 +10,6 @@ import {
   collapseStudentEdit,
   updateEmailResponse,
 } from '../../../app/redux/slicers/studentSlicer';
-import { DialogResponse } from '../../../components';
 
 class EditEmail extends ReactForms {
   constructor(props) {

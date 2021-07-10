@@ -1,7 +1,7 @@
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { ReactForms } from '../../../components';
+import { ReactForms, DialogResponse, PassIndicator } from '../../../components';
 import {
   collapseUserEdit,
   updatePasswordResponse,
@@ -10,7 +10,6 @@ import {
   getUsers,
   updateUserPassword,
 } from '../../../app/redux/actions/userAction';
-import { DialogResponse, PassIndicator } from '../../../components';
 
 class EditPassword extends ReactForms {
   constructor(props) {

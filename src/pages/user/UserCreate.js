@@ -1,13 +1,12 @@
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { ReactForms } from '../../components';
+import { ReactForms, DialogResponse, PassIndicator } from '../../components';
 import {
   createResponse,
   collapseUserCreate,
 } from '../../app/redux/slicers/userSlicer';
 import { getUsers, createUser } from '../../app/redux/actions/userAction';
-import { DialogResponse, PassIndicator } from '../../components';
 
 class UserCreate extends ReactForms {
   constructor(props) {

@@ -1,239 +1,86 @@
-import React from 'react';
-import moment from 'moment';
-import MomentUtils from '@date-io/moment';
 import 'moment/locale/pt-br';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
-import Select from 'react-select';
-import InputMask from 'react-input-mask';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  toTitleCaseFirst,
-} from '../../../helpers';
-import {
-  deletePackageResponse,
-  findPackages,
-  collapsePackagesEdit,
-  deleteStudantPackage,
-} from '../../../app/reducers/package';
-import {
-  InputDialog,
-  DialogResponse,
-} from '../../../components';
 
-class DeletePackage extends React.Component {
+import {
+  collapsePackageEdit,
+  deletePackageResponse,
+} from '../../../app/redux/slicers/packageSlicer';
+import {
+  getPackages,
+  deleteStudentPackage,
+} from '../../../app/redux/actions/packageAction';
+import { InputDialog, DialogResponse, ReactForms } from '../../../components';
+import Validator from '../../../utils/validators/Validator';
+
+class DeletePackage extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
 
     this.state = {
       dialogState: false,
-      descricao: data.descricao,
-      email: data.Aluno && data.Aluno.email,
-      nome: data.Aluno && data.Aluno.nome,
+      description: data.description,
+      email: data.student?.email,
+      firstName: data.student?.firstName,
+      lastName: data.student?.lastName,
+      fullName: Validator.toTitleCase(
+        data.student?.firstName + ' ' + data.student?.lastName
+      ),
       packageCode: data.packageCode,
       packageId: data.id,
-      sobrenome: data.Aluno && data.Aluno.sobrenome,
-      studantId: data.Aluno && data.Aluno.id,
-      telefone: data.Aluno && data.Aluno.telefone,
-      turno: data.Aluno && data.Aluno.turno,
-      turnos: [
+      studentId: data.student?.id,
+      phone: data.student?.phone,
+      shift: data.student?.shift,
+      shifts: [
         {
           label: 'Matutino',
-          value: 'matutino',
+          value: 'morning',
         },
         {
           label: 'Vespertino',
-          value: 'vespertino',
+          value: 'afternoon',
         },
         {
           label: 'Noturno',
-          value: 'noturno',
+          value: 'night',
         },
       ],
-      validade: data.validityAt,
+      validity: data.validityAt,
     };
+    this.deleteForm.bind(this);
+    this.createInput.bind(this);
+    this.createSelect.bind(this);
+    this.createInputMask.bind(this);
+    this.createDatePicker.bind(this);
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createSelect = (
-    value,
-    state,
-    label,
-    options,
-    placeholder,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Select
-        value={{
-          label: toTitleCaseFirst(value),
-          value,
-        }}
-        theme={(theme) => ({
-          ...theme,
-          borderRadius: '.25rem',
-          colors: {
-            ...theme.colors,
-            primary: '#fd7e14',
-            primary25: '#fd7e14',
-          },
-        })}
-        styles={{
-          option: ((provided, state) => ({
-            ...provided,
-            color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
-          })),
-        }}
-        options={options}
-        placeholder={placeholder}
-        isDisabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createInputMask = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    mask,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <InputMask
-        className="form-control"
-        placeholder={placeholder}
-        type={type}
-        mask={mask}
-        value={value}
-        required={required}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createDatePicker = (
-    value,
-    state,
-    label,
-    format = 'DD/MM/YYYY',
-    disabled = false,
-  ) => {
-    moment.locale('pt-br');
-    return (
-      <MuiPickersUtilsProvider
-        libInstance={moment}
-        utils={MomentUtils}
-        locale="pt-br"
-      >
-        <FormGroup>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format={format}
-            margin="normal"
-            label={label}
-            value={value < moment().format() ? moment().format() : value}
-            onChange={(e) => {
-              if (e) {
-                this.setValue(state, e.format());
-              }
-            }}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-            disabled={disabled}
-          />
-          {value < moment().format() ? (
-            <>
-              <p className="text-danger mb-0">
-                A data não pode ser menor que
-                {' '}
-                {`${moment().format('L')}`}
-              </p>
-              <p className="text-danger mt-0">
-                Pacotes com a validade vencida precisam ser devolvidos ou
-                descartados
-              </p>
-            </>
-          ) : (
-            ''
-          )}
-        </FormGroup>
-      </MuiPickersUtilsProvider>
-    );
-  };
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
-
-  deleteForm = () => {
-    const { deleteStudantPackage } = this.props;
-    const { packageId, studantId } = this.state;
-    deleteStudantPackage(packageId, studantId);
+  deleteForm() {
+    const { deleteStudentPackage } = this.props;
+    const { packageId, studentId } = this.state;
+    deleteStudentPackage(packageId, studentId);
     this.setState({ dialogState: false });
-  };
+  }
 
   render() {
     const {
-      descricao,
+      description,
       dialogState,
       email,
-      nome,
+      firstName,
+      lastName,
+      fullName,
       packageCode,
-      sobrenome,
-      telefone,
-      turno,
-      turnos,
-      validade,
+      phone,
+      shift,
+      shifts,
+      validity,
     } = this.state;
 
     const {
-      collapsePackagesEdit,
+      collapsePackageEdit,
       deletePackageResponse,
-      findPackages,
+      getPackages,
       response,
     } = this.props;
 
@@ -247,26 +94,26 @@ class DeletePackage extends React.Component {
           }}
         >
           {this.createInput(
-            nome,
-            'nome',
+            firstName,
+            'firstName',
             'Nome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
-            sobrenome,
-            'sobrenome',
+            lastName,
+            'lastName',
             'Sobrenome',
             '',
             'text',
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
             email,
@@ -277,25 +124,25 @@ class DeletePackage extends React.Component {
             false,
             '',
             false,
-            true,
+            true
           )}
-          {this.createSelect(turno, 'turno', 'Turno', turnos, '', true)}
+          {this.createSelect(shift, 'shift', 'Turno', shifts, '', true)}
           {this.createInputMask(
-            telefone,
-            'telefone',
+            phone,
+            'phone',
             'Telefone',
             '',
             'tel',
             true,
             '(99) 9999-999999',
-            true,
+            true
           )}
           {this.createDatePicker(
-            validade,
-            'validade',
+            validity,
+            'validity',
             'Validade do Pacote',
             'DD/MM/YYYY',
-            true,
+            true
           )}
           {this.createInput(
             packageCode,
@@ -306,18 +153,18 @@ class DeletePackage extends React.Component {
             false,
             '',
             false,
-            true,
+            true
           )}
           {this.createInput(
-            descricao,
-            'descricao',
+            description,
+            'description',
             'Descrição do Pacote',
             'Exemplo Contém A, B, C',
             'textarea',
             true,
             '5',
             true,
-            true,
+            true
           )}
           <Button color="danger">Deletar Pacote</Button>
         </Form>
@@ -326,8 +173,8 @@ class DeletePackage extends React.Component {
           fields={() => <></>}
           title="Atenção!"
           description={`Tem certeza que deseja deletar o pacote de ${
-            nome || 'sem'
-          } ${sobrenome || 'dono'} ?`}
+            fullName || 'sem dono'
+          }?`}
         >
           <Button
             color="primary"
@@ -369,8 +216,8 @@ class DeletePackage extends React.Component {
                 msg: null,
                 success: null,
               });
-              findPackages();
-              collapsePackagesEdit();
+              getPackages();
+              collapsePackageEdit();
             }}
           >
             Confirmar
@@ -386,10 +233,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapsePackagesEdit: () => dispatch(collapsePackagesEdit()),
-  findPackages: () => dispatch(findPackages()),
-  deleteStudantPackage: (packageId, studantId) => dispatch(deleteStudantPackage(packageId, studantId)),
-  deletePackageResponse: (response = {}) => dispatch(deletePackageResponse(response)),
+  collapsePackageEdit: () => dispatch(collapsePackageEdit()),
+  getPackages: () => dispatch(getPackages()),
+  deleteStudentPackage: (packageId, studentId) =>
+    dispatch(deleteStudentPackage(packageId, studentId)),
+  deletePackageResponse: (response = {}) =>
+    dispatch(deletePackageResponse(response)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeletePackage);

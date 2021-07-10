@@ -1,7 +1,6 @@
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { ReactForms } from '../../../components';
 import {
   collapsePackageEdit,
   updateProfileResponse,
@@ -14,6 +13,7 @@ import {
   InputDialog,
   DialogResponse,
   OnePassIndicator,
+  ReactForms,
 } from '../../../components';
 
 class EditInfo extends ReactForms {
@@ -27,12 +27,12 @@ class EditInfo extends ReactForms {
       dateWarning: false,
       dialogState: false,
       description: data.description,
-      email: data.student && data.student.email,
-      firstName: data.student && data.student.firstName,
+      email: data.student?.email,
+      firstName: data.student?.firstName,
       passwordIndicator: {
         equals: false,
       },
-      studentId: data.student && data.student.id,
+      studentId: data.student?.id,
       packageId: data.id,
       status: data.status,
       statusOptions: [
@@ -46,10 +46,10 @@ class EditInfo extends ReactForms {
         },
       ],
       password: '',
-      lastName: data.student && data.student.lastName,
+      lastName: data.student?.lastName,
       showIndicator: false,
-      phone: data.student && data.student.phone,
-      shift: data.student && data.student.shift,
+      phone: data.student?.phone,
+      shift: data.student?.shift,
       shifts: [
         {
           label: 'Matutino',
@@ -66,6 +66,16 @@ class EditInfo extends ReactForms {
       ],
       validity: data.validityAt,
     };
+
+    this.autoFillInput.bind(this);
+    this.resetAutoCompleteInput.bind(this);
+    this.editForm.bind(this);
+    this.createAutoComplete.bind(this);
+    this.createInput.bind(this);
+    this.createSelect.bind(this);
+    this.createInputMask.bind(this);
+    this.createDatePicker.bind(this);
+    this.createInputPassword.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {

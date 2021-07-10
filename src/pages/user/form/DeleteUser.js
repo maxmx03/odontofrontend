@@ -1,7 +1,7 @@
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { ReactForms } from '../../../components';
+import { ReactForms, DialogResponse, InputDialog } from '../../../components';
 import {
   collapseUserEdit,
   deleteAccountResponse,
@@ -10,7 +10,6 @@ import {
   getUsers,
   deleteUserAccount,
 } from '../../../app/redux/actions/userAction';
-import { DialogResponse, InputDialog } from '../../../components';
 import Validator from '../../../utils/validators/Validator';
 
 class DeleteUser extends ReactForms {
@@ -21,6 +20,8 @@ class DeleteUser extends ReactForms {
     this.state = {
       dialogState: false,
       id: data.id,
+      firstName: data.firstName,
+      lastName: data.lastName,
       fullName: Validator.toTitleCase(data.firstName + ' ' + data.lastName),
     };
 
@@ -43,10 +44,10 @@ class DeleteUser extends ReactForms {
     this.setState({
       dialogState: true,
     });
-  };
+  }
 
   render() {
-    const { dialogState, fullName } = this.state;
+    const { dialogState, fullName, firstName, lastName } = this.state;
 
     const {
       collapseUserEdit,
@@ -66,7 +67,7 @@ class DeleteUser extends ReactForms {
           }}
         >
           {this.createInput(
-            data.firstName,
+            firstName,
             'firstName',
             'Nome',
             '',
@@ -77,7 +78,7 @@ class DeleteUser extends ReactForms {
             true
           )}
           {this.createInput(
-            data.lastName,
+            lastName,
             'lastName',
             'Sobrenome',
             '',

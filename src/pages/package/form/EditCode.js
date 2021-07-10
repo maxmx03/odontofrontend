@@ -1,164 +1,80 @@
-import React from 'react';
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Button,
-} from 'reactstrap';
+import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-import {
-  htmlPurify,
-} from '../../../helpers';
+
 import {
   updateCodeResponse,
-  findPackages,
-  collapsePackagesEdit,
+  collapsePackageEdit,
+} from '../../../app/redux/slicers/packageSlicer';
+import {
+  getPackages,
   updatePackageCode,
-} from '../../../app/reducers/package';
+} from '../../../app/redux/actions/packageAction';
 import {
   DialogResponse,
   InputDialog,
   OnePassIndicator,
+  ReactForms,
 } from '../../../components';
 
-class EditCode extends React.Component {
+class EditCode extends ReactForms {
   constructor(props) {
     super(props);
     const { data } = this.props;
 
     this.state = {
-      confirmaSenha: '',
+      confirmPassword: '',
       dialogState: false,
       packageId: data.id,
-      packageCode: data.packageCode,
-      passwordRules: {
+      code: data.code,
+      passwordIndicator: {
         equals: false,
       },
-      senha: '',
+      password: '',
       showIndicator: false,
-      studantId: data.Aluno && data.Aluno.id,
+      studentId: data.student?.id,
     };
+
+    this.editForm.bind(this);
+    this.createInput.bind(this);
+    this.createInputPassword.bind(this);
   }
 
   componentDidUpdate(prevProp, prevState) {
-    const { confirmaSenha, senha } = this.state;
+    const { confirmPassword, password } = this.state;
 
     if (
-      prevState.senha !== senha
-      || prevState.confirmaSenha !== confirmaSenha
+      prevState.password !== password ||
+      prevState.confirmPassword !== confirmPassword
     ) {
       this.setState({
-        passwordRules: {
-          equals: senha && senha === confirmaSenha,
+        passwordIndicator: {
+          equals: password && password === confirmPassword,
         },
       });
     }
   }
 
-  createInput = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-    disabled = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => {
-          if (type === 'number') {
-            this.setValue(state, e.target.value >= 0 ? e.target.value : 0);
-          } else {
-            this.setValue(state, htmlPurify(e.target.value));
-          }
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-        disabled={disabled}
-      />
-    </FormGroup>
-  );
-
-  createInputPassword = (
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-  ) => (
-    <FormGroup>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        required={required}
-        onChange={(e) => this.setValue(state, e.target.value)}
-        onFocus={() => {
-          this.setState({
-            showIndicator: true,
-          });
-        }}
-        onBlur={() => {
-          this.setState({
-            showIndicator: false,
-          });
-        }}
-        rows={rows}
-        spellCheck={spellcheck}
-        style={{ resize: 'none' }}
-      />
-    </FormGroup>
-  );
-
-  setValue = async (state, value) => {
-    await this.setState({
-      [`${state}`]: value,
-    });
-  };
-
-  editForm = () => {
+  editForm() {
     const { updatePackageCode } = this.props;
-    const {
-      packageCode, packageId, studantId,
-    } = this.state;
+    const { code, packageId, studentId } = this.state;
 
-    updatePackageCode(
-      packageCode, packageId, studantId,
-    );
-  };
+    updatePackageCode(code, packageId, studentId);
+  }
 
   render() {
     const {
-      confirmaSenha,
+      confirmPassword,
       dialogState,
-      packageCode,
-      passwordRules,
-      senha,
+      code,
+      passwordIndicator,
+      password,
       showIndicator,
     } = this.state;
 
-    const {
-      collapsePackagesEdit,
-      findPackages,
-      response,
-      updateCodeResponse,
-    } = this.props;
+    const { collapsePackageEdit, getPackages, response, updateCodeResponse } =
+      this.props;
 
-    const { equals } = passwordRules;
+    const { equals } = passwordIndicator;
 
     return (
       <>
@@ -169,13 +85,7 @@ class EditCode extends React.Component {
             this.editForm();
           }}
         >
-          {this.createInput(
-            packageCode,
-            'packageCode',
-            'N° Pacote',
-            '',
-            'number',
-          )}
+          {this.createInput(code, 'code', 'N° Pacote', '', 'number')}
           <Button color="primary">Mudar Código</Button>
         </Form>
         <InputDialog
@@ -183,18 +93,18 @@ class EditCode extends React.Component {
           fields={() => (
             <>
               {this.createInputPassword(
-                senha,
-                'senha',
+                password,
+                'password',
                 'Senha',
                 '',
-                'password',
+                'password'
               )}
               {this.createInputPassword(
-                confirmaSenha,
-                'confirmaSenha',
+                confirmPassword,
+                'confirmPassword',
                 'Confirma Senha',
                 '',
-                'password',
+                'password'
               )}
               <OnePassIndicator
                 rule={equals}
@@ -204,7 +114,7 @@ class EditCode extends React.Component {
             </>
           )}
           title="Atenção"
-          description="Para atualizar, digite a senha do usuário"
+          description="Para atualizar, digite a password do usuário"
         >
           <Button color="primary" onClick={() => this.postForm()}>
             Confirmar
@@ -241,8 +151,8 @@ class EditCode extends React.Component {
                 msg: null,
                 success: null,
               });
-              findPackages();
-              collapsePackagesEdit();
+              getPackages();
+              collapsePackageEdit();
             }}
           >
             Confirmar
@@ -258,9 +168,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  collapsePackagesEdit: () => dispatch(collapsePackagesEdit()),
-  findPackages: () => dispatch(findPackages()),
-  updatePackageCode: (packageCode, packageId, studantId) => dispatch(updatePackageCode(packageCode, packageId, studantId)),
+  collapsePackageEdit: () => dispatch(collapsePackageEdit()),
+  getPackages: () => dispatch(getPackages()),
+  updatePackageCode: (code, packageId, studentId) =>
+    dispatch(updatePackageCode(code, packageId, studentId)),
   updateCodeResponse: (response = {}) => dispatch(updateCodeResponse(response)),
 });
 
