@@ -46,12 +46,12 @@ class EditProfile extends ReactForms {
     const { id, firstName, lastName, type } = this.state;
     const { updateUserProfile } = this.props;
 
-    updateUserProfile(
-      firstName.toLowerCase(),
-      lastName.toLowerCase(),
+    updateUserProfile({
+      firstName: firstName.toLowerCase(),
+      lastName: lastName.toLowerCase(),
       type,
-      id
-    );
+      userId: id,
+    });
   }
 
   render() {
@@ -70,9 +70,24 @@ class EditProfile extends ReactForms {
             this.editForm();
           }}
         >
-          {this.createSelect(type, 'type', 'Tipo', types)}
-          {this.createInput(firstName, 'firstName', 'Nome')}
-          {this.createInput(lastName, 'lastName', 'Sobrenome')}
+          {this.createSelect({
+            value: type,
+            state: 'type',
+            label: 'Tipo',
+            options: types,
+          })}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: true,
+          })}
           <Button color="primary">Mudar Perfil</Button>
         </Form>
         <DialogResponse
@@ -122,8 +137,7 @@ const mapDispatchToProps = (dispatch) => ({
   getUsers: () => dispatch(getUsers()),
   updateProfileResponse: (response = {}) =>
     dispatch(updateProfileResponse(response)),
-  updateUserProfile: (firstName, lastName, type, userId) =>
-    dispatch(updateUserProfile(firstName, lastName, type, userId)),
+  updateUserProfile: (body) => dispatch(updateUserProfile(body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

@@ -23,6 +23,7 @@ class DeleteUser extends ReactForms {
       firstName: data.firstName,
       lastName: data.lastName,
       fullName: Validator.toTitleCase(data.firstName + ' ' + data.lastName),
+      type: data.type,
     };
 
     this.deleteForm.bind(this);
@@ -47,15 +48,10 @@ class DeleteUser extends ReactForms {
   }
 
   render() {
-    const { dialogState, fullName, firstName, lastName } = this.state;
+    const { dialogState, fullName, firstName, lastName, type } = this.state;
 
-    const {
-      collapseUserEdit,
-      data,
-      deleteAccountResponse,
-      getUsers,
-      response,
-    } = this.props;
+    const { collapseUserEdit, deleteAccountResponse, getUsers, response } =
+      this.props;
 
     return (
       <>
@@ -66,29 +62,26 @@ class DeleteUser extends ReactForms {
             this.showDeleteUser();
           }}
         >
-          {this.createInput(
-            firstName,
-            'firstName',
-            'Nome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            lastName,
-            'lastName',
-            'Sobrenome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createSelect(data.type, 'tipo', 'Tipo', '', '', true)}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createSelect({
+            value: type,
+            state: 'tipo',
+            label: 'Tipo',
+            disabled: true,
+          })}
           <Button color="danger">Deletar Usuário</Button>
         </Form>
         <InputDialog

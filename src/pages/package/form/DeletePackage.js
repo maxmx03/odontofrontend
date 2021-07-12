@@ -27,9 +27,8 @@ class DeletePackage extends ReactForms {
       fullName: Validator.toTitleCase(
         data.student?.firstName + ' ' + data.student?.lastName
       ),
-      packageCode: data.packageCode,
+      code: data.code,
       packageId: data.id,
-      studentId: data.student?.id,
       phone: data.student?.phone,
       shift: data.student?.shift,
       shifts: [
@@ -57,8 +56,8 @@ class DeletePackage extends ReactForms {
 
   deleteForm() {
     const { deleteStudentPackage } = this.props;
-    const { packageId, studentId } = this.state;
-    deleteStudentPackage(packageId, studentId);
+    const { packageId } = this.state;
+    deleteStudentPackage(packageId);
     this.setState({ dialogState: false });
   }
 
@@ -70,7 +69,7 @@ class DeletePackage extends ReactForms {
       firstName,
       lastName,
       fullName,
-      packageCode,
+      code,
       phone,
       shift,
       shifts,
@@ -93,79 +92,68 @@ class DeletePackage extends ReactForms {
             this.setState({ dialogState: true });
           }}
         >
-          {this.createInput(
-            firstName,
-            'firstName',
-            'Nome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            lastName,
-            'lastName',
-            'Sobrenome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            email,
-            'email',
-            'Email',
-            '',
-            'email',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createSelect(shift, 'shift', 'Turno', shifts, '', true)}
-          {this.createInputMask(
-            phone,
-            'phone',
-            'Telefone',
-            '',
-            'tel',
-            true,
-            '(99) 9999-999999',
-            true
-          )}
-          {this.createDatePicker(
-            validity,
-            'validity',
-            'Validade do Pacote',
-            'DD/MM/YYYY',
-            true
-          )}
-          {this.createInput(
-            packageCode,
-            'packageCode',
-            'N° Pacote',
-            '',
-            'number',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            description,
-            'description',
-            'Descrição do Pacote',
-            'Exemplo Contém A, B, C',
-            'textarea',
-            true,
-            '5',
-            true,
-            true
-          )}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: email,
+            state: 'email',
+            label: 'Email',
+            type: 'email',
+            required: false,
+            disabled: true,
+          })}
+          {this.createSelect({
+            value: shift,
+            state: 'shift',
+            label: 'Turno',
+            options: shifts,
+            disabled: true,
+          })}
+          {this.createInputMask({
+            value: phone,
+            state: 'phone',
+            label: 'Telefone',
+            type: 'tel',
+            required: false,
+            mask: '(99) 9999-999999',
+            disabled: true,
+          })}
+          {this.createDatePicker({
+            value: validity,
+            state: 'validity',
+            label: 'Validade do Pacote',
+            disabled: true,
+          })}
+          {this.createInput({
+            value: code,
+            state: 'code',
+            label: 'N° Pacote',
+            type: 'number',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: description,
+            state: 'description',
+            label: 'Descrição do Pacote',
+            placeholder: 'Exemplo Contém A, B, C',
+            type: 'textarea',
+            required: false,
+            rows: '5',
+            disabled: true,
+          })}
           <Button color="danger">Deletar Pacote</Button>
         </Form>
         <InputDialog
@@ -235,8 +223,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   collapsePackageEdit: () => dispatch(collapsePackageEdit()),
   getPackages: () => dispatch(getPackages()),
-  deleteStudentPackage: (packageId, studentId) =>
-    dispatch(deleteStudentPackage(packageId, studentId)),
+  deleteStudentPackage: (packageId) =>
+    dispatch(deleteStudentPackage(packageId)),
   deletePackageResponse: (response = {}) =>
     dispatch(deletePackageResponse(response)),
 });

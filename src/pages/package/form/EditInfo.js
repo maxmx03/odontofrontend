@@ -132,15 +132,15 @@ class EditInfo extends ReactForms {
     } = this.state;
 
     if (password.length > 0 && password === confirmPassword) {
-      updatePackageProfile(
+      updatePackageProfile({
         packageId,
         studentId,
         password,
         confirmPassword,
         status,
         description,
-        validity
-      );
+        validity,
+      });
       this.setState({ dialogState: false });
     }
   }
@@ -169,7 +169,7 @@ class EditInfo extends ReactForms {
       collapsePackageEdit,
       getPackages,
       response,
-      studentsData,
+      studentData,
       updateProfileResponse,
     } = this.props;
 
@@ -184,88 +184,88 @@ class EditInfo extends ReactForms {
             this.setState({ dialogState: true });
           }}
         >
-          {this.createAutoComplete(
-            student,
-            'student',
-            'Pesquisar student',
-            studentsData
-          )}
-          {this.createInput(
-            firstName,
-            'firstName',
-            'Nome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            lastName,
-            'lastName',
-            'Sobrenome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            email,
-            'email',
-            'Email',
-            '',
-            'email',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createSelect(shift, 'shift', 'Turno', shifts, '', true)}
-          {this.createInputMask(
-            phone,
-            'phone',
-            'Telefone',
-            '',
-            'tel',
-            true,
-            '(99) 9999-999999',
-            true
-          )}
-          {this.createDatePicker(validity, 'validity', 'Validade do Pacote')}
-          {this.createSelect(status, 'status', 'Status', statusOptions, '')}
-          {this.createInput(
-            description,
-            'description',
-            'Descrição do Pacote',
-            'Exemplo Contém A, B, C',
-            'textarea',
-            true,
-            '5',
-            true
-          )}
+          {this.createAutoComplete({
+            value: student,
+            state: 'student',
+            label: 'Pesquisar Aluno',
+            options: studentData,
+            required: true,
+          })}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: email,
+            state: 'email',
+            label: 'Email',
+            type: 'email',
+            required: false,
+            disabled: true,
+          })}
+          {this.createSelect({
+            value: shift,
+            state: 'shift',
+            label: 'Turno',
+            options: shifts,
+            disabled: true,
+          })}
+          {this.createInputMask({
+            value: phone,
+            state: 'phone',
+            label: 'Telefone',
+            type: 'tel',
+            mask: '(99) 9999-999999',
+            required: false,
+            disabled: true,
+          })}
+          {this.createDatePicker({
+            value: validity,
+            state: 'validity',
+            label: 'Validade do Pacote',
+          })}
+          {this.createSelect({
+            value: status,
+            state: 'status',
+            label: 'Status',
+            options: statusOptions,
+          })}
+          {this.createInput({
+            value: description,
+            state: 'description',
+            label: 'Descrição do Pacote',
+            placeholder: 'Exemplo Contém A, B, C',
+            type: 'textarea',
+            required: true,
+            rows: '5',
+            spellcheck: true,
+          })}
           <Button color="primary">Mudar Informação</Button>
         </Form>
         <InputDialog
           open={dialogState}
           fields={() => (
             <>
-              {this.createInputPassword(
-                password,
-                'password',
-                'Senha',
-                '',
-                'password'
-              )}
-              {this.createInputPassword(
-                confirmPassword,
-                'confirmPassword',
-                'Confirma Senha',
-                '',
-                'password'
-              )}
+              {this.createInputPassword({
+                value: password,
+                state: 'password',
+                label: 'Senha',
+              })}
+              {this.createInputPassword({
+                value: confirmPassword,
+                state: 'confirmPassword',
+                label: 'Confirma Senha',
+              })}
               <OnePassIndicator
                 rule={equals}
                 showIndicator={showIndicator}
@@ -325,32 +325,13 @@ class EditInfo extends ReactForms {
 
 const mapStateToProps = (state) => ({
   response: state.packageReducer.updateProfileStatus,
-  studentsData: state.studentReducer.data,
+  studentData: state.studentReducer.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   collapsePackageEdit: () => dispatch(collapsePackageEdit()),
   getPackages: () => dispatch(getPackages()),
-  updatePackageProfile: (
-    packageId,
-    studentId,
-    password,
-    confirmPassword,
-    status,
-    description,
-    validity
-  ) =>
-    dispatch(
-      updatePackageProfile(
-        packageId,
-        studentId,
-        password,
-        confirmPassword,
-        status,
-        description,
-        validity
-      )
-    ),
+  updatePackageProfile: (body) => dispatch(updatePackageProfile(body)),
   updateProfileResponse: (response = {}) =>
     dispatch(updateProfileResponse(response)),
 });

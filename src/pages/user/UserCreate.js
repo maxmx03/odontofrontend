@@ -7,6 +7,7 @@ import {
   collapseUserCreate,
 } from '../../app/redux/slicers/userSlicer';
 import { getUsers, createUser } from '../../app/redux/actions/userAction';
+import Validator from '../../utils/validators/Validator';
 
 class UserCreate extends ReactForms {
   constructor(props) {
@@ -104,7 +105,7 @@ class UserCreate extends ReactForms {
         firstName: firstName.toLowerCase(),
         lastName: lastName.toLowerCase(),
         type,
-        email,
+        email: Validator.normalizedEmail(email),
         password,
         confirmPassword,
       });
@@ -139,23 +140,39 @@ class UserCreate extends ReactForms {
             this.postForm();
           }}
         >
-          {this.createInput(firstName, 'firstName', 'Nome')}
-          {this.createInput(lastName, 'lastName', 'Sobrenome')}
-          {this.createInput(email, 'email', 'Email', '', 'email')}
-          {this.createInputPassword(
-            password,
-            'password',
-            'Senha',
-            '',
-            'password'
-          )}
-          {this.createInputPassword(
-            confirmPassword,
-            'confirmPassword',
-            'Confirma Senha',
-            '',
-            'password'
-          )}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: true,
+          })}
+          {this.createInput({
+            value: email,
+            state: 'email',
+            label: 'Email',
+            type: 'email',
+            required: true,
+          })}
+          {this.createInputPassword({
+            value: password,
+            state: 'password',
+            label: 'Senha',
+            type: 'password',
+            required: true,
+          })}
+          {this.createInputPassword({
+            value: confirmPassword,
+            state: 'confirmPassword',
+            label: 'Confirma Senha',
+            type: 'password',
+            required: true,
+          })}
           <PassIndicator
             equals={equals}
             minChar={minChar}
@@ -164,7 +181,12 @@ class UserCreate extends ReactForms {
             upperCaseChar={upperCaseChar}
             showIndicator={showIndicator}
           />
-          {this.createSelect(type, 'type', 'Tipo', types)}
+          {this.createSelect({
+            value: type,
+            state: 'type',
+            label: 'Tipo',
+            options: types,
+          })}
           <Button color="primary">Cadastrar usuário</Button>
         </Form>
         <DialogResponse

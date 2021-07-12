@@ -66,9 +66,7 @@ export default class Validator {
   }
 
   static isEmail(email) {
-    const normalizedEmail = validator.normalizeEmail(email);
-
-    return validator.isEmail(normalizedEmail);
+    return validator.isEmail(email);
   }
 
   static isPassword(password) {
@@ -137,5 +135,9 @@ export default class Validator {
     }
 
     return '';
+  }
+
+  static normalizedEmail(email = '') {
+    return validator.normalizeEmail(email);
   }
 }

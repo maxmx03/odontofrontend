@@ -64,49 +64,36 @@ class DeleteStudent extends ReactForms {
             this.showDeleteStudent();
           }}
         >
-          {this.createInput(
-            firstName,
-            'firstName',
-            'Nome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            lastName,
-            'lastName',
-            'Sobrenome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            email,
-            'email',
-            'Email',
-            '',
-            'email',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInputMask(
-            cpf,
-            'cpf',
-            'CPF',
-            '',
-            'text',
-            true,
-            '999.999.999-99',
-            true
-          )}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: email,
+            state: 'email',
+            label: 'Email',
+            type: 'email',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInputMask({
+            value: cpf,
+            state: 'cpf',
+            label: 'CPF',
+            mask: '999.999.999-99',
+            required: false,
+            disabled: true,
+          })}
           <Button color="danger">Deletar Aluno</Button>
         </Form>
         <InputDialog
@@ -170,8 +157,8 @@ const mapDispatchToProps = (dispatch) => ({
   collapseStudentEdit: () => dispatch(collapseStudentEdit()),
   deleteAccountResponse: (response = {}) =>
     dispatch(deleteAccountResponse(response)),
-  deleteStudentAccount: (studantId) =>
-    dispatch(deleteStudentAccount(studantId)),
+  deleteStudentAccount: (studentId) =>
+    dispatch(deleteStudentAccount(studentId)),
   getStudents: () => dispatch(getStudents()),
 });
 

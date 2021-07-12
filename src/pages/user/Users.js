@@ -59,6 +59,14 @@ class Users extends Component {
           {
             Header: 'Tipo',
             accessor: 'type',
+            Cell: ({ row }) => {
+              const { original: user } = row;
+              return (
+                <span>
+                  {user.type === 'user' ? 'Usuário' : 'Administrador'}
+                </span>
+              );
+            },
           },
         ],
       },

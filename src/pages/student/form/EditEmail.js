@@ -29,7 +29,7 @@ class EditEmail extends ReactForms {
     const { email, id } = this.state;
     const { updateStudentEmail } = this.props;
 
-    updateStudentEmail(email, id);
+    updateStudentEmail({ email, userId: id });
   }
 
   render() {
@@ -47,7 +47,13 @@ class EditEmail extends ReactForms {
             this.editForm();
           }}
         >
-          {this.createInput(email, 'email', 'Email', '', 'email')}
+          {this.createInput({
+            value: email,
+            state: 'email',
+            label: 'Email',
+            type: 'email',
+            required: true,
+          })}
           <Button color="primary">Mudar E-mail</Button>
         </Form>
         <DialogResponse
@@ -96,8 +102,7 @@ const mapDispatchToProps = (dispatch) => ({
   getStudents: () => dispatch(getStudents()),
   updateEmailResponse: (response = {}) =>
     dispatch(updateEmailResponse(response)),
-  updateStudentEmail: (email, studantId) =>
-    dispatch(updateStudentEmail(email, studantId)),
+  updateStudentEmail: (body) => dispatch(updateStudentEmail(body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditEmail);

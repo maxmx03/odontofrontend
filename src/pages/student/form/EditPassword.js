@@ -53,7 +53,7 @@ class EditPassword extends ReactForms {
     const { confirmPassword, id, password } = this.state;
     const { updateStudentPassword } = this.props;
 
-    updateStudentPassword(password, confirmPassword, id);
+    updateStudentPassword({ password, confirmPassword, userId: id });
   };
 
   setValue = async (state, value) => {
@@ -80,20 +80,18 @@ class EditPassword extends ReactForms {
             this.editForm();
           }}
         >
-          {this.createInputPassword(
-            password,
-            'password',
-            'Senha',
-            '',
-            'password'
-          )}
-          {this.createInputPassword(
-            confirmPassword,
-            'confirmPassword',
-            'Confirma Senha',
-            '',
-            'password'
-          )}
+          {this.createInputPassword({
+            value: password,
+            state: 'password',
+            label: 'Senha',
+            required: true,
+          })}
+          {this.createInputPassword({
+            value: confirmPassword,
+            state: 'confirmPassword',
+            label: 'Confirma Senha',
+            required: true,
+          })}
           <WeakPassIndicator
             equals={equals}
             minChar={minChar}
@@ -148,8 +146,7 @@ const mapDispatchToProps = (dispatch) => ({
   getStudents: () => dispatch(getStudents()),
   pathPassResponse: (response = {}) =>
     dispatch(updatePasswordResponse(response)),
-  updateStudentPassword: (password, confirmPassword, studentId) =>
-    dispatch(updateStudentPassword(password, confirmPassword, studentId)),
+  updateStudentPassword: (body) => dispatch(updateStudentPassword(body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPassword);

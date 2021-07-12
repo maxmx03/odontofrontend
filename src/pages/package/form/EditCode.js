@@ -58,7 +58,7 @@ class EditCode extends ReactForms {
     const { updatePackageCode } = this.props;
     const { code, packageId, studentId } = this.state;
 
-    updatePackageCode(code, packageId, studentId);
+    updatePackageCode({ code, packageId, studentId });
   }
 
   render() {
@@ -85,27 +85,31 @@ class EditCode extends ReactForms {
             this.editForm();
           }}
         >
-          {this.createInput(code, 'code', 'N° Pacote', '', 'number')}
+          {this.createInput({
+            value: code,
+            state: 'code',
+            label: 'N° Pacote',
+            type: 'number',
+            required: true,
+          })}
           <Button color="primary">Mudar Código</Button>
         </Form>
         <InputDialog
           open={dialogState}
           fields={() => (
             <>
-              {this.createInputPassword(
-                password,
-                'password',
-                'Senha',
-                '',
-                'password'
-              )}
-              {this.createInputPassword(
-                confirmPassword,
-                'confirmPassword',
-                'Confirma Senha',
-                '',
-                'password'
-              )}
+              {this.createInputPassword({
+                value: password,
+                state: 'password',
+                label: 'Senha',
+                required: true,
+              })}
+              {this.createInputPassword({
+                value: confirmPassword,
+                state: 'confirmPassword',
+                label: 'Confirma Senha',
+                required: true,
+              })}
               <OnePassIndicator
                 rule={equals}
                 showIndicator={showIndicator}
@@ -170,8 +174,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   collapsePackageEdit: () => dispatch(collapsePackageEdit()),
   getPackages: () => dispatch(getPackages()),
-  updatePackageCode: (code, packageId, studentId) =>
-    dispatch(updatePackageCode(code, packageId, studentId)),
+  updatePackageCode: (body) => dispatch(updatePackageCode(body)),
   updateCodeResponse: (response = {}) => dispatch(updateCodeResponse(response)),
 });
 

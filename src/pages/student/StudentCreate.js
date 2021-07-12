@@ -14,6 +14,7 @@ import {
   getStudents,
   createStudent,
 } from '../../app/redux/actions/studentAction';
+import Validator from '../../utils/validators/Validator';
 
 class StudentCreate extends ReactForms {
   constructor(props) {
@@ -128,16 +129,16 @@ class StudentCreate extends ReactForms {
       /[A-Za-z0-9_]/.test(password) &&
       password === confirmPassword
     ) {
-      createStudent(
-        firstName,
-        lastName,
+      createStudent({
+        firstName: firstName.toLowerCase(),
+        lastName: lastName.toLowerCase(),
         cpf,
-        email,
+        email: Validator.normalizedEmail(email),
         password,
         confirmPassword,
         phone,
-        shift
-      );
+        shift,
+      });
     }
   };
 
@@ -176,48 +177,64 @@ class StudentCreate extends ReactForms {
             this.postForm();
           }}
         >
-          {this.createInput(firstName, 'firstName', 'Nome')}
-          {this.createInput(lastName, 'lastName', 'Sobrenome')}
-          {this.createInput(email, 'email', 'Email', '', 'email')}
-          {this.createInputPassword(
-            password,
-            'password',
-            'Senha',
-            '',
-            'password'
-          )}
-          {this.createInputPassword(
-            confirmPassword,
-            'confirmPassword',
-            'Confirma Senha',
-            '',
-            'password'
-          )}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: true,
+          })}
+          {this.createInput({
+            value: email,
+            state: 'email',
+            label: 'Email',
+            type: 'email',
+            required: true,
+          })}
+          {this.createInputPassword({
+            value: password,
+            state: 'password',
+            label: 'Senha',
+            required: true,
+          })}
+          {this.createInputPassword({
+            value: confirmPassword,
+            state: 'confirmPassword',
+            label: 'Confirma Senha',
+            required: true,
+          })}
           <WeakPassIndicator
             equals={equals}
             minChar={minChar}
             minAlphaNum={minAlphaNum}
             showIndicator={showIndicator}
           />
-          {this.createSelect(shift, 'shift', 'Turno', shifts)}
-          {this.createInputMask(
-            phone,
-            'phone',
-            'Telefone',
-            '',
-            'tel',
-            true,
-            '(99) 9999-999999'
-          )}
-          {this.createInputMask(
-            cpf,
-            'cpf',
-            'CPF',
-            '',
-            'text',
-            true,
-            '999.999.999-99'
-          )}
+          {this.createSelect({
+            value: shift,
+            state: 'shift',
+            label: 'Turno',
+            options: shifts,
+          })}
+          {this.createInputMask({
+            value: phone,
+            state: 'phone',
+            label: 'Telefone',
+            type: 'tel',
+            mask: '(99) 9999-999999',
+            required: true,
+          })}
+          {this.createInputMask({
+            value: cpf,
+            state: 'cpf',
+            label: 'CPF',
+            mask: '999.999.999-99',
+            required: true,
+          })}
           <Button color="primary">Cadastrar Aluno</Button>
         </Form>
         <DialogResponse
@@ -265,28 +282,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   collapseStudentCreate: () => dispatch(collapseStudentCreate()),
   getStudents: () => dispatch(getStudents()),
-  createStudent: (
-    firstName,
-    lastName,
-    cpf,
-    email,
-    password,
-    confirmPassword,
-    phone,
-    shift
-  ) =>
-    dispatch(
-      createStudent(
-        firstName,
-        lastName,
-        cpf,
-        email,
-        password,
-        confirmPassword,
-        phone,
-        shift
-      )
-    ),
+  createStudent: (body) => dispatch(createStudent(body)),
   createResponse: (response = {}) => dispatch(createResponse(response)),
 });
 

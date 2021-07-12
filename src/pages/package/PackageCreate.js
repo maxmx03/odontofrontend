@@ -185,14 +185,14 @@ class PackageCreate extends ReactForms {
     } = this.state;
 
     if (password.length > 0 && password === confirmPassword) {
-      createPackage(
+      createPackage({
         studentId,
         password,
         confirmPassword,
         status,
         description,
-        validity
-      );
+        validity,
+      });
       this.setState({ dialogState: false });
     }
   }
@@ -235,89 +235,90 @@ class PackageCreate extends ReactForms {
             this.setState({ dialogState: true });
           }}
         >
-          {this.createAutoComplete(
-            student,
-            'student',
-            'Pesquisar Aluno',
-            studentData,
-            this.resetAutoCompleteInput
-          )}
-          {this.createInput(
-            firstName,
-            'firstName',
-            'Nome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            lastName,
-            'lastName',
-            'Sobrenome',
-            '',
-            'text',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createInput(
-            email,
-            'email',
-            'Email',
-            '',
-            'email',
-            false,
-            '',
-            false,
-            true
-          )}
-          {this.createSelect(shift, 'shift', 'Turno', shifts, '', true)}
-          {this.createInputMask(
-            phone,
-            'phone',
-            'Telefone',
-            '',
-            'tel',
-            true,
-            '(99) 9999-999999',
-            true
-          )}
-          {this.createDatePicker(validity, 'validity', 'Validade do Pacote')}
-          {this.createSelect(status, 'status', 'Status', statusOptions, '')}
-          {this.createInput(
-            description,
-            'description',
-            'Descrição do Pacote',
-            'Exemplo Contém A, B, C',
-            'textarea',
-            true,
-            '5',
-            true
-          )}
+          {this.createAutoComplete({
+            value: student,
+            state: 'student',
+            label: 'Pesquisar Aluno',
+            options: studentData,
+            required: true,
+          })}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: false,
+            disabled: true,
+          })}
+          {this.createInput({
+            value: email,
+            state: 'email',
+            label: 'Email',
+            type: 'email',
+            required: false,
+            disabled: true,
+          })}
+          {this.createSelect({
+            value: shift,
+            state: 'shift',
+            label: 'Turno',
+            options: shifts,
+            disabled: true,
+          })}
+          {this.createInputMask({
+            value: phone,
+            state: 'phone',
+            label: 'Telefone',
+            type: 'tel',
+            mask: '(99) 9999-999999',
+            disabled: true,
+          })}
+          {this.createDatePicker({
+            value: validity,
+            state: 'validity',
+            label: 'Validade do Pacote',
+          })}
+          {this.createSelect({
+            value: status,
+            state: 'status',
+            label: 'Status',
+            options: statusOptions,
+            required: true,
+          })}
+          {this.createInput({
+            value: description,
+            state: 'description',
+            label: 'Descrição do Pacote',
+            placeholder: 'Exemplo Contém A, B, C',
+            type: 'textarea',
+            rows: '5',
+            spellcheck: true,
+            required: true,
+          })}
           <Button color="primary">Cadastrar Pacote</Button>
         </Form>
         <InputDialog
           open={dialogState}
           fields={() => (
             <>
-              {this.createInputPassword(
-                password,
-                'password',
-                'Senha',
-                '',
-                'password'
-              )}
-              {this.createInputPassword(
-                confirmPassword,
-                'confirmPassword',
-                'Confirma Senha',
-                '',
-                'password'
-              )}
+              {this.createInputPassword({
+                value: password,
+                state: 'password',
+                label: 'Senha',
+                required: true,
+              })}
+              {this.createInputPassword({
+                value: confirmPassword,
+                state: 'confirmPassword',
+                label: 'Confirma Senha',
+                required: true,
+              })}
               <OnePassIndicator
                 rule={equals}
                 showIndicator={showIndicator}
@@ -378,30 +379,13 @@ class PackageCreate extends ReactForms {
 
 const mapStateToProps = (state) => ({
   response: state.packageReducer.createStatus,
-  studentData: state.studentReducer.data
+  studentData: state.studentReducer.data,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   collapsePackageCreate: () => dispatch(collapsePackageCreate()),
   getPackages: () => dispatch(getPackages()),
-  createPackage: (
-    studentId,
-    password,
-    confirmPassword,
-    status,
-    description,
-    validity
-  ) =>
-    dispatch(
-      createPackage(
-        studentId,
-        password,
-        confirmPassword,
-        status,
-        description,
-        validity
-      )
-    ),
+  createPackage: (body) => dispatch(createPackage(body)),
   createResponse: (response = {}) => dispatch(createResponse(response)),
 });
 

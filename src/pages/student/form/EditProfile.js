@@ -49,7 +49,14 @@ class EditProfile extends ReactForms {
     const { cpf, id, firstName, lastName, phone, shift } = this.state;
     const { updateStudentProfile } = this.props;
 
-    updateStudentProfile(firstName, lastName, cpf, phone, shift, id);
+    updateStudentProfile({
+      firstName: firstName.toLowerCase(),
+      lastName: lastName.toLowerCase(),
+      cpf,
+      phone,
+      shift,
+      userId: id,
+    });
   }
 
   render() {
@@ -71,27 +78,39 @@ class EditProfile extends ReactForms {
             this.editForm();
           }}
         >
-          {this.createInput(firstName, 'firstName', 'Nome')}
-          {this.createInput(lastName, 'lastName', 'Sobrenome')}
-          {this.createSelect(shift, 'shift', 'Turno', shifts)}
-          {this.createInputMask(
-            phone,
-            'phone',
-            'Telefone',
-            '',
-            'tel',
-            true,
-            '(99) 9999-999999'
-          )}
-          {this.createInputMask(
-            cpf,
-            'cpf',
-            'CPF',
-            '',
-            'text',
-            true,
-            '999.999.999-99'
-          )}
+          {this.createInput({
+            value: firstName,
+            state: 'firstName',
+            label: 'Nome',
+            required: true,
+          })}
+          {this.createInput({
+            value: lastName,
+            state: 'lastName',
+            label: 'Sobrenome',
+            required: true,
+          })}
+          {this.createSelect({
+            value: shift,
+            state: 'shift',
+            label: 'Turno',
+            options: shifts,
+          })}
+          {this.createInputMask({
+            value: phone,
+            state: 'phone',
+            label: 'Telefone',
+            type: 'tel',
+            mask: '(99) 9999-999999',
+            required: true,
+          })}
+          {this.createInputMask({
+            value: cpf,
+            state: 'cpf',
+            label: 'CPF',
+            mask: '999.999.999-99',
+            required: true,
+          })}
           <Button color="primary">Mudar Perfil</Button>
         </Form>
         <DialogResponse
@@ -140,10 +159,7 @@ const mapDispatchToProps = (dispatch) => ({
   getStudents: () => dispatch(getStudents()),
   updateProfileResponse: (response = {}) =>
     dispatch(updateProfileResponse(response)),
-  updateStudentProfile: (firstName, lastName, cpf, phone, shift, studentId) =>
-    dispatch(
-      updateStudentProfile(firstName, lastName, cpf, phone, shift, studentId)
-    ),
+  updateStudentProfile: (body) => dispatch(updateStudentProfile(body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfile);

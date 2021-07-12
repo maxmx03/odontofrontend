@@ -63,7 +63,11 @@ class EditPassword extends ReactForms {
       /[A-Z]/.test(password) &&
       password === confirmPassword
     ) {
-      updateUserPassword(password, confirmPassword, id);
+      updateUserPassword({
+        password,
+        confirmPassword,
+        userId: id,
+      });
     }
   }
 
@@ -87,20 +91,18 @@ class EditPassword extends ReactForms {
             this.editForm();
           }}
         >
-          {this.createInputPassword(
-            password,
-            'password',
-            'Nova Senha',
-            '',
-            'password'
-          )}
-          {this.createInputPassword(
-            confirmPassword,
-            'confirmPassword',
-            'Confirmar Senha',
-            '',
-            'password'
-          )}
+          {this.createInputPassword({
+            value: password,
+            state: 'password',
+            label: 'Nova Senha',
+            required: true,
+          })}
+          {this.createInputPassword({
+            value: confirmPassword,
+            state: 'confirmPassword',
+            label: 'Confirmar Senha',
+            required: true,
+          })}
           <PassIndicator
             equals={equals}
             minChar={minChar}
@@ -158,8 +160,7 @@ const mapDispatchToProps = (dispatch) => ({
   getUsers: () => dispatch(getUsers()),
   updatePasswordResponse: (response = {}) =>
     dispatch(updatePasswordResponse(response)),
-  updateUserPassword: (password, confirmPassword, userId) =>
-    dispatch(updateUserPassword(password, confirmPassword, userId)),
+  updateUserPassword: (body) => dispatch(updateUserPassword(body)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditPassword);

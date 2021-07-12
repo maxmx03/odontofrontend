@@ -15,9 +15,9 @@ import moment from 'moment';
 import Validator from '../../utils/validators/Validator';
 
 export class ReactForms extends React.Component {
+  // eslint-disable-next-line no-useless-constructor
   constructor(props) {
     super(props);
-    this.dateWarning = false;
   }
 
   setValue(state, value) {
@@ -27,83 +27,114 @@ export class ReactForms extends React.Component {
   }
 
   createInput(
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-    disabled
+    opts = {
+      value: '',
+      state: '',
+      label: '',
+      placeholder: '',
+      type: '',
+      required: false,
+      rows: '',
+      spellcheck: false,
+      disabled: false,
+    }
   ) {
     return (
       <FormGroup>
-        <Label>{label}</Label>
+        <Label>{opts.label}</Label>
         <Input
-          type={type}
-          value={value}
-          placeholder={placeholder}
-          required={required}
+          type={opts.type ?? 'text'}
+          value={opts.value}
+          placeholder={opts.placeholder}
+          required={opts.required}
           onChange={(e) => {
-            type === 'text'
-              ? this.setValue(state, Validator.clearHTML(e.target.value))
-              : this.setValue(state, e.target.value);
+            opts.type === 'text'
+              ? this.setValue(opts.state, Validator.clearHTML(e.target.value))
+              : this.setValue(opts.state, e.target.value);
           }}
-          rows={rows}
-          spellCheck={spellcheck}
+          rows={opts.rows}
+          spellCheck={opts.spellcheck}
           style={{ resize: 'none' }}
-          disabled={disabled}
+          disabled={opts.disabled}
         />
       </FormGroup>
     );
   }
 
   createInputPassword(
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    rows,
-    spellcheck = false,
-    disabled
+    opts = {
+      value: '',
+      state: '',
+      label: '',
+      placeholder: '',
+      type: '',
+      required: false,
+      disabled: false,
+    }
   ) {
     return (
       <FormGroup>
-        <Label>{label}</Label>
+        <Label>{opts.label}</Label>
         <Input
-          type={type}
-          value={value}
-          placeholder={placeholder}
-          required={required}
-          onChange={(e) => this.setValue(state, e.target.value)}
+          type={opts.type ?? 'password'}
+          value={opts.value}
+          placeholder={opts.placeholder}
+          required={opts.required}
+          onChange={(e) => this.setValue(opts.state, e.target.value)}
           onFocus={() => {
             this.setValue('showIndicator', true);
           }}
           onBlur={() => {
             this.setValue('showIndicator', false);
           }}
-          rows={rows}
-          spellCheck={spellcheck}
+          rows={opts.rows}
+          spellCheck={opts.spellcheck}
           style={{ resize: 'none' }}
-          disabled={disabled}
+          disabled={opts.disabled}
         />
       </FormGroup>
     );
   }
 
-  createSelect(value, state, label, options, placeholder, disabled = false) {
+  createSelect(
+    opts = {
+      value: '',
+      state: '',
+      label: '',
+      options: [{ label: '', value: '' }],
+      placeholder: '',
+      disabled: false,
+    }
+  ) {
+    let label;
+
+    if (Validator.isType(opts.value)) {
+      label =
+        opts.value === 'disabled'
+          ? 'Desativado'
+          : opts.value === 'user'
+          ? 'Laboratorista'
+          : 'Administrador';
+    }
+
+    if (Validator.isShift(opts.value)) {
+      label =
+        opts.value === 'morning'
+          ? 'Matutino'
+          : opts.value === 'afternoon'
+          ? 'Vespertino'
+          : 'Noturno';
+    }
+
     return (
       <FormGroup>
-        <Label>{label}</Label>
+        <Label>{opts.label}</Label>
         <Select
           value={{
-            label: value === 'user' ? 'Laboratorista' : 'Administrador',
-            value,
+            label,
+            value: opts.value,
           }}
-          onChange={(e) => this.setValue(state, e.value)}
+          onChange={(e) => this.setValue(opts.state, e.value)}
           theme={(theme) => ({
             ...theme,
             borderRadius: '.25rem',
@@ -119,56 +150,58 @@ export class ReactForms extends React.Component {
               color: state.isSelected || state.isFocused ? '#fff' : '#6c757d',
             }),
           }}
-          options={options}
-          placeholder={placeholder}
-          isDisabled={disabled}
+          options={opts.options}
+          placeholder={opts.placeholder}
+          isDisabled={opts.disabled}
         />
       </FormGroup>
     );
   }
 
   createInputMask(
-    value,
-    state,
-    label,
-    placeholder,
-    type = 'text',
-    required = true,
-    mask,
-    disabled
+    opts = {
+      value: '',
+      state: '',
+      label: '',
+      placeholder: '',
+      type: '',
+      required: true,
+      mask: '',
+      disabled: false,
+    }
   ) {
     return (
       <FormGroup>
-        <Label>{label}</Label>
+        <Label>{opts.label}</Label>
         <InputMask
           className="form-control"
-          placeholder={placeholder}
-          type={type}
-          mask={mask}
-          value={value}
-          onChange={(e) => this.setValue(state, e.target.value)}
-          required={required}
-          disabled={disabled}
+          placeholder={opts.placeholder}
+          type={opts.type ?? 'text'}
+          mask={opts.mask}
+          value={opts.value}
+          onChange={(e) => this.setValue(opts.state, e.target.value)}
+          required={opts.required}
+          disabled={opts.disabled}
         />
       </FormGroup>
     );
   }
 
-  createAutoComplete(value, state, label, options, callback) {
+  createAutoComplete(opts = { value: '', state: '', label: '', options: [] }) {
     return (
       <FormGroup>
         <Autocomplete
           onChange={(e, v) => {
             if (e.target.textContent.length === 0) {
-              callback();
+              this.resetAutoCompleteInput();
             }
-            this.setValue(state, v);
+            this.setValue(opts.state, v);
           }}
-          value={value}
-          options={options}
+          value={opts.value}
+          options={opts.options}
           getOptionLabel={(option) => option.email}
           renderInput={(params) => (
-            <TextField {...params} label={label} variant="standard" />
+            <TextField {...params} label={opts.label} variant="standard" />
           )}
         />
       </FormGroup>
@@ -176,15 +209,16 @@ export class ReactForms extends React.Component {
   }
 
   createDatePicker(
-    value,
-    state,
-    label,
-    format = 'DD/MM/YYYY',
-    disabled = false
+    opts = {
+      value: '',
+      state: '',
+      label: '',
+      format: '',
+      disabled: false,
+    }
   ) {
-    const { dateWarning } = this.state;
-
     moment.locale('pt-br');
+
     return (
       <MuiPickersUtilsProvider
         libInstance={moment}
@@ -195,28 +229,28 @@ export class ReactForms extends React.Component {
           <KeyboardDatePicker
             disableToolbar
             variant="inline"
-            format={format}
+            format={opts.format ?? 'DD/MM/YYYY'}
             margin="normal"
-            label={label}
+            label={opts.label}
             value={
-              moment(value).isBefore(moment(), 'days')
+              moment(opts.value).isBefore(moment(), 'days')
                 ? moment().format()
-                : value
+                : opts.value
             }
             onChange={(e) => {
               if (e && moment(e).isAfter(moment(), 'days')) {
-                this.setValue(state, e.format());
+                this.setValue(opts.state, e.format());
               } else {
-                this.setValue(state, moment().format());
+                this.setValue(opts.state, moment().format());
                 this.setValue('dateWarning', true);
               }
             }}
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
-            disabled={disabled}
+            disabled={opts.disabled}
           />
-          {dateWarning ? (
+          {this.state?.dateWarning ? (
             <>
               <p className="text-danger mb-0">
                 A data não pode ser menor que {`${moment().format('L')}`}
