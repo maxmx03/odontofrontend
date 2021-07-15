@@ -16,6 +16,7 @@ import {
 import { getPackages } from '../../app/redux/actions/packageAction';
 import { getStudents } from '../../app/redux/actions/studentAction';
 import Validator from '../../utils/validators/Validator';
+import Translator from '../../utils/translator/Translator'
 
 class Packages extends Component {
   constructor(props) {
@@ -83,6 +84,10 @@ class Packages extends Component {
           {
             Header: 'Turno',
             accessor: 'student.shift',
+            Cell: ({ row }) => {
+              const { original: student } = row;
+              return <span>{Translator.translate(student.shift)}</span>;
+            },
           },
           {
             Header: 'Status',

@@ -34,7 +34,7 @@ export const WeakPassIndicator = ({
       <div className="m-3">
         <IndicatorOutput rule={minChar} msg="A senha precisa ter no mínimo 5 caracters" />
         <IndicatorOutput rule={minAlphaNum} msg="A senha precisa ter no mínimo um número e uma letra" />
-        <IndicatorOutput rule={equals} msg="As senhas precisar ser iguais" />
+        <IndicatorOutput rule={equals} msg="As senhas precisam ser iguais" />
       </div>
     );
   }

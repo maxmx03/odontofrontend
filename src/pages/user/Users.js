@@ -15,6 +15,7 @@ import {
   collapseUserEdit,
 } from '../../app/redux/slicers/userSlicer';
 import Validator from '../../utils/validators/Validator';
+import Translator from '../../utils/translator/Translator';
 
 class Users extends Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class Users extends Component {
               const { original: user } = row;
               return (
                 <span>
-                  {user.type === 'user' ? 'Usuário' : 'Administrador'}
+                  {Translator.translate(user.type)}
                 </span>
               );
             },

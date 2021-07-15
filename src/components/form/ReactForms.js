@@ -1,4 +1,4 @@
-import React from 'react';
+import { Component } from 'react';
 import { FormGroup, Label, Input } from 'reactstrap';
 import { TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -13,8 +13,9 @@ import Select from 'react-select';
 import moment from 'moment';
 
 import Validator from '../../utils/validators/Validator';
+import Translator from '../../utils/translator/Translator';
 
-export class ReactForms extends React.Component {
+export class ReactForms extends Component {
   // eslint-disable-next-line no-useless-constructor
   constructor(props) {
     super(props);
@@ -106,25 +107,7 @@ export class ReactForms extends React.Component {
       disabled: false,
     }
   ) {
-    let label;
-
-    if (Validator.isType(opts.value)) {
-      label =
-        opts.value === 'disabled'
-          ? 'Desativado'
-          : opts.value === 'user'
-          ? 'Laboratorista'
-          : 'Administrador';
-    }
-
-    if (Validator.isShift(opts.value)) {
-      label =
-        opts.value === 'morning'
-          ? 'Matutino'
-          : opts.value === 'afternoon'
-          ? 'Vespertino'
-          : 'Noturno';
-    }
+    let label = Translator.translate(opts.value);
 
     return (
       <FormGroup>

@@ -50,8 +50,8 @@ export function createUser(body) {
         Validator.isNotEmpty(lastName) &&
         Validator.isEmail(email) &&
         Validator.isType(type) &&
-        Validator.isPassword(password) &&
-        Validator.isPassword(confirmPassword) &&
+        Validator.isUserPassword(password) &&
+        Validator.isUserPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword)
       ) {
         return Axios.post(CREATE_USER, body, token)
@@ -204,8 +204,8 @@ export function updateUserPassword(body) {
       const token = Session.get('token');
 
       if (
-        Validator.isPassword(password) &&
-        Validator.isPassword(confirmPassword) &&
+        Validator.isUserPassword(password) &&
+        Validator.isUserPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword) &&
         Validator.isNotEmpty(userId)
       ) {

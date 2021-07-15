@@ -49,8 +49,8 @@ export function createPackage(body) {
         Validator.isNotEmpty(description) &&
         Validator.isDate(validity) &&
         Validator.isStatus(status) &&
-        Validator.isPassword(password) &&
-        Validator.isPassword(confirmPassword) &&
+        Validator.isStudentPassword(password) &&
+        Validator.isStudentPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword)
       ) {
         return Axios.post(CREATE_PACKAGE, body, token)

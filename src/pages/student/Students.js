@@ -15,6 +15,7 @@ import {
   collapseStudentEdit,
 } from '../../app/redux/slicers/studentSlicer';
 import Validator from '../../utils/validators/Validator';
+import Translator from '../../utils/translator/Translator';
 
 class Students extends Component {
   constructor(props) {
@@ -67,6 +68,10 @@ class Students extends Component {
           {
             Header: 'Turno',
             accessor: 'shift',
+            Cell: ({ row }) => {
+              const { original: student } = row;
+              return <span>{Translator.translate(student.shift)}</span>;
+            },
           },
           {
             Header: 'N° de Pacotes',

@@ -69,18 +69,27 @@ export default class Validator {
     return validator.isEmail(email);
   }
 
-  static isPassword(password) {
-    const hasMinEightCharacter = /^.{8,}$/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecialCharacter = /[!@#$%&*^~+?(){}]/.test(password);
-    const hasUpperCaseCharacter = /[A-Z]/.test(password);
+  static isPhone(phone) {
+    const regex = /[(]+[0-9]+[)]+[\s]+[0-9]+[-]+[0-9]+/g;
 
-    return (
-      hasMinEightCharacter &&
-      hasNumber &&
-      hasSpecialCharacter &&
-      hasUpperCaseCharacter
-    );
+    return regex.test(phone);
+  }
+
+  static isUserPassword(password) {
+    const minLength = /^.{8,}$/.test(password);
+    const minNum = /[0-9]/.test(password);
+    const specialChar = /[!@#$%&*^~+?(){}]/.test(password);
+    const upperCaseChar = /[A-Z]/.test(password);
+
+    return minLength && minNum && specialChar && upperCaseChar;
+  }
+
+  static isStudentPassword(password) {
+    const minLength = /^.{5,}$/.test(password);
+    const minChar = /[a-z]/gi.test(password);
+    const minNum = /[0-9]/.test(password);
+
+    return minLength && minChar && minNum;
   }
 
   static areEqual(value, valueToCompare) {

@@ -15,7 +15,7 @@ export function loginUser(body) {
       dispatch(load());
       const { email, password } = body;
 
-      if (Validator.isEmail(email) && Validator.isPassword(password)) {
+      if (Validator.isEmail(email) && Validator.isUserPassword(password)) {
         return Axios.post(USER_LOGIN, body, { token: null })
           .then(({ data }) => {
             Session.set('token', data.token);

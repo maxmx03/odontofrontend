@@ -52,10 +52,10 @@ export function createStudent(body) {
         Validator.isNotEmpty(lastName) &&
         Validator.isEmail(email) &&
         Validator.isCPF(cpf) &&
-        Validator.isPassword(password) &&
-        Validator.isPassword(confirmPassword) &&
+        Validator.isStudentPassword(password) &&
+        Validator.isStudentPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword) &&
-        Validator.isNotEmpty(phone) &&
+        Validator.isPhone(phone) &&
         Validator.isShift(shift)
       ) {
         return Axios.post(CREATE_STUDENT, body, token)
@@ -110,7 +110,7 @@ export function updateStudentProfile(body) {
         Validator.isNotEmpty(firstName) &&
         Validator.isNotEmpty(lastName) &&
         Validator.isCPF(cpf) &&
-        Validator.isNotEmpty(phone) &&
+        Validator.isPhone(phone) &&
         Validator.isShift(shift) &&
         Validator.isNotEmpty(studentId)
       ) {
@@ -210,8 +210,8 @@ export function updateStudentPassword(body) {
       const token = Session.get('token');
 
       if (
-        Validator.isPassword(password) &&
-        Validator.isPassword(confirmPassword) &&
+        Validator.isStudentPassword(password) &&
+        Validator.isStudentPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword) &&
         Validator.isNotEmpty(studentId)
       ) {
