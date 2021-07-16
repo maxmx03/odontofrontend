@@ -2,6 +2,8 @@
 import validator from 'validator';
 import moment from 'moment';
 
+import Translator from '../translator/Translator';
+
 export default class Validator {
   static isNotEmpty(value) {
     if (value === 0) {
@@ -110,9 +112,9 @@ export default class Validator {
         data: moment(data.createdAt).format('L'),
         operation: data.operation,
         description: data.description,
-        userName: data.user?.firstName,
-        userType: data.user?.type,
-        studentName: data.student?.firstName,
+        userName: this.toTitleCase(data.user?.firstName),
+        userType: Translator.translate(data.user?.type),
+        studentName: this.toTitleCase(data.student?.firstName),
         studentCpf: data.student?.cpf,
       };
 
