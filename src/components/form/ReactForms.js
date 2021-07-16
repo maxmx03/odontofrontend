@@ -107,8 +107,9 @@ export class ReactForms extends Component {
       disabled: false,
     }
   ) {
+    console.log('opts.value: ', opts.value);
     let label = Translator.translate(opts.value);
-
+    console.log('label: ', label);
     return (
       <FormGroup>
         <Label>{opts.label}</Label>
@@ -201,7 +202,6 @@ export class ReactForms extends Component {
     }
   ) {
     moment.locale('pt-br');
-
     return (
       <MuiPickersUtilsProvider
         libInstance={moment}
@@ -212,7 +212,7 @@ export class ReactForms extends Component {
           <KeyboardDatePicker
             disableToolbar
             variant="inline"
-            format={opts.format ?? 'DD/MM/YYYY'}
+            format={opts.format || 'DD/MM/YYYY'}
             margin="normal"
             label={opts.label}
             value={
@@ -223,15 +223,15 @@ export class ReactForms extends Component {
             onChange={(e) => {
               if (e && moment(e).isAfter(moment(), 'days')) {
                 this.setValue(opts.state, e.format());
+                this.setState({ dateWarning: false });
               } else {
                 this.setValue(opts.state, moment().format());
-                this.setValue('dateWarning', true);
+                this.setState({ dateWarning: true });
               }
             }}
             KeyboardButtonProps={{
               'aria-label': 'change date',
             }}
-            disabled={opts.disabled}
           />
           {this.state?.dateWarning ? (
             <>

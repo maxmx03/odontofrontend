@@ -76,6 +76,10 @@ class Students extends Component {
           {
             Header: 'N° de Pacotes',
             accessor: 'qtPackage',
+            Cell: ({ row }) => {
+              const { original: student } = row;
+              return <span>{student.qtPackage ?? 0}</span>;
+            }
           },
         ],
       },

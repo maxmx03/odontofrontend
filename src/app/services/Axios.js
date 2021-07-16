@@ -1,62 +1,40 @@
 import axios from 'axios';
-import Validator from '../../utils/validators/Validator';
 
 const instance = axios.create({
   baseURL: 'http://localhost:8080',
 });
 
-const error = {
-  response: {
-    status: 404,
-  },
-};
-
 export default class Axios {
-  static get(url, token) {
-    if (Validator.isNotEmpty(url)) {
-      return instance.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-
-    return Promise.reject(error);
+  static get(opts = { url: '', token: '' }) {
+    return instance.get(opts.url, {
+      headers: {
+        Authorization: `Bearer ${opts.token}`,
+      },
+    });
   }
 
-  static post(url, body, token) {
-    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(body)) {
-      return instance.post(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-
-    return Promise.reject(error);
+  static post(opts = { url: '', body: '', token: '' }) {
+    return instance.post(opts.url, opts.body, {
+      headers: {
+        Authorization: `Bearer ${opts.token}`,
+      },
+    });
   }
 
-  static patch(url, body, token) {
-    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(body)) {
-      return instance.patch(url, body, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-
-    return Promise.reject(error);
+  static patch(opts = { url: '', body: '', token: '' }) {
+    return instance.patch(opts.url, opts.body, {
+      headers: {
+        Authorization: `Bearer ${opts.token}`,
+      },
+    });
   }
 
-  static delete(url, id, token) {
-    if (Validator.isNotEmpty(url) && Validator.isNotEmpty(id)) {
-      return instance.delete(`${url}${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-    }
-
-    return Promise.reject(error);
+  static delete(opts = { url: '', body: '', id: '', token: '' }) {
+    return instance.delete(`${opts.url}${opts.id}`, {
+      headers: {
+        Authorization: `Bearer ${opts.token}`,
+      },
+      data: opts.body,
+    });
   }
 }

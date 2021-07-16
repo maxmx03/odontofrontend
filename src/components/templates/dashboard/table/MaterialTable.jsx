@@ -76,7 +76,16 @@ export const MaterialTable = ({ columns, rows }) => {
                   <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
                       const value = row[column.id];
-                      if (value) {
+
+                      if (!value) {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {'Não existe'}
+                          </TableCell>
+                        );
+                      }
+
+                      if (value && column.id !== 'description') {
                         return (
                           <TableCell key={column.id} align={column.align}>
                             {column.format && typeof value === 'number'
@@ -85,13 +94,14 @@ export const MaterialTable = ({ columns, rows }) => {
                           </TableCell>
                         );
                       }
+
                       return (
                         <TableCell key={column.id} align={column.align}>
                           <Button
                             color="secondary"
                             variant="outlined"
                             size="small"
-                            onClick={() => openModal(row.descricao)}
+                            onClick={() => openModal(row.description)}
                             startIcon={<DescriptionIcon />}
                           >
                             Detalhes

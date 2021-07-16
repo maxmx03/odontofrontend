@@ -16,7 +16,7 @@ import {
 import { getPackages } from '../../app/redux/actions/packageAction';
 import { getStudents } from '../../app/redux/actions/studentAction';
 import Validator from '../../utils/validators/Validator';
-import Translator from '../../utils/translator/Translator'
+import Translator from '../../utils/translator/Translator';
 
 class Packages extends Component {
   constructor(props) {
@@ -39,7 +39,7 @@ class Packages extends Component {
               const { original: studentPackage } = row;
               return (
                 <span>
-                  {Validator.toTitleCase(studentPackage.student.firstName)}
+                  {Validator.toTitleCase(studentPackage.student?.firstName)}
                 </span>
               );
             },
@@ -51,7 +51,7 @@ class Packages extends Component {
               const { original: studentPackage } = row;
               return (
                 <span>
-                  {Validator.toTitleCase(studentPackage.student.lastName)}
+                  {Validator.toTitleCase(studentPackage.student?.lastName)}
                 </span>
               );
             },
@@ -68,7 +68,7 @@ class Packages extends Component {
               const { original: studentPackage } = row;
               return (
                 <span>
-                  {Validator.limitNumChar(studentPackage.student.email)}
+                  {Validator.limitNumChar(studentPackage.student?.email)}
                 </span>
               );
             },
@@ -85,13 +85,25 @@ class Packages extends Component {
             Header: 'Turno',
             accessor: 'student.shift',
             Cell: ({ row }) => {
-              const { original: student } = row;
-              return <span>{Translator.translate(student.shift)}</span>;
+              const { original: studentPackage } = row;
+              return (
+                <span>
+                  {Translator.translate(studentPackage.student?.shift)}
+                </span>
+              );
             },
           },
           {
             Header: 'Status',
             accessor: 'status',
+            Cell: ({ row }) => {
+              const { original: studentPackage } = row;
+              return (
+                <span>
+                  {Translator.translate(studentPackage.status)}
+                </span>
+              );
+            },
           },
         ],
       },

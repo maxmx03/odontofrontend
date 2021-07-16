@@ -24,7 +24,7 @@ export function getStudents() {
     const token = Session.get('token');
 
     if (Validator.isNotEmpty(token)) {
-      Axios.get(FIND_STUDENTS, token).then(({ data }) => {
+      Axios.get({ url: FIND_STUDENTS, token }).then(({ data }) => {
         dispatch(storeStudent(data.students));
       });
     }
@@ -58,7 +58,7 @@ export function createStudent(body) {
         Validator.isPhone(phone) &&
         Validator.isShift(shift)
       ) {
-        return Axios.post(CREATE_STUDENT, body, token)
+        return Axios.post({ url: CREATE_STUDENT, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -114,7 +114,7 @@ export function updateStudentProfile(body) {
         Validator.isShift(shift) &&
         Validator.isNotEmpty(studentId)
       ) {
-        return Axios.patch(UPDATE_STUDENT_PROFILE, body, token)
+        return Axios.patch({ url: UPDATE_STUDENT_PROFILE, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -162,7 +162,7 @@ export function updateStudentEmail(body) {
       const token = Session.get('token');
 
       if (Validator.isEmail(email) && Validator.isNotEmpty(studentId)) {
-        return Axios.patch(UPDATE_STUDENT_EMAIL, body, token)
+        return Axios.patch({ url: UPDATE_STUDENT_EMAIL, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -215,7 +215,7 @@ export function updateStudentPassword(body) {
         Validator.areEqual(password, confirmPassword) &&
         Validator.isNotEmpty(studentId)
       ) {
-        return Axios.patch(UPDATE_STUDENT_PASSWORD, body, token)
+        return Axios.patch({ url: UPDATE_STUDENT_PASSWORD, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -262,7 +262,7 @@ export function deleteStudentAccount(studentId) {
       const token = Session.get('token');
 
       if (Validator.isNotEmpty(studentId)) {
-        return Axios.delete(DELETE_STUDENT, studentId, token)
+        return Axios.delete({ url: DELETE_STUDENT, id: studentId, token })
           .then(() => {
             dispatch(unload());
             dispatch(

@@ -44,7 +44,7 @@ class PackageCreate extends ReactForms {
         },
         {
           label: 'Retirado',
-          value: 'withdraw',
+          value: 'withdrawn',
         },
       ],
       phone: '',
@@ -191,7 +191,7 @@ class PackageCreate extends ReactForms {
         confirmPassword,
         status,
         description,
-        validity,
+        validity: moment(validity).format(),
       });
       this.setState({ dialogState: false });
     }

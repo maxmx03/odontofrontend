@@ -1,5 +1,6 @@
 import { Form, Button } from 'reactstrap';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 import {
   collapsePackageEdit,
@@ -139,7 +140,7 @@ class EditInfo extends ReactForms {
         confirmPassword,
         status,
         description,
-        validity,
+        validity: moment(validity).format(),
       });
       this.setState({ dialogState: false });
     }

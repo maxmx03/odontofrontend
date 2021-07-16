@@ -16,7 +16,7 @@ export function loginUser(body) {
       const { email, password } = body;
 
       if (Validator.isEmail(email) && Validator.isUserPassword(password)) {
-        return Axios.post(USER_LOGIN, body, { token: null })
+        return Axios.post({ url: USER_LOGIN, body })
           .then(({ data }) => {
             Session.set('token', data.token);
 
@@ -105,7 +105,7 @@ export function isUserLogged() {
         });
       }
 
-      return Axios.get(IS_USER_LOGGED, token)
+      return Axios.get({ url: IS_USER_LOGGED, token })
         .then(({ data }) => {
           dispatch(unload());
           dispatch(
@@ -154,7 +154,7 @@ export function recoverUserPassword(body) {
       const { email } = body;
 
       if (Validator.isEmail(email)) {
-        return Axios.post(RECOVER_PASSWORD, body, { token: null })
+        return Axios.post({ url: RECOVER_PASSWORD, body })
           .then(() => {
             dispatch(unload());
             dispatch(

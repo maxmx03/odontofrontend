@@ -22,7 +22,7 @@ export function getPackages() {
     const token = Session.get('token');
 
     if (Validator.isNotEmpty(token)) {
-      Axios.get(FIND_PACKAGES, token).then(({ data }) => {
+      Axios.get({ url: FIND_PACKAGES, token }).then(({ data }) => {
         dispatch(storePackage(data.packages));
       });
     }
@@ -53,7 +53,7 @@ export function createPackage(body) {
         Validator.isStudentPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword)
       ) {
-        return Axios.post(CREATE_PACKAGE, body, token)
+        return Axios.post({ url: CREATE_PACKAGE, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -108,7 +108,7 @@ export function updatePackageProfile(body) {
         Validator.isDate(validity) &&
         Validator.isStatus(status)
       ) {
-        return Axios.patch(UPDATE_PACKAGE_PROFILE, body, token)
+        return Axios.patch({ url: UPDATE_PACKAGE_PROFILE, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -160,7 +160,7 @@ export function updatePackageCode(body) {
         Validator.isNotEmpty(studentId) &&
         Validator.isNotEmpty(code)
       ) {
-        return Axios.patch(UPDATE_PACKAGE_CODE, body, token)
+        return Axios.patch({ url: UPDATE_PACKAGE_CODE, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -200,28 +200,28 @@ export function updatePackageCode(body) {
   };
 }
 
-export function deleteStudentPackage(packageId) {
+export function deleteStudentPackage(body, packageId) {
   return function (dispatch) {
     try {
       dispatch(load());
       const token = Session.get('token');
 
-      if (Validator.isNotEmpty(packageId)) {
-        return Axios.delete(DELETE_PACKAGE, packageId, token)
+      if (Validator.isNotEmpty(body) && Validator.isNotEmpty(packageId)) {
+        return Axios.delete({ url: DELETE_PACKAGE, body, id: packageId, token })
           .then(() => {
             dispatch(unload());
             dispatch(
               deletePackageResponse({
-                msg: 'Usuário foi deletado com sucesso!',
+                msg: 'Pacote foi deletado com sucesso!',
                 success: true,
               })
             );
           })
-          .catch(() => {
+          .catch((error) => {
             dispatch(unload());
             dispatch(
               deletePackageResponse({
-                msg: 'Não foi possível deletar este usuário',
+                msg: 'Não foi possível deletar este pacote',
                 success: false,
               })
             );
@@ -231,7 +231,7 @@ export function deleteStudentPackage(packageId) {
       dispatch(unload());
       dispatch(
         deletePackageResponse({
-          msg: 'Não foi possível deletar este usuário',
+          msg: 'Não foi possível deletar este pacote',
           success: false,
         })
       );
@@ -239,7 +239,7 @@ export function deleteStudentPackage(packageId) {
       dispatch(unload());
       dispatch(
         deletePackageResponse({
-          msg: 'Não foi possível deletar este usuário',
+          msg: 'Não foi possível deletar este pacote',
           success: false,
         })
       );

@@ -29,7 +29,7 @@ class EditEmail extends ReactForms {
     const { email, id } = this.state;
     const { updateStudentEmail } = this.props;
 
-    updateStudentEmail({ email, userId: id });
+    updateStudentEmail({ email, studentId: id });
   }
 
   render() {

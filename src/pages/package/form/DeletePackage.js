@@ -29,6 +29,7 @@ class DeletePackage extends ReactForms {
       ),
       code: data.code,
       packageId: data.id,
+      studentId: data.student?.id,
       phone: data.student?.phone,
       shift: data.student?.shift,
       shifts: [
@@ -56,8 +57,8 @@ class DeletePackage extends ReactForms {
 
   deleteForm() {
     const { deleteStudentPackage } = this.props;
-    const { packageId } = this.state;
-    deleteStudentPackage(packageId);
+    const { packageId, studentId } = this.state;
+    deleteStudentPackage({ studentId }, packageId);
     this.setState({ dialogState: false });
   }
 
@@ -223,8 +224,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   collapsePackageEdit: () => dispatch(collapsePackageEdit()),
   getPackages: () => dispatch(getPackages()),
-  deleteStudentPackage: (packageId) =>
-    dispatch(deleteStudentPackage(packageId)),
+  deleteStudentPackage: (body, packageId) =>
+    dispatch(deleteStudentPackage(body, packageId)),
   deletePackageResponse: (response = {}) =>
     dispatch(deletePackageResponse(response)),
 });

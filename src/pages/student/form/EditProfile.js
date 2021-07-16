@@ -55,7 +55,7 @@ class EditProfile extends ReactForms {
       cpf,
       phone,
       shift,
-      userId: id,
+      studentId: id,
     });
   }
 

@@ -25,7 +25,7 @@ export function getUsers() {
     dispatch(load());
 
     if (Validator.isNotEmpty(token)) {
-      Axios.get(FIND_USERS, token)
+      Axios.get({ url: FIND_USERS, token })
         .then(({ data }) => {
           dispatch(storeUsers(data.users));
         })
@@ -54,7 +54,7 @@ export function createUser(body) {
         Validator.isUserPassword(confirmPassword) &&
         Validator.areEqual(password, confirmPassword)
       ) {
-        return Axios.post(CREATE_USER, body, token)
+        return Axios.post({ url: CREATE_USER, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -108,7 +108,7 @@ export function updateUserProfile(body) {
         Validator.isType(type) &&
         Validator.isNotEmpty(userId)
       ) {
-        return Axios.patch(UPDATE_USER_PROFILE, body, token)
+        return Axios.patch({ url: UPDATE_USER_PROFILE, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -156,7 +156,7 @@ export function updateUserEmail(body) {
       const token = Session.get('token');
 
       if (Validator.isEmail(email) && Validator.isNotEmpty(userId)) {
-        return Axios.patch(UPDATE_USER_EMAIL, body, token)
+        return Axios.patch({ url: UPDATE_USER_EMAIL, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -209,7 +209,7 @@ export function updateUserPassword(body) {
         Validator.areEqual(password, confirmPassword) &&
         Validator.isNotEmpty(userId)
       ) {
-        return Axios.patch(UPDATE_USER_PASSWORD, body, token)
+        return Axios.patch({ url: UPDATE_USER_PASSWORD, body, token })
           .then(() => {
             dispatch(unload());
             dispatch(
@@ -256,7 +256,7 @@ export function deleteUserAccount(userId) {
       const token = Session.get('token');
 
       if (Validator.isNotEmpty(userId)) {
-        return Axios.delete(DELETE_USER, userId, token)
+        return Axios.delete({ url: DELETE_USER, id: userId, token })
           .then(() => {
             dispatch(unload());
             dispatch(

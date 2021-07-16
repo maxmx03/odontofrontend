@@ -110,10 +110,10 @@ export default class Validator {
         data: moment(data.createdAt).format('L'),
         operation: data.operation,
         description: data.description,
-        userName: data.user.firstName,
-        userType: data.user.type,
-        studentName: data.student.firstName,
-        studentCpf: data.student.cpf,
+        userName: data.user?.firstName,
+        userType: data.user?.type,
+        studentName: data.student?.firstName,
+        studentCpf: data.student?.cpf,
       };
 
       delete columns.users;

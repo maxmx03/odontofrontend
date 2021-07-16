@@ -9,7 +9,7 @@ export function getServices() {
     const token = Session.get('token');
 
     if (Validator.isNotEmpty(token)) {
-      Axios.get(FIND_SERVICES, token).then(({ data }) => {
+      Axios.get({ url: FIND_SERVICES, token }).then(({ data }) => {
         dispatch(storeServices(data.services));
       });
     }

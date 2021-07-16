@@ -53,7 +53,7 @@ class EditPassword extends ReactForms {
     const { confirmPassword, id, password } = this.state;
     const { updateStudentPassword } = this.props;
 
-    updateStudentPassword({ password, confirmPassword, userId: id });
+    updateStudentPassword({ password, confirmPassword, studentId: id });
   };
 
   setValue = async (state, value) => {
