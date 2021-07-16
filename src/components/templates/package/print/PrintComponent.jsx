@@ -16,7 +16,7 @@ export class PrintComponent extends Component {
       lastName: data.student?.lastName,
       phone: data.student?.phone,
       shift: data.student?.shift,
-      validity: data.validityAt,
+      validity: data.validity,
       status: data.status,
       description: data.description,
       code: data.code,

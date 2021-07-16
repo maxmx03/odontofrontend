@@ -136,7 +136,7 @@ class StudentCreate extends ReactForms {
         email: Validator.normalizedEmail(email),
         password,
         confirmPassword,
-        phone,
+        phone: Validator.normalizedPhone(phone),
         shift,
       });
     }

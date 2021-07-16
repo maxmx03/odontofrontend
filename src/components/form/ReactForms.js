@@ -107,9 +107,8 @@ export class ReactForms extends Component {
       disabled: false,
     }
   ) {
-    console.log('opts.value: ', opts.value);
     let label = Translator.translate(opts.value);
-    console.log('label: ', label);
+
     return (
       <FormGroup>
         <Label>{opts.label}</Label>

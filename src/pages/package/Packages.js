@@ -121,14 +121,14 @@ class Packages extends Component {
           },
           {
             Header: 'Data de Validade',
-            accessor: 'validityAt',
+            accessor: 'validity',
             Cell: ({ row }) => {
               const { original } = row;
-              const validity = moment(original.validityAt).format('L');
+              const validity = moment(original.validity).format('L');
               const today = moment();
               const compareDate =
-                moment(original.validityAt).isSame(today, 'days') ||
-                moment(original.validityAt).isBefore(today, 'days');
+                moment(original.validity).isSame(today, 'days') ||
+                moment(original.validity).isBefore(today, 'days');
               return (
                 <span className={compareDate ? 'text-danger' : 'text-light'}>
                   {validity}

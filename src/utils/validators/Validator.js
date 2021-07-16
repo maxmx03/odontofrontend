@@ -125,8 +125,8 @@ export default class Validator {
 
   static limitNumChar(string = '') {
     const stringLength = string;
-    if (stringLength && stringLength.length > 50) {
-      return stringLength.substr(0, stringLength.length - 10);
+    if (stringLength && stringLength.length >= 50) {
+      return stringLength.substr(0, stringLength.length - 35);
     }
 
     return stringLength;
@@ -148,5 +148,11 @@ export default class Validator {
 
   static normalizedEmail(email = '') {
     return validator.normalizeEmail(email);
+  }
+
+  static normalizedPhone(phone = '') {
+    const regex = /[_]/g;
+
+    return phone.replace(regex, '');
   }
 }

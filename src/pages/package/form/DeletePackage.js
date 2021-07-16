@@ -46,7 +46,7 @@ class DeletePackage extends ReactForms {
           value: 'night',
         },
       ],
-      validity: data.validityAt,
+      validity: data.validity,
     };
     this.deleteForm.bind(this);
     this.createInput.bind(this);

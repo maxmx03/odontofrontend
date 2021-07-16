@@ -10,6 +10,7 @@ import {
   getStudents,
   updateStudentProfile,
 } from '../../../app/redux/actions/studentAction';
+import Validator from '../../../utils/validators/Validator';
 
 class EditProfile extends ReactForms {
   constructor(props) {
@@ -53,7 +54,7 @@ class EditProfile extends ReactForms {
       firstName: firstName.toLowerCase(),
       lastName: lastName.toLowerCase(),
       cpf,
-      phone,
+      phone: Validator.normalizedPhone(phone),
       shift,
       studentId: id,
     });

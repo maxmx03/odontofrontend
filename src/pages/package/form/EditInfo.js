@@ -65,7 +65,7 @@ class EditInfo extends ReactForms {
           value: 'night',
         },
       ],
-      validity: data.validityAt,
+      validity: data.validity,
     };
 
     this.autoFillInput.bind(this);
