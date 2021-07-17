@@ -12,12 +12,11 @@ export default function App() {
 
   useEffect(() => {
     dispatch(isUserLogged());
-
     if (user.isLogged) {
       return history.push('/dashboard');
     }
 
-    history.push('/login');
+    if (user.isLogged === false) history.push('/login');
   }, [dispatch, history, user.isLogged]);
 
   return <></>;

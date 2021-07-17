@@ -96,13 +96,15 @@ export function isUserLogged() {
       const token = Session.get('token');
       if (!Validator.isNotEmpty(token)) {
         dispatch(unload());
-        return storeUser({
-          email: '',
-          firstName: '',
-          lastName: '',
-          type: '',
-          isLogged: false,
-        });
+        return dispatch(
+          storeUser({
+            email: '',
+            firstName: '',
+            lastName: '',
+            type: '',
+            isLogged: false,
+          })
+        );
       }
 
       return Axios.get({ url: IS_USER_LOGGED, token })
