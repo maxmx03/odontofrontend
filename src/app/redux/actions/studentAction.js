@@ -63,7 +63,7 @@ export function createStudent(body) {
             dispatch(unload());
             dispatch(
               createResponse({
-                msg: 'Estudante foi criado com sucesso!',
+                msg: 'O estudante foi criado com sucesso!',
                 success: true,
               })
             );
@@ -119,7 +119,7 @@ export function updateStudentProfile(body) {
             dispatch(unload());
             dispatch(
               updateProfileResponse({
-                msg: 'Perfil atualizado com sucesso!',
+                msg: 'O perfil foi atualizado com sucesso!',
                 success: true,
               })
             );
@@ -167,7 +167,7 @@ export function updateStudentEmail(body) {
             dispatch(unload());
             dispatch(
               updateEmailResponse({
-                msg: 'E-mail foi atualizado com sucesso!',
+                msg: 'O email foi atualizado com sucesso!',
                 success: true,
               })
             );
@@ -176,7 +176,7 @@ export function updateStudentEmail(body) {
             dispatch(unload());
             dispatch(
               updateEmailResponse({
-                msg: 'E-mail inválido ou ele já existe',
+                msg: 'O email é inválido ou ele já existe',
                 success: false,
               })
             );
@@ -186,7 +186,7 @@ export function updateStudentEmail(body) {
       dispatch(unload());
       dispatch(
         updateEmailResponse({
-          msg: 'Não foi possível atualizar este E-mail',
+          msg: 'Não foi possível atualizar este email',
           success: false,
         })
       );
@@ -194,7 +194,7 @@ export function updateStudentEmail(body) {
       dispatch(unload());
       dispatch(
         updateEmailResponse({
-          msg: 'Não foi possível atualizar este E-mail',
+          msg: 'Não foi possível atualizar este email',
           success: false,
         })
       );
@@ -220,7 +220,7 @@ export function updateStudentPassword(body) {
             dispatch(unload());
             dispatch(
               updatePasswordResponse({
-                msg: 'Senha foi atualizada com sucesso!',
+                msg: 'A senha foi atualizado com sucesso!',
                 success: true,
               })
             );
@@ -229,7 +229,7 @@ export function updateStudentPassword(body) {
             dispatch(unload());
             dispatch(
               updatePasswordResponse({
-                msg: 'Senha inválida, verifique se você esta preenchendo a senha corretamente.',
+                msg: 'A senha é inválida, verifique se você esta preenchendo a senha corretamente.',
                 success: false,
               })
             );
@@ -267,7 +267,7 @@ export function deleteStudentAccount(studentId) {
             dispatch(unload());
             dispatch(
               deleteAccountResponse({
-                msg: 'Estudante foi deletado com sucesso!',
+                msg: 'O estudante foi deletado com sucesso!',
                 success: true,
               })
             );

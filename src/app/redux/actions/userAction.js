@@ -59,7 +59,7 @@ export function createUser(body) {
             dispatch(unload());
             dispatch(
               createResponse({
-                msg: 'Usuário foi criado com sucesso!',
+                msg: 'O usuário foi criado com sucesso!',
                 success: true,
               })
             );
@@ -113,7 +113,7 @@ export function updateUserProfile(body) {
             dispatch(unload());
             dispatch(
               updateProfileResponse({
-                msg: 'Perfil atualizado com sucesso!',
+                msg: 'O perfil foi atualizado com sucesso!',
                 success: true,
               })
             );
@@ -161,7 +161,7 @@ export function updateUserEmail(body) {
             dispatch(unload());
             dispatch(
               updateEmailResponse({
-                msg: 'E-mail foi atualizado com sucesso!',
+                msg: 'O email foi atualizado com sucesso!',
                 success: true,
               })
             );
@@ -170,7 +170,7 @@ export function updateUserEmail(body) {
             dispatch(unload());
             dispatch(
               updateEmailResponse({
-                msg: 'E-mail inválido ou ele já existe',
+                msg: 'O email é inválido ou ele já existe',
                 success: false,
               })
             );
@@ -214,7 +214,7 @@ export function updateUserPassword(body) {
             dispatch(unload());
             dispatch(
               updatePasswordResponse({
-                msg: 'Senha foi atualizada com sucesso!',
+                msg: 'A senha foi atualizada com sucesso!',
                 success: true,
               })
             );
@@ -223,7 +223,7 @@ export function updateUserPassword(body) {
             dispatch(unload());
             dispatch(
               updatePasswordResponse({
-                msg: 'Senha inválida, verifique se você esta preenchendo a senha corretamente.',
+                msg: 'A senha é inválida, verifique se você esta preenchendo a senha corretamente.',
                 success: false,
               })
             );
@@ -261,7 +261,7 @@ export function deleteUserAccount(userId) {
             dispatch(unload());
             dispatch(
               deleteAccountResponse({
-                msg: 'Usuário foi deletado com sucesso!',
+                msg: 'O usuário foi deletado com sucesso!',
                 success: true,
               })
             );

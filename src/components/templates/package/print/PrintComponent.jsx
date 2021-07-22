@@ -2,8 +2,10 @@ import { Component, useRef } from 'react';
 import { Container, Col, Row, Button } from 'reactstrap';
 import moment from 'moment';
 import ReactToPrint from 'react-to-print';
+
 import { odontoEasy } from '../../../../assets/images';
 import Validator from '../../../../utils/validators/Validator';
+import Translator from '../../../../utils/translator/Translator';
 
 export class PrintComponent extends Component {
   constructor(props) {
@@ -36,6 +38,7 @@ export class PrintComponent extends Component {
       shift,
       validity,
     } = this.state;
+
     return (
       <>
         <Row className="p-5 print-font-style">
@@ -44,10 +47,10 @@ export class PrintComponent extends Component {
           </Row>
           <Col>
             <h3 className="print-title">Informações do student</h3>
-            <p>Nome: {firstName}</p>
-            <p>Sobrenome: {lastName}</p>
+            <p>Nome: {Validator.toTitleCase(firstName)}</p>
+            <p>Sobrenome: {Validator.toTitleCase(lastName)}</p>
             <p>Telefone: {phone}</p>
-            <p>Turno: {shift}</p>
+            <p>Turno: {Translator.translate(shift)}</p>
             <p>CPF: {cpf}</p>
             <p>Email: {email}</p>
           </Col>

@@ -113,7 +113,7 @@ export function updatePackageProfile(body) {
             dispatch(unload());
             dispatch(
               updateProfileResponse({
-                msg: 'Perfil atualizado com sucesso!',
+                msg: 'O perfil atualizado com sucesso!',
                 success: true,
               })
             );
@@ -165,7 +165,7 @@ export function updatePackageCode(body) {
             dispatch(unload());
             dispatch(
               updateCodeResponse({
-                msg: 'Código foi atualizado com sucesso!',
+                msg: 'Este código foi atualizado com sucesso!',
                 success: true,
               })
             );
@@ -174,7 +174,7 @@ export function updatePackageCode(body) {
             dispatch(unload());
             dispatch(
               updateCodeResponse({
-                msg: 'Código inválido ou ele já existe',
+                msg: 'Este código é inválido ou ele já existe',
                 success: false,
               })
             );
@@ -212,7 +212,7 @@ export function deleteStudentPackage(body, packageId) {
             dispatch(unload());
             dispatch(
               deletePackageResponse({
-                msg: 'Pacote foi deletado com sucesso!',
+                msg: 'O Pacote foi deletado com sucesso!',
                 success: true,
               })
             );

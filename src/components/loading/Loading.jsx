@@ -12,9 +12,9 @@ export function Loading() {
     setLoad(loading);
   }, [loading]);
 
-  const handleClose = () => {
+  function handleClose() {
     setLoad(false);
-  };
+  }
 
   return (
     <Modal

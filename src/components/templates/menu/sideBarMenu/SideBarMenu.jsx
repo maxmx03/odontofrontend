@@ -58,7 +58,10 @@ export function SecondaryMenuList() {
 
   return (
     <div>
-      <MenuItem name={`${Validator.toTitleCase(user.firstName) || 'Usuário'}`} icon={<AccountCircleIcon />} />
+      <MenuItem
+        name={`${Validator.toTitleCase(user.firstName) || 'Usuário'}`}
+        icon={<AccountCircleIcon />}
+      />
       <MenuItem
         name="Deslogar"
         icon={<ExitToAppIcon />}

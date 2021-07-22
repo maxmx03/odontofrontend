@@ -1,4 +1,4 @@
-import React from 'react';
+import { useMemo } from 'react';
 import {
   useTable,
   useFilters,
@@ -82,7 +82,7 @@ function Pagination({
 }
 
 export function ReactTable({ columns, data }) {
-  const defaultColumn = React.useMemo(
+  const defaultColumn = useMemo(
     () => ({
       Filter: DefaultColumnFilter,
     }),

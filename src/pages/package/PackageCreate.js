@@ -327,7 +327,7 @@ class PackageCreate extends ReactForms {
             </>
           )}
           title="Atenção"
-          description="Para salvar, digite a password do usuário"
+          description="Para salvar, digite a senha do usuário"
         >
           <Button color="primary" onClick={() => this.postForm()}>
             Confirmar

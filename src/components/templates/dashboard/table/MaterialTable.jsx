@@ -30,26 +30,26 @@ const useStyles = makeStyles({
   },
 });
 
-export const MaterialTable = ({ columns, rows }) => {
+export function MaterialTable({ columns, rows }) {
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [open, setOpen] = useState(false);
   const [details, setDetails] = useState({});
 
-  const openModal = (data) => {
+  function openModal(data) {
     setOpen(true);
     setDetails(data);
-  };
+  }
 
-  const handleChangePage = (event, newPage) => {
+  function handleChangePage(event, newPage) {
     setPage(newPage);
-  };
+  }
 
-  const handleChangeRowsPerPage = (event) => {
+  function handleChangeRowsPerPage(event) {
     setRowsPerPage(+event.target.value);
     setPage(0);
-  };
+  }
 
   return (
     <>
@@ -142,4 +142,4 @@ export const MaterialTable = ({ columns, rows }) => {
       />
     </>
   );
-};
+}

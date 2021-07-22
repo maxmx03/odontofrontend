@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -14,9 +14,9 @@ export function InputDialog({ children, description, fields, open, title }) {
     setModal(open);
   }, [open]);
 
-  const handleClose = () => {
+  function handleClose() {
     setModal(false);
-  };
+  }
 
   return (
     <div>

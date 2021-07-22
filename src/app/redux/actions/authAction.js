@@ -23,7 +23,7 @@ export function loginUser(body) {
             dispatch(unload());
             dispatch(
               authResponse({
-                msg: 'Usuário logado com sucesso!',
+                msg: 'O usuário foi logado com sucesso!',
                 success: true,
               })
             );
@@ -39,7 +39,7 @@ export function loginUser(body) {
             if (Validator.isNotEmpty(response) && response.status === 429) {
               return dispatch(
                 authResponse({
-                  msg: 'Limite de solitação atingido, tente novamente mais tarde',
+                  msg: 'Limite de solicitação atingido, tente novamente mais tarde',
                   success: false,
                 })
               );

@@ -118,7 +118,7 @@ class EditCode extends ReactForms {
             </>
           )}
           title="Atenção"
-          description="Para atualizar, digite a password do usuário"
+          description="Para atualizar, digite a senha do usuário"
         >
           <Button color="primary" onClick={() => this.postForm()}>
             Confirmar
