@@ -11,15 +11,15 @@ export default class Translator {
     }
 
     if (Validator.isType(string)) {
-        return string === 'disabled'
+      return string === 'disabled'
         ? 'Desativado'
         : string === 'user'
         ? 'Laboratorista'
         : 'Administrador';
     }
-    
+
     if (Validator.isStatus(string)) {
-        return string === 'stored' ? 'Armazenado' : 'Retirado';
+      return string === 'stored' ? 'Armazenado' : 'Retirado';
     }
   }
 }
