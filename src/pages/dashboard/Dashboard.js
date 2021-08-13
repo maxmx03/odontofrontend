@@ -11,6 +11,7 @@ import { getServices } from '../../app/redux/actions/serviceAction';
 import { selectServices } from '../../app/redux/selectors/serviceSelector';
 import { InfoCard, MaterialTable } from '../../components/templates/dashboard';
 import { columns } from '../../constants/dashboard';
+import moment from 'moment';
 
 export default function Dashboard() {
   const dispatch = useDispatch();
@@ -38,13 +39,13 @@ export default function Dashboard() {
             total={students && students.length}
             title="Total de Alunos"
             className="shadow p-3 mb-5 bg-white rounded"
-            data={students && students.length ? students[0].createdAt : ''}
+            data={students && students.length ? moment(students[0].createdAt).format('L') : ''}
           />
           <InfoCard
             total={packages && packages.length}
             title="Total de Pacotes"
             className="shadow p-3 mb-5 bg-white rounded"
-            data={packages && packages.length ? packages[0].createdAt : ''}
+            data={packages && packages.length ? moment(packages[0].createdAt).format('L') : ''}
           />
         </Col>
       </Row>

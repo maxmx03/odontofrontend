@@ -9986,6 +9986,15 @@ h3 {
   color: #343a40 !important;
 }
 
+.css-123x0ol-control {
+  background-color: #e9ecef !important;
+  border: 1px solid #ced4da !important;
+}
+
+.css-107lb6w-singleValue {
+  color: #495057 !important;
+}
+
 @media print {
   .print-font-style {
     font-family: "Open Sans", sans-serif;
